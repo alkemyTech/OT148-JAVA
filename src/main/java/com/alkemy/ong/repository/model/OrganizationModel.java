@@ -1,12 +1,20 @@
 package com.alkemy.ong.repository.model;
 
 
+import lombok.Builder;
 import lombok.Data;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Column;
+import javax.persistence.Table;
+import javax.persistence.PrePersist;
 import java.time.LocalDateTime;
 
 @Data
+@Builder
 @Entity
 @Table(name = "organizations")
 public class OrganizationModel {
@@ -18,18 +26,18 @@ public class OrganizationModel {
     private String name;
     @Column(nullable = false)
     private String image;
-    @Column(nullable = true)
+    @Column()
     private String address;
-    @Column(nullable = true)
+    @Column()
     private Integer phone;
     @Column(nullable = false)
     private String email;
     @Column(nullable = false)
     private String welcomeText;
-    @Column(nullable = true)
+    @Column()
     private String aboutUsText;
-    @Column(name = "high_date")
-    private LocalDateTime highDate;
+    @Column(name = "creation_date")
+    private LocalDateTime creationDate;
 
     public OrganizationModel(String name,
                              String image,
@@ -51,7 +59,7 @@ public class OrganizationModel {
 
     @PrePersist
     private void beforePersisting(){
-        this.highDate = LocalDateTime.now();
+        this.creationDate = LocalDateTime.now();
     }
 
 }
