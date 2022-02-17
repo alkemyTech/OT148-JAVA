@@ -3,12 +3,10 @@ package com.alkemy.ong.mapper;
 import com.alkemy.ong.domain.Organization;
 import com.alkemy.ong.repository.model.OrganizationModel;
 
-import java.time.LocalDateTime;
-
 public class OrganizationMapper {
 
-    public static Organization mapOrganizationModelToDomain(OrganizationModel organizationModel){
-        Organization organizationDomain = new Organization();
+    public static Organization mapModelToDomain(OrganizationModel organizationModel){
+        Organization organizationDomain = Organization.builder().build();
         organizationDomain.setName(organizationModel.getName());
         organizationDomain.setImage(organizationModel.getImage());
         organizationDomain.setAddress(organizationModel.getAddress());
@@ -19,7 +17,7 @@ public class OrganizationMapper {
         return organizationDomain;
     }
 
-    public static OrganizationModel mapOrganizationDomainToModel(Organization organizationDomain){
+    public static OrganizationModel mapDomainToModel(Organization organizationDomain){
         OrganizationModel organizationModel = new OrganizationModel();
         organizationModel.setName(organizationDomain.getName());
         organizationModel.setImage(organizationDomain.getImage());
