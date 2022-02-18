@@ -1,10 +1,13 @@
 package com.alkemy.ong.domain;
 
+import lombok.Builder;
 import lombok.Data;
 
 @Data
+@Builder
 public class Member {
 
+    private Long idMember;
     private String name;
     private String facebookUrl;
     private String instagramUrl;
