@@ -19,7 +19,7 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    private UserMapper mapper;
+    private UserMapper mapper = new UserMapper();
 
 
     @Transactional
