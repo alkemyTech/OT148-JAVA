@@ -11,7 +11,7 @@ public class UserMapper {
                 email(userModel.getEmail()).
                 password(userModel.getPassword()).
                 photo(userModel.getPhoto()).
-                roleId(userModel.getRoleId()).build();
+                role(userModel.getRole()).build();
         return userDomain;
     }
     public static UserModel mapDomainToModel(User userDomain){
@@ -21,7 +21,7 @@ public class UserMapper {
                 email(userDomain.getEmail()).
                 password(userDomain.getPassword()).
                 photo(userDomain.getPhoto()).
-                roleId(userDomain.getRoleId()).build();
+                role(userDomain.getRole()).build();
         return userModel;
     }
 }

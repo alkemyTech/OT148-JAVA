@@ -37,7 +37,7 @@ public class UserModel {
     private String photo;
     @ManyToOne
     @JoinColumn(name = "role_id",insertable = false, updatable = false)
-    private Role roleId;
+    private Role role;
     private LocalDateTime creationDate;
     private boolean deleted;
 }
