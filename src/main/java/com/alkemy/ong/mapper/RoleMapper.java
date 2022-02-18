@@ -5,15 +5,15 @@ import com.alkemy.ong.repository.model.RoleModel;
 
 public class RoleMapper {
     public static Role mapModelToDomain(RoleModel roleModel){
-        Role roleDomain = new Role();
-        roleDomain.setName(roleModel.getName());
-        roleDomain.setDescription(roleModel.getDescription());
+        Role roleDomain = Role.builder().
+                name(roleModel.getName()).
+                description(roleModel.getDescription()).build();
         return roleDomain;
     }
     public static RoleModel mapDomainToModel (Role roleDomain){
-        RoleModel roleModel = new RoleModel();
-        roleModel.setName(roleDomain.getName());
-        roleModel.setDescription(roleDomain.getDescription());
+        RoleModel roleModel = RoleModel.builder().
+                name(roleDomain.getName()).
+                description(roleDomain.getDescription()).build();
         return roleModel;
     }
 }

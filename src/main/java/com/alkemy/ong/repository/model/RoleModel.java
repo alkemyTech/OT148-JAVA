@@ -1,11 +1,13 @@
 package com.alkemy.ong.repository.model;
 
+import lombok.Builder;
 import lombok.Data;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Data
+@Builder
 @Entity
 @Table (name = "roles")
 public class RoleModel {
