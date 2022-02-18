@@ -14,7 +14,7 @@ public class UserMapper {
                 .role(userModel.getRole()).build();
         return userDomain;
     }
-    
+
     public static UserModel mapDomainToModel(User userDomain){
         UserModel userModel = UserModel.builder()
                 .firstName(userDomain.getFirstName())
