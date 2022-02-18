@@ -9,7 +9,7 @@ import java.io.Serializable;
 
 @Data
 @Builder
-public class UserDTO implements Serializable {
+public class UserCreationDTO implements Serializable {
 
     @NotNull
     @NotBlank
@@ -24,7 +24,7 @@ public class UserDTO implements Serializable {
     @NotBlank
     private String password;
 
-    public UserDTO(String name, String lastname, String email, String password) {
+    public UserCreationDTO(String name, String lastname, String email, String password) {
         this.name = name;
         this.lastname = lastname;
         this.email = email;
