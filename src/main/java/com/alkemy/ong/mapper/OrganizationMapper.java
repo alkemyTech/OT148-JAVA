@@ -1,0 +1,33 @@
+package com.alkemy.ong.mapper;
+
+import com.alkemy.ong.domain.Organization;
+import com.alkemy.ong.repository.model.OrganizationModel;
+
+public class OrganizationMapper {
+
+    public static Organization mapModelToDomain(OrganizationModel organizationModel){
+        Organization organizationDomain = Organization.builder().
+                name(organizationModel.getName()).
+                image(organizationModel.getImage()).
+                address(organizationModel.getAddress()).
+                phone(organizationModel.getPhone()).
+                email(organizationModel.getEmail()).
+                welcomeText(organizationModel.getWelcomeText()).
+                aboutUsText(organizationModel.getAboutUsText()).build();
+        return organizationDomain;
+    }
+
+    public static OrganizationModel mapDomainToModel(Organization organizationDomain){
+        OrganizationModel organizationModel = OrganizationModel.builder().
+                name(organizationDomain.getName()).
+                image(organizationDomain.getImage()).
+                address(organizationDomain.getAddress()).
+                phone(organizationDomain.getPhone()).
+                email(organizationDomain.getEmail()).
+                welcomeText(organizationDomain.getWelcomeText()).
+                aboutUsText(organizationDomain.getAboutUsText()).build();
+        return organizationModel;
+    }
+
+
+}
