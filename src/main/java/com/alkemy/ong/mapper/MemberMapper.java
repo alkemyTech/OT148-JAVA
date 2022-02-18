@@ -5,25 +5,27 @@ import com.alkemy.ong.repository.model.MemberModel;
 
 public class MemberMapper {
 
-    public static Member mapMemberModelToMember(MemberModel memberModel){
-        Member newMember = new Member();
-        newMember.setName(memberModel.getName());
-        newMember.setFacebookUrl(memberModel.getFacebookUrl());
-        newMember.setInstagramUrl(memberModel.getInstagramUrl());
-        newMember.setLinkedinUrl(memberModel.getLinkedinUrl());
-        newMember.setImage(memberModel.getImage());
-        newMember.setDescription(memberModel.getDescription());
-        return newMember;
+    public static Member mapModelToDomain(MemberModel memberModel){
+        Member memberDomain = Member.builder().
+                idMember(memberModel.getIdMember()).
+                name(memberModel.getName()).
+                facebookUrl(memberModel.getFacebookUrl()).
+                instagramUrl(memberModel.getInstagramUrl()).
+                linkedinUrl(memberModel.getLinkedinUrl()).
+                image(memberModel.getImage()).
+                description(memberModel.getDescription()).build();
+        return memberDomain;
     }
 
-    public static MemberModel mapMemberToMemberModel(Member member){
-        MemberModel newMemberModel = new MemberModel();
-        newMemberModel.setName(member.getName());
-        newMemberModel.setFacebookUrl(member.getFacebookUrl());
-        newMemberModel.setInstagramUrl(member.getInstagramUrl());
-        newMemberModel.setLinkedinUrl(member.getLinkedinUrl());
-        newMemberModel.setImage(member.getImage());
-        newMemberModel.setDescription(member.getDescription());
-        return newMemberModel;
+    public static MemberModel mapDomainToModel(Member memberDomain){
+        MemberModel memberModel = MemberModel.builder().
+                idMember(memberDomain.getIdMember()).
+                name(memberDomain.getName()).
+                facebookUrl(memberDomain.getFacebookUrl()).
+                instagramUrl(memberDomain.getInstagramUrl()).
+                linkedinUrl(memberDomain.getLinkedinUrl()).
+                image(memberDomain.getImage()).
+                description(memberDomain.getDescription()).build();
+        return memberModel;
     }
 }
