@@ -1,7 +1,7 @@
 package com.alkemy.ong.controller;
 
 import com.alkemy.ong.domain.User;
-import com.alkemy.ong.dto.UserDTO;
+import com.alkemy.ong.dto.UserCreationDTO;
 import com.alkemy.ong.mapper.UserMapper;
 import com.alkemy.ong.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,11 +27,9 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    private UserMapper mapper = new UserMapper();
-
     @PostMapping("/register")
-    public ResponseEntity<?> userRegister(@Valid @RequestBody UserDTO userDto){
-        User userDomain = mapper.mapDtoToDomain(userDto);
+    public ResponseEntity<?> userRegister(@Valid @RequestBody UserCreationDTO userCreationDto){
+        User userDomain = UserMapper.mapDtoCreationToDomain(userCreationDto);
         return ResponseEntity.ok(userService.registerUser(userDomain));
     }
 

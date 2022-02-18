@@ -19,15 +19,12 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    private UserMapper mapper = new UserMapper();
-
-
     @Transactional
     public UserDTO registerUser(User user) {
-        UserModel userModel = mapper.mapDomainToModel(user);
+        UserModel userModel = UserMapper.mapDomainToModel(user);
         userModel.setPassword(encryptPassword(user));
         UserModel save = userRepository.save(userModel);
-        return mapper.mapModelToDto(save);
+        return UserMapper.mapModelToDto(save);
     }
 
     private String encryptPassword(User user){
