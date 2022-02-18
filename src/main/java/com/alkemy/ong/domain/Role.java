@@ -14,5 +14,5 @@ import java.time.LocalDateTime;
 public class Role {
     private String name;
     private String description;
-    private LocalDateTime timestamps;
+    private LocalDateTime creationDate;
 }
