@@ -4,7 +4,7 @@ import com.alkemy.ong.repository.model.CategoryModel;
 
 public class CategoryMapper {
 
-    public static Category mapModelToDomain (CategoryModel categoryModel){
+    public static Category mapModelToDomain(CategoryModel categoryModel){
         Category category = Category.builder()
                 .id(categoryModel.getId())
                 .name(categoryModel.getName())
