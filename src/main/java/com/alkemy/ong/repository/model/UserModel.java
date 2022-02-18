@@ -14,6 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Column;
 import javax.persistence.Table;
+import javax.persistence.PrePersist;
 import javax.persistence.ManyToOne;
 import javax.persistence.JoinColumn;
 import java.time.LocalDateTime;
@@ -42,6 +43,10 @@ public class UserModel {
     @ManyToOne
     @JoinColumn(name = "role_id",insertable = false, updatable = false)
     private Role role;
+    @Column(name = "creation_date")
     private LocalDateTime creationDate;
     private boolean deleted;
+
+    @PrePersist
+    private void beforePersisting(){ this.creationDate = LocalDateTime.now(); }
 }
