@@ -7,7 +7,7 @@ import lombok.Data;
 @Builder
 public class Member {
 
-    private Long idMember;
+    private Long id;
     private String name;
     private String facebookUrl;
     private String instagramUrl;
