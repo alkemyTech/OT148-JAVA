@@ -17,13 +17,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping(name = "/auth")
+@RequestMapping( "/auth")
 public class UserController {
 
     @Autowired
     private UserService userService;
 
-    private UserMapper mapper;
+    private UserMapper mapper = new UserMapper();
 
     @PostMapping("/register")
     public ResponseEntity<?> userRegister(@Valid @RequestBody UserDTO userDto, BindingResult result){
