@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Role {
+    private Long id;
     private String name;
     private String description;
     private LocalDateTime creationDate;
