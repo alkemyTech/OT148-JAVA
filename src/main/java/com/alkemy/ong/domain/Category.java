@@ -7,13 +7,10 @@ import java.time.LocalDateTime;
 
 @Data
 @Builder
-public class User {
+public class Category {
     private Long id;
-    private String firstName;
-    private String lastName;
-    private String email;
-    private String password;
-    private String photo;
-    private Role role;
+    private String name;
+    private String description;
+    private String image;
     private LocalDateTime creationDate;
 }

@@ -25,14 +25,7 @@ public class UserMapper {
         return userCreationDTO;
     }
 
-    public static UserModel mapDomainToModel(User user){
-        UserModel userModel = UserModel.builder().
-                email(user.getEmail()).
-                name(user.getName()).
-                lastname(user.getLastname()).
-                password(user.getPassword()).build();
-        return userModel;
-    }
+
 
     public static UserCreationDTO mapModelToDtoCreation(UserModel user){
         UserCreationDTO userCreationDTO = UserCreationDTO.builder().
@@ -55,4 +48,25 @@ public class UserMapper {
         return userDTO;
     }
 
+    public static User mapModelToDomain(UserModel userModel){
+        User userDomain = User.builder()
+                .firstName(userModel.getFirstName())
+                .lastName(userModel.getLastName())
+                .email(userModel.getEmail())
+                .password(userModel.getPassword())
+                .photo(userModel.getPhoto())
+                .role(userModel.getRole()).build();
+        return userDomain;
+    }
+
+    public static UserModel mapDomainToModel(User userDomain){
+        UserModel userModel = UserModel.builder()
+                .firstName(userDomain.getFirstName())
+                .lastName(userDomain.getLastName())
+                .email(userDomain.getEmail())
+                .password(userDomain.getPassword())
+                .photo(userDomain.getPhoto())
+                .role(userDomain.getRole()).build();
+        return userModel;
+    }
 }
