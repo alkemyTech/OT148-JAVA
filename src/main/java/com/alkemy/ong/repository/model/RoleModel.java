@@ -15,15 +15,11 @@ import java.time.LocalDateTime;
 @Entity
 @Table (name = "roles")
 public class RoleModel {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @Column(nullable = false)
     private String name;
-
     private String description;
-
     private LocalDateTime timestamps;
 }
