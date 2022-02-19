@@ -27,6 +27,6 @@ public class SlideModel {
     private String text;
     private Integer order;
     @ManyToOne
-    @JoinColumn(name = "organization_id", insertable = false, updatable = false)
-    private Organization organization;
+    @JoinColumn(name = "id", insertable = false, updatable = false)
+    private OrganizationModel organizationModel;
 }
