@@ -1,16 +1,13 @@
 package com.alkemy.ong.repository.model;
 
 import com.sun.istack.NotNull;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 
 @Data
@@ -27,7 +24,7 @@ import java.time.LocalDateTime;
         @NotNull
         private String name;
         @NotNull
-        private String text;
+        private String content;
         @NotNull
         private String image;
         @Column(name = "created_date", updatable = false, nullable = false)
@@ -47,9 +44,7 @@ import java.time.LocalDateTime;
         @Column(name = "is_active")
         private boolean isActive = Boolean.TRUE;
 
-        @PrePersist
-    private void beforePersisting(){
-        this.createdDate = LocalDate.now();
+    public ActivityModel(String name, String content, String image, LocalDate creationDate, LocalDate modifiedDate, LocalDate deletedDate, Boolean isActive) {
     }
 }
 
