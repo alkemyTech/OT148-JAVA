@@ -1,6 +1,5 @@
 package com.alkemy.ong.repository.model;
 
-import com.alkemy.ong.domain.Organization;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
