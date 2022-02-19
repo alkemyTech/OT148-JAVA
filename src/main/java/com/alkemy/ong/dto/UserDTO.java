@@ -1,5 +1,6 @@
 package com.alkemy.ong.dto;
 
+import com.alkemy.ong.repository.model.RoleModel;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Builder;
@@ -19,5 +20,6 @@ public class UserDTO implements Serializable {
     @JsonIgnore
     private String password;
     private String photo;
+    private RoleModel role;
     private LocalDateTime creationDate;
 }
