@@ -20,7 +20,7 @@ import javax.persistence.JoinColumn;
 @Builder
 @Entity
 @Table(name = "slides")
-public class SlidesModel {
+public class SlideModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

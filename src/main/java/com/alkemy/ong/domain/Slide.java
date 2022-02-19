@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class Slides {
+public class Slide {
     private Long id;
     private String image;
     private String text;
