@@ -1,27 +1,40 @@
 package com.alkemy.ong.repository.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import javax.persistence.*;
+import lombok.NoArgsConstructor;
 
-@Entity
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.GenerationType;
+import javax.persistence.Column;
+
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
 @Table(name="members")
 public class MemberModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id_member",nullable = false)
-    private Integer idMember;
+    @Column(nullable = false)
+    private Long id;
     @Column(nullable = false)
     private String name;
-    @Column(name="facebook_url", nullable = true)
+    @Column(name="facebook_url")
     private String facebookUrl;
-    @Column(name="instagram_url", nullable = true)
+    @Column(name="instagram_url")
     private String instagramUrl;
-    @Column(name="linkedin_url", nullable = true )
+    @Column(name="linkedin_url")
     private String linkedinUrl;
     @Column(nullable = false)
     private String image;
-    @Column(nullable = true)
+    @Column
     private String description;
+
 }
