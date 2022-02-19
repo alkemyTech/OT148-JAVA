@@ -2,6 +2,7 @@ package com.alkemy.ong.repository.model;
 
 import com.alkemy.ong.domain.Category;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -24,6 +25,7 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Table(name = "news")
 @SQLDelete(sql = "UPDATE news SET deleted = true WHERE id=?")
 @Where(clause = "deleted = false")
