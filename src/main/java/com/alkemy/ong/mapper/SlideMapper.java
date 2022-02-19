@@ -1,8 +1,6 @@
 package com.alkemy.ong.mapper;
 
-import com.alkemy.ong.domain.Organization;
 import com.alkemy.ong.domain.Slide;
-import com.alkemy.ong.repository.model.OrganizationModel;
 import com.alkemy.ong.repository.model.SlideModel;
 
 public class SlideMapper {
