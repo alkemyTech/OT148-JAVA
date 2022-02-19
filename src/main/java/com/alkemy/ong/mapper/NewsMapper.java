@@ -11,7 +11,7 @@ public class NewsMapper {
                 .name(newsModel.getName())
                 .content(newsModel.getContent())
                 .image(newsModel.getImage())
-                .category(newsModel.getCategory())
+                .category(CategoryMapper.mapModelToDomain(newsModel.getCategoryModel()))
                 .creationDate(newsModel.getCreationDate())
                 .build();
         return news;
@@ -23,7 +23,7 @@ public class NewsMapper {
                 .name(news.getName())
                 .content(news.getContent())
                 .image(news.getImage())
-                .category(news.getCategory())
+                .categoryModel(CategoryMapper.mapDomainToModel(news.getCategory()))
                 .creationDate(news.getCreationDate())
                 .build();
         return newsModel;

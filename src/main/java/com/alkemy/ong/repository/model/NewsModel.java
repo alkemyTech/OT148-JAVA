@@ -41,8 +41,8 @@ public class NewsModel {
     @Column(nullable = false)
     private String image;
     @ManyToOne
-    @JoinColumn(name = "category_id",insertable = false, updatable = false)
-    private Category category;
+    @JoinColumn(name = "id",insertable = false, updatable = false)
+    private CategoryModel categoryModel;
     private boolean deleted;
     @Column(name = "creation_date")
     private LocalDateTime creationDate;
