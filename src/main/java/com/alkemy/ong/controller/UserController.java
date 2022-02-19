@@ -21,13 +21,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping( "/auth")
 public class UserController {
 
     @Autowired
     private UserService userService;
 
-    @PostMapping("/register")
+    @PostMapping("/auth/register")
     public ResponseEntity<?> userRegister(@Valid @RequestBody UserCreationDTO userCreationDto){
         User userDomain = UserMapper.mapDtoCreationToDomain(userCreationDto);
         return ResponseEntity.ok(userService.registerUser(userDomain));
