@@ -1,50 +1,41 @@
 package com.alkemy.ong.repository.model;
 
-import com.sun.istack.NotNull;
-import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.format.annotation.DateTimeFormat;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
-import java.time.LocalDate;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.PrePersist;
+import java.time.LocalDateTime;
 
-
-@Data
+    @Data
     @Entity
     @NoArgsConstructor
     @AllArgsConstructor
-    @Table(name="Activities, Campos:")
+    @Builder
+    @Table(name="activities")
     public class ActivityModel {
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
-        @Column(name = "activities_id")
         private Long id;
-        @Column
-        @NotNull
+        @Column(nullable = false)
         private String name;
-        @NotNull
+        @Column(nullable = false)
         private String content;
-        @NotNull
+        @Column(nullable = false)
         private String image;
-        @Column(name = "created_date", updatable = false, nullable = false)
-        @CreatedDate
-        @DateTimeFormat(pattern = "yyyy/MM/dd")
-        private LocalDate createdDate;
+        @Column(name = "creation_date")
+        private LocalDateTime creationDate;
 
-        @Column(name = "modified_date")
-        @LastModifiedDate
-        @DateTimeFormat(pattern = "yyyy/MM/dd")
-        private LocalDate modifiedDate;
-
-        @Column(name = "deleted_date")
-        @DateTimeFormat(pattern = "yyyy/MM/dd")
-        private LocalDate deletedDate;
-
-        @Column(name = "is_active")
-        private boolean isActive = Boolean.TRUE;
-
-    public ActivityModel(String name, String content, String image, LocalDate creationDate, LocalDate modifiedDate, LocalDate deletedDate, Boolean isActive) {
+    @PrePersist
+    private void beforePersisting(){
+        this.creationDate = LocalDateTime.now();
     }
 }
 

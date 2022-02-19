@@ -1,23 +1,16 @@
 package com.alkemy.ong.domain;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import java.time.LocalDate;
+
+import java.time.LocalDateTime;
 
 @Data
 @Builder
-@AllArgsConstructor
 public class Activity {
-
+    private long id;
     private String name;
     private String content;
     private String image;
-    private LocalDate creationDate;
-    private LocalDate modifiedDate;
-    private LocalDate deletedDate;
-    private Boolean isActive;
-
-
+    private LocalDateTime creationDate;
 }
