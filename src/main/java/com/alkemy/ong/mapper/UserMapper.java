@@ -3,7 +3,6 @@ package com.alkemy.ong.mapper;
 import com.alkemy.ong.domain.User;
 import com.alkemy.ong.dto.UserCreationDTO;
 import com.alkemy.ong.dto.UserDTO;
-import com.alkemy.ong.repository.model.RoleModel;
 import com.alkemy.ong.repository.model.UserModel;
 
 public class UserMapper {
@@ -12,7 +11,7 @@ public class UserMapper {
         User userDomain = User.builder().
                 email(userCreationDTO.getEmail()).
                 firstName(userCreationDTO.getName()).
-                lastName(userCreationDTO.getLastname()).
+                lastName(userCreationDTO.getLastName()).
                 password(userCreationDTO.getPassword()).build();
         return userDomain;
     }
@@ -21,7 +20,7 @@ public class UserMapper {
         UserCreationDTO userCreationDTO = UserCreationDTO.builder().
                 email(user.getEmail()).
                 name(user.getFirstName()).
-                lastname(user.getLastName()).
+                lastName(user.getLastName()).
                 password(user.getPassword()).build();
         return userCreationDTO;
     }
@@ -34,7 +33,6 @@ public class UserMapper {
                 lastName(toDomain.getLastName()).
                 creationDate(toDomain.getCreationDate()).
                 id(toDomain.getId()).
-                role(RoleMapper.mapDomainToModel(toDomain.getRole())).
                 photo(toDomain.getPhoto()).build();
         return userDTO;
     }

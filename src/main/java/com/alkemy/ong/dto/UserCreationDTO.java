@@ -1,5 +1,6 @@
 package com.alkemy.ong.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
@@ -9,6 +10,7 @@ import java.io.Serializable;
 
 @Data
 @Builder
+@AllArgsConstructor
 public class UserCreationDTO implements Serializable {
 
     @NotNull
@@ -16,7 +18,7 @@ public class UserCreationDTO implements Serializable {
     private String name;
     @NotNull
     @NotBlank
-    private String lastname;
+    private String lastName;
     @NotNull
     @NotBlank
     private String email;
@@ -24,10 +26,4 @@ public class UserCreationDTO implements Serializable {
     @NotBlank
     private String password;
 
-    public UserCreationDTO(String name, String lastname, String email, String password) {
-        this.name = name;
-        this.lastname = lastname;
-        this.email = email;
-        this.password = password;
-    }
 }

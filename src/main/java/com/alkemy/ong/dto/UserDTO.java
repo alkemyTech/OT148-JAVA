@@ -21,6 +21,5 @@ public class UserDTO implements Serializable {
     @JsonIgnore
     private String password;
     private String photo;
-    private RoleModel role;
     private LocalDateTime creationDate;
 }
