@@ -23,8 +23,12 @@ import java.util.Map;
 @RestController
 public class UserController {
 
-    @Autowired
-    private UserService userService;
+
+    private final UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @PostMapping("/auth/register")
     public ResponseEntity<?> userRegister(@Valid @RequestBody UserCreationDTO userCreationDto){
