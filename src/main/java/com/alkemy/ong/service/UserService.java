@@ -27,7 +27,7 @@ public class UserService {
 
     @Transactional
     public UserDTO registerUser(User user) {
-        RoleModel roleModel = roleRepository.findByName("Normal");
+        RoleModel roleModel = roleRepository.findByName("USER");
         user.setRole(RoleMapper.mapModelToDomain(roleModel));
         UserModel userModel = UserMapper.mapDomainToModel(user);
         userModel.setPassword(encryptPassword(user));
