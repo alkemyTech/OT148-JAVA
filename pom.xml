@@ -54,6 +54,23 @@
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>com.sendgrid</groupId>
+			<artifactId>java-http-client</artifactId>
+			<version>4.4.0</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.sendgrid/sendgrid-java -->
+		<dependency>
+			<groupId>com.sendgrid</groupId>
+			<artifactId>sendgrid-java</artifactId>
+			<version>4.8.3</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.sendgrid/smtpapi-java -->
+		<dependency>
+			<groupId>com.sendgrid</groupId>
+			<artifactId>smtpapi-java</artifactId>
+			<version>1.2.10</version>
+		</dependency>
 	</dependencies>
 
 	<build>
