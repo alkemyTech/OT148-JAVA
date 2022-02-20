@@ -10,6 +10,9 @@ import com.alkemy.ong.repository.model.RoleModel;
 import com.alkemy.ong.repository.model.UserModel;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class UserService {
 
@@ -32,12 +35,21 @@ public class UserService {
         UserModel userModel = UserMapper.mapDomainToModel(user);
         userModel.setPassword(encryptPassword(user));
         UserModel save = userRepository.save(userModel);
-        return UserMapper.mapModelToDto(save);
+        User userDomain = UserMapper.mapModelToDomain(save);
+        return UserMapper.mapDomainToDTO(userDomain);
     }
 
     private String encryptPassword(User user){
         String password = user.getPassword();
         String encryptedPassword = passwordEncoder.encode(password);
         return encryptedPassword;
+    }
+
+    @Transactional(readOnly = true)
+    public List<UserDTO> getAll(){
+        List<UserModel> userModelList = userRepository.findAll();
+        return userModelList.stream().map(UserMapper::mapModelToDomain)
+                .map(UserMapper::mapDomainToDTO)
+                .collect(Collectors.toList());
     }
 }

@@ -1,6 +1,5 @@
 package com.alkemy.ong.repository.model;
 
-import com.alkemy.ong.domain.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -29,6 +28,7 @@ import java.time.LocalDateTime;
 @SQLDelete(sql = "UPDATE users SET deleted = true WHERE id=?")
 @Where(clause = "deleted = false")
 public class UserModel {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -42,7 +42,7 @@ public class UserModel {
     private String password;
     private String photo;
     @ManyToOne(cascade = {CascadeType.MERGE})
-    @JoinColumn(name = "role_id",insertable = false, updatable = false)
+    @JoinColumn(name = "role_id")
     private RoleModel role;
     @Column(name = "creation_date")
     private LocalDateTime creationDate;
