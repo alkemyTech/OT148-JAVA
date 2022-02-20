@@ -12,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class UserService {
 
@@ -47,12 +48,8 @@ public class UserService {
     @Transactional(readOnly = true)
     public List<UserDTO> getAll(){
         List<UserModel> userModelList = userRepository.findAll();
-        List<UserDTO> userDTOList = new ArrayList<>();
-        userModelList.forEach(userModel -> {
-            User userDomain = UserMapper.mapModelToDomain(userModel);
-            UserDTO userDTO = UserMapper.mapDomainToDTO(userDomain);
-            userDTOList.add(userDTO);
-        });
-        return userDTOList;
+        return userModelList.stream().map(UserMapper::mapModelToDomain)
+                .map(UserMapper::mapDomainToDTO)
+                .collect(Collectors.toList());
     }
 }
