@@ -9,14 +9,15 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.Id;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.Column;
-import javax.persistence.Table;
-import javax.persistence.PrePersist;
 import javax.persistence.ManyToOne;
+import javax.persistence.CascadeType;
 import javax.persistence.JoinColumn;
+import javax.persistence.PrePersist;
 import java.time.LocalDateTime;
 
 @Data
@@ -40,9 +41,9 @@ public class UserModel {
     @Column(nullable = false)
     private String password;
     private String photo;
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.MERGE})
     @JoinColumn(name = "role_id",insertable = false, updatable = false)
-    private Role role;
+    private RoleModel role;
     @Column(name = "creation_date")
     private LocalDateTime creationDate;
     private boolean deleted;

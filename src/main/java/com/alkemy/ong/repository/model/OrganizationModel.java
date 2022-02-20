@@ -1,8 +1,10 @@
 package com.alkemy.ong.repository.model;
 
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,13 +13,16 @@ import javax.persistence.Id;
 import javax.persistence.Column;
 import javax.persistence.Table;
 import javax.persistence.PrePersist;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "organizations")
-public class OrganizationModel {
+public class OrganizationModel implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,23 +44,6 @@ public class OrganizationModel {
     @Column(name = "creation_date")
     private LocalDateTime creationDate;
 
-    public OrganizationModel(String name,
-                             String image,
-                             String address,
-                             Integer phone,
-                             String email,
-                             String welcomeText,
-                             String aboutUsText) {
-        this.name = name;
-        this.image = image;
-        this.address = address;
-        this.phone = phone;
-        this.email = email;
-        this.welcomeText = welcomeText;
-        this.aboutUsText = aboutUsText;
-    }
-
-    public OrganizationModel(){}
 
     @PrePersist
     private void beforePersisting(){
