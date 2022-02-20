@@ -27,14 +27,15 @@ public class UserMapper {
     }
 
     public static UserDTO mapModelToDto(UserModel user){
+        User toDomain = mapModelToDomain(user);
         UserDTO userDTO = UserDTO.builder().
-                email(user.getEmail()).
-                firstName(user.getFirstName()).
-                lastName(user.getLastName()).
-                creationDate(user.getCreationDate()).
-                id(user.getId()).
-                role(user.getRole()).
-                photo(user.getPhoto()).build();
+                email(toDomain.getEmail()).
+                firstName(toDomain.getFirstName()).
+                lastName(toDomain.getLastName()).
+                creationDate(toDomain.getCreationDate()).
+                id(toDomain.getId()).
+                role(RoleMapper.mapDomainToModel(toDomain.getRole())).
+                photo(toDomain.getPhoto()).build();
         return userDTO;
     }
 
