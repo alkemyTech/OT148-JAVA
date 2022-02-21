@@ -1,6 +1,7 @@
 package com.alkemy.ong.security;
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -18,6 +19,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues())
                 .and()
                 .csrf().disable();
+
+        http.authorizeRequests().antMatchers(HttpMethod.POST).hasAnyRole("ADMIN")
+                .antMatchers(HttpMethod.GET).hasAnyRole("ADMIN")
+                .antMatchers(HttpMethod.GET, "/users/{Id}").access("@userSecurity.hasUserId(authentication, #Id)")
+                .antMatchers(HttpMethod.PUT).hasAnyRole("ADMIN")
+                .antMatchers(HttpMethod.DELETE).hasAnyRole("ADMIN");
 
         http.csrf().disable();
         http.headers().frameOptions().disable();
