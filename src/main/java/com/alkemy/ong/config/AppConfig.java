@@ -2,6 +2,7 @@ package com.alkemy.ong.config;
 
 import com.alkemy.ong.repository.RoleRepository;
 import com.alkemy.ong.repository.UserRepository;
+import com.alkemy.ong.service.EmailService;
 import com.alkemy.ong.service.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,6 +24,11 @@ public class AppConfig {
         return new UserService(userRepository,
                 roleRepository,
                 passwordEncoder);
+    }
+
+    @Bean
+    public EmailService emailService(String to){
+        return new EmailService(to);
     }
 
 }

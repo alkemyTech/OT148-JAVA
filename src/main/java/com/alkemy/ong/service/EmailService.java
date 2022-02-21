@@ -17,19 +17,17 @@ import java.io.IOException;
 
 public class EmailService {
 
-    @Autowired
-    private Environment env;
-
+    private final String to;
+    @Value("${sendgrid.api.key}")
+    private String apiKey;
+    @Value("${alkemy.ong.email.sender}")
     private String emailSender;
-
-    private boolean enable;
+    
+    public EmailService(String to){
+        this.to = to;
+    }
 
     public void sendEmailTo(String to){
-        if(!enable){
-            return;
-        }
-        String apiKey= env.getProperty("EMAIL_API_KEY");
-
         Email fromEmail= new Email(emailSender);
         Email toEmail= new Email(to);
         Content content= new Content("text/plain", "Proyecto ONG - Somos Más");
@@ -44,9 +42,6 @@ public class EmailService {
             request.setBody(mail.build());
             Response response=sendGrid.api(request);
 
-            System.out.println(response.getStatusCode());
-            System.out.println(response.getBody());
-            System.out.println(response.getHeaders());
         }catch (IOException ex){
             System.out.println("Error trying to send the email");
         }
