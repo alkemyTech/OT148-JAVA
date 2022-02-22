@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Data
 @Builder
 @Entity
-@Table (name = "testimonials")
+@Table(name = "testimonials")
 public class TestimonialModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,5 +24,10 @@ public class TestimonialModel {
     private String image;
     private String content;
     private LocalDateTime creationDate;
+
+    @PrePersist
+    private void beforePersisting() {
+        this.creationDate = LocalDateTime.now();
+    }
 
 }
