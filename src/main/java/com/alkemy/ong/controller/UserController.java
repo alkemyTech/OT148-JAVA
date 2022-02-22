@@ -1,10 +1,12 @@
 package com.alkemy.ong.controller;
 
 import com.alkemy.ong.domain.User;
+import com.alkemy.ong.dto.ErrorDTO;
 import com.alkemy.ong.dto.UserCreationDTO;
 import com.alkemy.ong.dto.UserDTO;
 import com.alkemy.ong.dto.UserUpdateDTO;
 import com.alkemy.ong.exception.BadRequestException;
+import com.alkemy.ong.exception.UserNotFoundException;
 import com.alkemy.ong.mapper.UserMapper;
 import com.alkemy.ong.service.UserService;
 import javassist.NotFoundException;
@@ -17,6 +19,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpClientErrorException.NotFound;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.el.MethodNotFoundException;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
@@ -50,6 +53,16 @@ public class UserController {
         return errors;
     }
 
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<ErrorDTO> handleUserNotFoundExceptions(UserNotFoundException ex) {
+        ErrorDTO userNotFound =
+                ErrorDTO.builder()
+                        .code(HttpStatus.NOT_FOUND)
+                        .message(ex.getMessage()).build();
+        return new ResponseEntity(userNotFound, HttpStatus.NOT_FOUND);
+
+    }
+
     @GetMapping("/users")
     public ResponseEntity<List<UserDTO>> getAll(){
         return ResponseEntity.ok(userService.getAll());
@@ -58,10 +71,7 @@ public class UserController {
     @PatchMapping("/users/{userId}")
     public ResponseEntity<UserDTO> updateUser(
             @PathVariable Integer userId,
-            @Valid @RequestBody UserUpdateDTO updateDTO) {
-        if(!userService.existById(userId)){
-            return ResponseEntity.notFound().build();
-        }
+            @Valid @RequestBody UserUpdateDTO updateDTO) throws UserNotFoundException {
         User toDomain = UserMapper.mapUpdateDTOToDomain(updateDTO);
         return ResponseEntity.ok(userService.updateUser(userId, toDomain));
     }

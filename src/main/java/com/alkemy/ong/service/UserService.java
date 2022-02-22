@@ -3,6 +3,7 @@ package com.alkemy.ong.service;
 import com.alkemy.ong.domain.User;
 import com.alkemy.ong.dto.UserDTO;
 import com.alkemy.ong.exception.BadRequestException;
+import com.alkemy.ong.exception.UserNotFoundException;
 import com.alkemy.ong.mapper.RoleMapper;
 import com.alkemy.ong.mapper.UserMapper;
 import com.alkemy.ong.repository.RoleRepository;
@@ -55,7 +56,8 @@ public class UserService {
     }
 
     @Transactional
-    public UserDTO updateUser(Integer id,User user) {
+    public UserDTO updateUser(Integer id,User user) throws UserNotFoundException {
+        if(userRepository.existsById(Long.valueOf(id))){
             UserModel userModel = userRepository.findById(Long.valueOf(id)).get();
             userModel.setEmail(user.getEmail());
             userModel.setFirstName(user.getFirstName());
@@ -64,10 +66,10 @@ public class UserService {
             userModel.setPassword(passwordEncoder.encode(user.getPassword()));
             UserModel save = userRepository.save(userModel);
             return UserMapper.mapDomainToDTO(UserMapper.mapModelToDomain(save));
-    }
+        }else{
+            throw new UserNotFoundException(String.format("User with ID: %s not found",id));
+        }
 
-    public Boolean existById(Integer id){
-        return userRepository.existsById(Long.valueOf(id));
     }
 
 }
