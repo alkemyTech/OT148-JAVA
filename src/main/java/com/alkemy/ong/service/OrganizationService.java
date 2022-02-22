@@ -10,7 +10,6 @@ import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Service
 public class OrganizationService {
 
     private OrganizationRepository organizationRepository;
