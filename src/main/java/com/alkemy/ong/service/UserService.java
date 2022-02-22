@@ -2,10 +2,8 @@ package com.alkemy.ong.service;
 
 import com.alkemy.ong.domain.User;
 import com.alkemy.ong.dto.UserDTO;
-import com.alkemy.ong.exception.BadRequestException;
 import com.alkemy.ong.exception.UserNotFoundException;
-import com.alkemy.ong.exception.UserLoginPasswordInvalid;
-import com.alkemy.ong.exception.UserNotFoundException;
+import com.alkemy.ong.exception.NotExistPasswordException;
 import com.alkemy.ong.mapper.RoleMapper;
 import com.alkemy.ong.mapper.UserMapper;
 import com.alkemy.ong.repository.RoleRepository;
@@ -74,31 +72,28 @@ public class UserService {
 
     }
 
-
-    public UserDTO loginUser(User user) throws UserNotFoundException, UserLoginPasswordInvalid {
+    public User loginUser(User user) throws UserNotFoundException, NotExistPasswordException {
         if (userRepository.existsByEmail(user.getEmail())) {
             String email = user.getEmail();
             String password = user.getPassword();
             UserModel userModel = userRepository.findByEmail(email);
-            return getUserDTO(password, userModel);
+            return getUserPasswordChecked(password, userModel);
         }else{
             throw new UserNotFoundException("User not found");
         }
     }
 
-    private UserDTO getUserDTO
-            (String password, UserModel userModel) throws UserLoginPasswordInvalid {
-        if (matchEncryptedPassword(password, userModel.getPassword())) {
+    private User getUserPasswordChecked
+            (String password, UserModel userModel) throws NotExistPasswordException {
+        if (passwordMatches(password, userModel.getPassword())) {
         User userDomain = UserMapper.mapModelToDomain(userModel);
-        UserDTO userDTO = UserMapper.mapDomainToDTO(userDomain);
-            return userDTO;
-
+            return userDomain;
         }else{
-            throw new UserLoginPasswordInvalid("The password is invalid");
+            throw new NotExistPasswordException("The password is invalid");
         }
     }
 
-    private Boolean matchEncryptedPassword(String password, String passwordEncrypted) {
+    private Boolean passwordMatches(String password, String passwordEncrypted) {
         return passwordEncoder.matches(password, passwordEncrypted);
     }
 

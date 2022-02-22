@@ -9,7 +9,7 @@ import com.alkemy.ong.repository.model.UserModel;
 
 public class UserMapper {
 
-    public static User mapDtoCreationToDomain(UserCreationDTO userCreationDTO){
+    public static User mapDtoCreationToDomain(UserCreationDTO userCreationDTO) {
         User userDomain = User.builder().
                 email(userCreationDTO.getEmail()).
                 firstName(userCreationDTO.getName()).
@@ -18,7 +18,7 @@ public class UserMapper {
         return userDomain;
     }
 
-    public static User mapModelToDomain(UserModel userModel){
+    public static User mapModelToDomain(UserModel userModel) {
         User userDomain = User.builder()
                 .firstName(userModel.getFirstName())
                 .lastName(userModel.getLastName())
@@ -29,7 +29,7 @@ public class UserMapper {
         return userDomain;
     }
 
-    public static UserModel mapDomainToModel(User userDomain){
+    public static UserModel mapDomainToModel(User userDomain) {
         UserModel userModel = UserModel.builder()
                 .firstName(userDomain.getFirstName())
                 .lastName(userDomain.getLastName())
@@ -40,7 +40,7 @@ public class UserMapper {
         return userModel;
     }
 
-    public static UserDTO mapDomainToDTO(User userDomain){
+    public static UserDTO mapDomainToDTO(User userDomain) {
         UserDTO userDTO = UserDTO.builder().
                 lastName(userDomain.getLastName()).
                 firstName(userDomain.getFirstName()).
@@ -51,7 +51,7 @@ public class UserMapper {
         return userDTO;
     }
 
-    public static User mapUpdateDTOToDomain(UserUpdateDTO updateDTO){
+    public static User mapUpdateDTOToDomain(UserUpdateDTO updateDTO) {
         User userDomain = User.builder()
                 .firstName(updateDTO.getFirstName())
                 .lastName(updateDTO.getLastName())
@@ -61,8 +61,9 @@ public class UserMapper {
         return userDomain;
     }
 
-    public static User mapLoginDTOToDomain(UserLoginDTO userLoginDTO){
-        User user = User.builder().password(userLoginDTO.getPassword()).email(userLoginDTO.getEmail()).build();
-    return user;
+    public static User mapLoginDTOToDomain(UserLoginDTO userLoginDTO) {
+        User user = User.builder().password
+                (userLoginDTO.getPassword()).email(userLoginDTO.getEmail()).build();
+        return user;
     }
 }

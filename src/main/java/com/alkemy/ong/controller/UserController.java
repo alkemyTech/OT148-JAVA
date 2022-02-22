@@ -5,25 +5,17 @@ import com.alkemy.ong.dto.ErrorDTO;
 import com.alkemy.ong.dto.UserCreationDTO;
 import com.alkemy.ong.dto.UserDTO;
 import com.alkemy.ong.dto.UserUpdateDTO;
-import com.alkemy.ong.exception.BadRequestException;
+import com.alkemy.ong.exception.NotExistPasswordException;
 import com.alkemy.ong.exception.UserNotFoundException;
 import com.alkemy.ong.dto.UserLoginDTO;
-import com.alkemy.ong.exception.UserLoginPasswordInvalid;
-import com.alkemy.ong.exception.UserNotFoundException;
 import com.alkemy.ong.mapper.UserMapper;
 import com.alkemy.ong.service.UserService;
-import javassist.NotFoundException;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.HttpClientErrorException.NotFound;
-import org.springframework.web.server.ResponseStatusException;
 
-import javax.el.MethodNotFoundException;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
@@ -57,7 +49,7 @@ public class UserController {
     }
 
     @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<ErrorDTO> handleUserNotFoundExceptions(UserNotFoundException ex) {
+    public ResponseEntity<ErrorDTO> handleUserNotFoundExceptions(UserNotFoundException ex){
         ErrorDTO userNotFound =
                 ErrorDTO.builder()
                         .code(HttpStatus.NOT_FOUND)
@@ -80,26 +72,18 @@ public class UserController {
     }
 
     @PostMapping("/auth/login")
-    public ResponseEntity<UserDTO> userRegister(@Valid @RequestBody UserLoginDTO userLoginDTO) throws UserNotFoundException, UserLoginPasswordInvalid {
+    public ResponseEntity<UserDTO> userRegister(@Valid @RequestBody UserLoginDTO userLoginDTO) throws UserNotFoundException, NotExistPasswordException {
         User userDomain = UserMapper.mapLoginDTOToDomain(userLoginDTO);
-        return ResponseEntity.ok(userService.loginUser(userDomain));
+        UserDTO userDTO = UserMapper.mapDomainToDTO(userService.loginUser(userDomain));
+        return ResponseEntity.ok(userDTO);
     }
 
-    @ExceptionHandler(UserLoginPasswordInvalid.class)
-    public ResponseEntity<ErrorDTO> handlerUserLoginPasswordInvalid (UserLoginPasswordInvalid ex) {
-        ErrorDTO loginUserNotFound =
+    @ExceptionHandler(NotExistPasswordException.class)
+    public ResponseEntity<ErrorDTO> handlerUserLoginPasswordInvalid (NotExistPasswordException ex) {
+        ErrorDTO notExistsPassword =
                 ErrorDTO.builder()
                         .code(HttpStatus.BAD_REQUEST)
                         .message(ex.getMessage()).build();
-        return new ResponseEntity(loginUserNotFound, HttpStatus.BAD_REQUEST);
-    }
-    @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<ErrorDTO> handleUserNotFoundExceptions(UserNotFoundException ex) {
-        ErrorDTO userNotFound =
-                ErrorDTO.builder()
-                        .code(HttpStatus.NOT_FOUND)
-                        .message(ex.getMessage()).build();
-        return new ResponseEntity(userNotFound, HttpStatus.NOT_FOUND);
-
+        return new ResponseEntity(notExistsPassword, HttpStatus.BAD_REQUEST);
     }
 }
