@@ -1,6 +1,7 @@
 package com.alkemy.ong.mapper;
 
 import com.alkemy.ong.domain.Organization;
+import com.alkemy.ong.dto.OrganizationDTO;
 import com.alkemy.ong.repository.model.OrganizationModel;
 
 public class OrganizationMapper {
@@ -29,5 +30,15 @@ public class OrganizationMapper {
         return organizationModel;
     }
 
-
+    public static OrganizationDTO mapDomainToDTO(Organization organizationDomain){
+        OrganizationDTO organizationDTO = OrganizationDTO.builder()
+                .name(organizationDomain.getName())
+                .image(organizationDomain.getImage())
+                .address(organizationDomain.getAddress())
+                .phone(organizationDomain.getPhone())
+                .email(organizationDomain.getEmail())
+                .welcomeText(organizationDomain.getWelcomeText())
+                .aboutUsText(organizationDomain.getAboutUsText()).build();
+        return organizationDTO;
+    }
 }
