@@ -2,7 +2,9 @@ package com.alkemy.ong.config;
 
 import com.alkemy.ong.repository.RoleRepository;
 import com.alkemy.ong.repository.UserRepository;
+import com.alkemy.ong.service.EmailService;
 import com.alkemy.ong.service.UserService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -25,4 +27,10 @@ public class AppConfig {
                 passwordEncoder);
     }
 
+    @Bean
+    public EmailService emailService(@Value("${sendgrid.api.key}") String apiKey,@Value("${alkemy.ong.email.sender}") String emailSender){
+        return new EmailService(apiKey,emailSender);
+    }
+
 }
+

@@ -4,6 +4,7 @@ import com.alkemy.ong.domain.User;
 import com.alkemy.ong.dto.UserCreationDTO;
 import com.alkemy.ong.dto.UserDTO;
 import com.alkemy.ong.dto.UserLoginDTO;
+import com.alkemy.ong.dto.UserUpdateDTO;
 import com.alkemy.ong.repository.model.UserModel;
 
 public class UserMapper {
@@ -48,6 +49,16 @@ public class UserMapper {
                 email(userDomain.getEmail()).
                 photo(userDomain.getPhoto()).build();
         return userDTO;
+    }
+
+    public static User mapUpdateDTOToDomain(UserUpdateDTO updateDTO){
+        User userDomain = User.builder()
+                .firstName(updateDTO.getFirstName())
+                .lastName(updateDTO.getLastName())
+                .email(updateDTO.getEmail())
+                .password(updateDTO.getPassword())
+                .photo(updateDTO.getPhoto()).build();
+        return userDomain;
     }
 
     public static User mapLoginDTOToDomain(UserLoginDTO userLoginDTO){
