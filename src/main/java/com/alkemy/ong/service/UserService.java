@@ -2,6 +2,8 @@ package com.alkemy.ong.service;
 
 import com.alkemy.ong.domain.User;
 import com.alkemy.ong.dto.UserDTO;
+import com.alkemy.ong.exception.BadRequestException;
+import com.alkemy.ong.exception.UserNotFoundException;
 import com.alkemy.ong.mapper.RoleMapper;
 import com.alkemy.ong.mapper.UserMapper;
 import com.alkemy.ong.repository.RoleRepository;
@@ -10,7 +12,7 @@ import com.alkemy.ong.repository.model.RoleModel;
 import com.alkemy.ong.repository.model.UserModel;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.ArrayList;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -52,4 +54,22 @@ public class UserService {
                 .map(UserMapper::mapDomainToDTO)
                 .collect(Collectors.toList());
     }
+
+    @Transactional
+    public UserDTO updateUser(Integer id,User user) throws UserNotFoundException {
+        if(userRepository.existsById(Long.valueOf(id))){
+            UserModel userModel = userRepository.findById(Long.valueOf(id)).get();
+            userModel.setEmail(user.getEmail());
+            userModel.setFirstName(user.getFirstName());
+            userModel.setLastName(user.getLastName());
+            userModel.setPhoto(user.getPhoto());
+            userModel.setPassword(passwordEncoder.encode(user.getPassword()));
+            UserModel save = userRepository.save(userModel);
+            return UserMapper.mapDomainToDTO(UserMapper.mapModelToDomain(save));
+        }else{
+            throw new UserNotFoundException(String.format("User with ID: %s not found",id));
+        }
+
+    }
+
 }
