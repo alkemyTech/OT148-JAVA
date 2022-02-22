@@ -62,8 +62,10 @@ public class UserMapper {
     }
 
     public static User mapLoginDTOToDomain(UserLoginDTO userLoginDTO) {
-        User user = User.builder().password
-                (userLoginDTO.getPassword()).email(userLoginDTO.getEmail()).build();
+        User user = User.builder()
+                .password(userLoginDTO.getPassword())
+                .email(userLoginDTO.getEmail())
+                .build();
         return user;
     }
 }

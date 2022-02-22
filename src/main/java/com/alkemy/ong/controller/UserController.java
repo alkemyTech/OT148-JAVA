@@ -5,7 +5,7 @@ import com.alkemy.ong.dto.ErrorDTO;
 import com.alkemy.ong.dto.UserCreationDTO;
 import com.alkemy.ong.dto.UserDTO;
 import com.alkemy.ong.dto.UserUpdateDTO;
-import com.alkemy.ong.exception.NotExistPasswordException;
+import com.alkemy.ong.exception.InvalidPasswordException;
 import com.alkemy.ong.exception.UserNotFoundException;
 import com.alkemy.ong.dto.UserLoginDTO;
 import com.alkemy.ong.mapper.UserMapper;
@@ -72,14 +72,14 @@ public class UserController {
     }
 
     @PostMapping("/auth/login")
-    public ResponseEntity<UserDTO> userRegister(@Valid @RequestBody UserLoginDTO userLoginDTO) throws UserNotFoundException, NotExistPasswordException {
+    public ResponseEntity<UserDTO> userRegister(@Valid @RequestBody UserLoginDTO userLoginDTO) throws UserNotFoundException, InvalidPasswordException {
         User userDomain = UserMapper.mapLoginDTOToDomain(userLoginDTO);
         UserDTO userDTO = UserMapper.mapDomainToDTO(userService.loginUser(userDomain));
         return ResponseEntity.ok(userDTO);
     }
 
-    @ExceptionHandler(NotExistPasswordException.class)
-    public ResponseEntity<ErrorDTO> handlerUserLoginPasswordInvalid (NotExistPasswordException ex) {
+    @ExceptionHandler(InvalidPasswordException.class)
+    public ResponseEntity<ErrorDTO> handleInvalidPasswordException (InvalidPasswordException ex) {
         ErrorDTO notExistsPassword =
                 ErrorDTO.builder()
                         .code(HttpStatus.BAD_REQUEST)
