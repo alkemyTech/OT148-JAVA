@@ -4,6 +4,7 @@ import com.alkemy.ong.repository.RoleRepository;
 import com.alkemy.ong.repository.UserRepository;
 import com.alkemy.ong.service.EmailService;
 import com.alkemy.ong.service.UserService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -27,8 +28,8 @@ public class AppConfig {
     }
 
     @Bean
-    public EmailService emailService(String to){
-        return new EmailService(to);
+    public EmailService emailService(String apiKey, String emailSender){
+        return new EmailService(apiKey,emailSender);
     }
 
 }

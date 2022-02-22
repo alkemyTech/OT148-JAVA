@@ -7,26 +7,25 @@ import com.sendgrid.SendGrid;
 import com.sendgrid.helpers.mail.Mail;
 import com.sendgrid.helpers.mail.objects.Content;
 import com.sendgrid.helpers.mail.objects.Email;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.env.Environment;
-import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 
 
 public class EmailService {
 
-    private final String to;
     @Value("${sendgrid.api.key}")
-    private String apiKey;
+    private final String apiKey;
     @Value("${alkemy.ong.email.sender}")
-    private String emailSender;
-    
-    public EmailService(String to){
-        this.to = to;
+    private final String emailSender;
+
+    public EmailService(String apiKey, String emailSender) {
+        this.apiKey = apiKey;
+        this.emailSender = emailSender;
     }
 
+    @Transactional
     public void sendEmailTo(String to){
         Email fromEmail= new Email(emailSender);
         Email toEmail= new Email(to);
