@@ -41,10 +41,10 @@ public class EmailService {
     }
 
     public void welcomeEmail(String email,String username){
-        String msg= "Bienvenid@ " + username +" !!";
+        String message= "Bienvenid@ " + username +" !!";
         String subject = "Welcome ONG-Somos Más";
 
-        sendEmailTo(email,msg,subject);
+        sendEmailTo(email,message,subject);
     }
 
 }
