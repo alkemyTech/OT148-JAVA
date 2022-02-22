@@ -28,7 +28,7 @@ public class AppConfig {
     }
 
     @Bean
-    public EmailService emailService(String apiKey, String emailSender){
+    public EmailService emailService(@Value("${sendgrid.api.key}") String apiKey,@Value("${alkemy.ong.email.sender}") String emailSender){
         return new EmailService(apiKey,emailSender);
     }
 

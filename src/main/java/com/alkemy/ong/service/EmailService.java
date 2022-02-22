@@ -15,9 +15,8 @@ import java.io.IOException;
 
 public class EmailService {
 
-    @Value("${sendgrid.api.key}")
+
     private final String apiKey;
-    @Value("${alkemy.ong.email.sender}")
     private final String emailSender;
 
     public EmailService(String apiKey, String emailSender) {
@@ -25,7 +24,6 @@ public class EmailService {
         this.emailSender = emailSender;
     }
 
-    @Transactional
     public void sendEmailTo(String to){
         Email fromEmail= new Email(emailSender);
         Email toEmail= new Email(to);
