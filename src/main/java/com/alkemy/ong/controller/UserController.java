@@ -5,26 +5,21 @@ import com.alkemy.ong.dto.ErrorDTO;
 import com.alkemy.ong.dto.UserCreationDTO;
 import com.alkemy.ong.dto.UserDTO;
 import com.alkemy.ong.dto.UserUpdateDTO;
-import com.alkemy.ong.exception.BadRequestException;
+import com.alkemy.ong.exception.InvalidPasswordException;
 import com.alkemy.ong.exception.UserNotFoundException;
+import com.alkemy.ong.dto.UserLoginDTO;
 import com.alkemy.ong.mapper.UserMapper;
 import com.alkemy.ong.service.UserService;
-import javassist.NotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.HttpClientErrorException.NotFound;
-import org.springframework.web.server.ResponseStatusException;
 
-import javax.el.MethodNotFoundException;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @RestController
 public class UserController {
@@ -54,7 +49,7 @@ public class UserController {
     }
 
     @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<ErrorDTO> handleUserNotFoundExceptions(UserNotFoundException ex) {
+    public ResponseEntity<ErrorDTO> handleUserNotFoundExceptions(UserNotFoundException ex){
         ErrorDTO userNotFound =
                 ErrorDTO.builder()
                         .code(HttpStatus.NOT_FOUND)
@@ -74,5 +69,21 @@ public class UserController {
             @Valid @RequestBody UserUpdateDTO updateDTO) throws UserNotFoundException {
         User toDomain = UserMapper.mapUpdateDTOToDomain(updateDTO);
         return ResponseEntity.ok(userService.updateUser(userId, toDomain));
+    }
+
+    @PostMapping("/auth/login")
+    public ResponseEntity<UserDTO> userRegister(@Valid @RequestBody UserLoginDTO userLoginDTO) throws UserNotFoundException, InvalidPasswordException {
+        User userDomain = UserMapper.mapLoginDTOToDomain(userLoginDTO);
+        UserDTO userDTO = UserMapper.mapDomainToDTO(userService.loginUser(userDomain));
+        return ResponseEntity.ok(userDTO);
+    }
+
+    @ExceptionHandler(InvalidPasswordException.class)
+    public ResponseEntity<ErrorDTO> handleInvalidPasswordException (InvalidPasswordException ex) {
+        ErrorDTO notExistsPassword =
+                ErrorDTO.builder()
+                        .code(HttpStatus.BAD_REQUEST)
+                        .message(ex.getMessage()).build();
+        return new ResponseEntity(notExistsPassword, HttpStatus.BAD_REQUEST);
     }
 }

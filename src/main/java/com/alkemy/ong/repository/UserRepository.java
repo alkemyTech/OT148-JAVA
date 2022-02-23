@@ -10,4 +10,9 @@ import java.util.List;
 public interface UserRepository extends CrudRepository<UserModel,Long> {
 
     List<UserModel> findAll();
+
+    UserModel findByEmail (String email);
+
+    boolean existsByEmail (String email);
+
 }

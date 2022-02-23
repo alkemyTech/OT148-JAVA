@@ -2,8 +2,8 @@ package com.alkemy.ong.service;
 
 import com.alkemy.ong.domain.User;
 import com.alkemy.ong.dto.UserDTO;
-import com.alkemy.ong.exception.BadRequestException;
 import com.alkemy.ong.exception.UserNotFoundException;
+import com.alkemy.ong.exception.InvalidPasswordException;
 import com.alkemy.ong.mapper.RoleMapper;
 import com.alkemy.ong.mapper.UserMapper;
 import com.alkemy.ong.repository.RoleRepository;
@@ -41,14 +41,14 @@ public class UserService {
         return UserMapper.mapDomainToDTO(userDomain);
     }
 
-    private String encryptPassword(User user){
+    private String encryptPassword(User user) {
         String password = user.getPassword();
         String encryptedPassword = passwordEncoder.encode(password);
         return encryptedPassword;
     }
 
     @Transactional(readOnly = true)
-    public List<UserDTO> getAll(){
+    public List<UserDTO> getAll() {
         List<UserModel> userModelList = userRepository.findAll();
         return userModelList.stream().map(UserMapper::mapModelToDomain)
                 .map(UserMapper::mapDomainToDTO)
@@ -56,8 +56,8 @@ public class UserService {
     }
 
     @Transactional
-    public UserDTO updateUser(Integer id,User user) throws UserNotFoundException {
-        if(userRepository.existsById(Long.valueOf(id))){
+    public UserDTO updateUser(Integer id, User user) throws UserNotFoundException {
+        if (userRepository.existsById(Long.valueOf(id))) {
             UserModel userModel = userRepository.findById(Long.valueOf(id)).get();
             userModel.setEmail(user.getEmail());
             userModel.setFirstName(user.getFirstName());
@@ -66,10 +66,35 @@ public class UserService {
             userModel.setPassword(passwordEncoder.encode(user.getPassword()));
             UserModel save = userRepository.save(userModel);
             return UserMapper.mapDomainToDTO(UserMapper.mapModelToDomain(save));
-        }else{
-            throw new UserNotFoundException(String.format("User with ID: %s not found",id));
+        } else {
+            throw new UserNotFoundException(String.format("User with ID: %s not found", id));
         }
 
+    }
+
+    public User loginUser(User user) throws UserNotFoundException, InvalidPasswordException {
+        if (userRepository.existsByEmail(user.getEmail())) {
+            String email = user.getEmail();
+            String password = user.getPassword();
+            UserModel userModel = userRepository.findByEmail(email);
+            return getUserPasswordChecked(password, userModel);
+        } else {
+            throw new UserNotFoundException("User not found");
+        }
+    }
+
+    private User getUserPasswordChecked
+            (String password, UserModel userModel) throws InvalidPasswordException {
+        if (passwordMatches(password, userModel.getPassword())) {
+            User userDomain = UserMapper.mapModelToDomain(userModel);
+            return userDomain;
+        } else {
+            throw new InvalidPasswordException("The password is invalid");
+        }
+    }
+
+    private Boolean passwordMatches(String password, String passwordEncrypted) {
+        return passwordEncoder.matches(password, passwordEncrypted);
     }
 
 }
