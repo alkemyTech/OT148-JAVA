@@ -1,5 +1,6 @@
 package com.alkemy.ong.repository.model;
 
+import javax.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -25,6 +26,7 @@ public class SlideModel {
     private Long id;
     private String image;
     private String text;
+    @Column(name = "`order`")
     private Integer order;
     @ManyToOne
     @JoinColumn(name = "id", insertable = false, updatable = false)
