@@ -12,26 +12,21 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 
-
 public class EmailService {
 
-
-    private final String apiKey;
     private final String emailSender;
+    private final SendGrid sendGrid;
 
     public EmailService(String apiKey, String emailSender) {
-        this.apiKey = apiKey;
         this.emailSender = emailSender;
+        this.sendGrid = new SendGrid(apiKey);
     }
 
-    public void sendEmailTo(String to){
+    public void sendEmailTo(String to,String message, String subject){
         Email fromEmail= new Email(emailSender);
         Email toEmail= new Email(to);
-        Content content= new Content("text/plain", "Proyecto ONG - Somos Más");
-        String subject= "Proyecto ONG - Somos Más";
-
+        Content content = new Content("text/html",message);
         Mail mail=new Mail(fromEmail,subject,toEmail,content);
-        SendGrid sendGrid=new SendGrid(apiKey);
         Request request= new Request();
         try{
             request.setMethod(Method.POST);
@@ -44,4 +39,12 @@ public class EmailService {
         }
 
     }
+
+    public void welcomeEmail(String email,String username){
+        String message= "Bienvenid@ " + username +" !!";
+        String subject = "Welcome ONG-Somos Más";
+
+        sendEmailTo(email,message,subject);
+    }
+
 }
