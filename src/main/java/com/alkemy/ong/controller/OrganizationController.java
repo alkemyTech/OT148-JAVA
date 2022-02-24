@@ -8,6 +8,7 @@ import com.alkemy.ong.exception.OrganizationNotFoundException;
 import com.alkemy.ong.mapper.OrganizationMapper;
 import com.alkemy.ong.service.OrganizationService;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +30,10 @@ public class OrganizationController {
 
     @GetMapping("/organization/public")
     public ResponseEntity<List<OrganizationDTO>> getAll() {
-        return ResponseEntity.ok(organizationService.findAll());
+        List<OrganizationDTO> organizationDTOS = organizationService.findAll()
+                .stream().map(OrganizationMapper::mapDomainToDTO)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(organizationDTOS);
     }
 
     @PatchMapping("/organization/{id}")
