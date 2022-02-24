@@ -41,11 +41,11 @@ public class AppConfig {
     }
 
     @Bean
-    public AmazonService amazonClientService(
-            @Value("${amazonProperties.bucketName}") String bucketName,
-            @Value("${amazonProperties.accessKey}") String accessKey,
-            @Value("${amazonProperties.secretKey}") String secretKey,
-            @Value("${amazonProperties.endpointUrl}") String endpointUrl
+    public AmazonService amazonService(
+            @Value("${aws.s3.bucketName}") String bucketName,
+            @Value("${aws.s3.accessKey}") String accessKey,
+            @Value("${aws.s3.secretKey}") String secretKey,
+            @Value("${aws.s3.endpointUrl}") String endpointUrl
     ) {
         return new AmazonService(bucketName, accessKey, secretKey, endpointUrl);
     }
