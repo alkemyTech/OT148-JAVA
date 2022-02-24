@@ -7,7 +7,7 @@ public class RoleMapper {
     public static Role mapModelToDomain(RoleModel roleModel){
         Role roleDomain = Role.builder().
                 id(roleModel.getId()).
-                name(roleModel.getName()).
+                roleName(roleModel.getRoleName()).
                 description(roleModel.getDescription()).
                 creationDate(roleModel.getCreationDate()).build();
         return roleDomain;
@@ -15,7 +15,7 @@ public class RoleMapper {
     public static RoleModel mapDomainToModel (Role roleDomain){
         RoleModel roleModel = RoleModel.builder().
                 id(roleDomain.getId()).
-                name(roleDomain.getName()).
+                name(roleDomain.getRoleName().toString()).
                 description(roleDomain.getDescription()).
                 creationDate(roleDomain.getCreationDate()).build();
         return roleModel;
