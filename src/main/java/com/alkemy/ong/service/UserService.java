@@ -10,6 +10,7 @@ import com.alkemy.ong.repository.RoleRepository;
 import com.alkemy.ong.repository.UserRepository;
 import com.alkemy.ong.repository.model.RoleModel;
 import com.alkemy.ong.repository.model.UserModel;
+import com.alkemy.ong.util.RoleName;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,7 +33,7 @@ public class UserService {
 
     @Transactional
     public UserDTO registerUser(User user) {
-        RoleModel roleModel = roleRepository.findByName("USER");
+        RoleModel roleModel = roleRepository.findByRolName(RoleName.ROLE_USER);
         user.setRole(RoleMapper.mapModelToDomain(roleModel));
         UserModel userModel = UserMapper.mapDomainToModel(user);
         userModel.setPassword(encryptPassword(user));
@@ -96,5 +97,6 @@ public class UserService {
     private Boolean passwordMatches(String password, String passwordEncrypted) {
         return passwordEncoder.matches(password, passwordEncrypted);
     }
+
 
 }
