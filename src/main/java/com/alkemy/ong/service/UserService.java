@@ -2,19 +2,18 @@ package com.alkemy.ong.service;
 
 import com.alkemy.ong.domain.User;
 import com.alkemy.ong.dto.UserDTO;
-import com.alkemy.ong.exception.UserNotFoundException;
 import com.alkemy.ong.exception.InvalidPasswordException;
+import com.alkemy.ong.exception.UserNotFoundException;
 import com.alkemy.ong.mapper.RoleMapper;
 import com.alkemy.ong.mapper.UserMapper;
 import com.alkemy.ong.repository.RoleRepository;
 import com.alkemy.ong.repository.UserRepository;
 import com.alkemy.ong.repository.model.RoleModel;
 import com.alkemy.ong.repository.model.UserModel;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 
 public class UserService {
 
@@ -31,27 +30,25 @@ public class UserService {
     }
 
     @Transactional
-    public UserDTO registerUser(User user) {
+    public User registerUser(User user) {
         RoleModel roleModel = roleRepository.findByName("USER");
         user.setRole(RoleMapper.mapModelToDomain(roleModel));
         UserModel userModel = UserMapper.mapDomainToModel(user);
         userModel.setPassword(encryptPassword(user));
         UserModel save = userRepository.save(userModel);
-        User userDomain = UserMapper.mapModelToDomain(save);
-        return UserMapper.mapDomainToDTO(userDomain);
+        return UserMapper.mapModelToDomain(save);
     }
 
     private String encryptPassword(User user) {
         String password = user.getPassword();
-        String encryptedPassword = passwordEncoder.encode(password);
-        return encryptedPassword;
+        return passwordEncoder.encode(password);
     }
 
     @Transactional(readOnly = true)
-    public List<UserDTO> getAll() {
+    public List<User> getAll() {
         List<UserModel> userModelList = userRepository.findAll();
-        return userModelList.stream().map(UserMapper::mapModelToDomain)
-                .map(UserMapper::mapDomainToDTO)
+        return userModelList.stream()
+                .map(UserMapper::mapModelToDomain)
                 .collect(Collectors.toList());
     }
 
