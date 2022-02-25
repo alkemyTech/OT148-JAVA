@@ -6,12 +6,15 @@ import com.alkemy.ong.repository.UserRepository;
 import com.alkemy.ong.service.EmailService;
 import com.alkemy.ong.service.OrganizationService;
 import com.alkemy.ong.service.UserService;
-import com.sendgrid.SendGrid;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.util.ResourceUtils;
 
 @Configuration
 public class AppConfig {
@@ -29,18 +32,21 @@ public class AppConfig {
                 roleRepository,
                 passwordEncoder);
     }
-
+    
     @Bean
-    public EmailService emailService(@Value("${sendgrid.api.key}") String apiKey, @Value("${alkemy.ong.email.sender}") String emailSender,
-                                     @Value("/template/plantilla_email.html") String welcomeMail) {
-        SendGrid sendGrid = new SendGrid(apiKey);
-        return new EmailService(sendGrid, emailSender, welcomeMail);
+    public String emailTemplate() throws IOException {
+        File template = ResourceUtils.getFile("classpath:template/plantilla_email.html");
+        return new String(Files.readAllBytes(template.toPath()));
     }
 
-    //@Bean
-    //public TemplateEngine templateEngine (){
-    //  return new TemplateEngine();
-    //}
+    @Bean
+    public EmailService emailService(
+            @Value("${sendgrid.api.key}") String apiKey,
+            @Value("${alkemy.ong.email.sender}") String emailSender,
+            String emailTemplate) {
+        return new EmailService(apiKey, emailSender, emailTemplate);
+    }
+
     @Bean
     public OrganizationService organizationService(OrganizationRepository organizationRepository) {
         return new OrganizationService(organizationRepository);
