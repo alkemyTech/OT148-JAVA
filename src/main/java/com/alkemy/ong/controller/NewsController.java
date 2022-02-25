@@ -1,6 +1,7 @@
 package com.alkemy.ong.controller;
 
 import com.alkemy.ong.dto.NewsDTO;
+import com.alkemy.ong.mapper.NewsMapper;
 import com.alkemy.ong.service.NewsService;
 import com.alkemy.ong.service.UserService;
 import javassist.NotFoundException;
@@ -22,6 +23,6 @@ public class NewsController {
 
     @GetMapping("/{id}")
     public ResponseEntity<NewsDTO> getById(@PathVariable Long id) throws NotFoundException {
-        return ResponseEntity.ok(newsService.getById(id));
+        return ResponseEntity.ok(NewsMapper.mapDomainToDTO(newsService.getById(id)));
     }
 }

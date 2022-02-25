@@ -42,6 +42,7 @@ public class AppConfig {
         return new OrganizationService(organizationRepository);
     }
 
+    @Bean
     public AmazonService amazonService(
             @Value("${aws.s3.bucketName}") String bucketName,
             @Value("${aws.s3.accessKey}") String accessKey,
