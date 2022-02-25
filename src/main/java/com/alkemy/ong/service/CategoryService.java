@@ -1,7 +1,6 @@
 package com.alkemy.ong.service;
 
 import com.alkemy.ong.domain.Category;
-import com.alkemy.ong.dto.CategoryDTO;
 import com.alkemy.ong.mapper.CategoryMapper;
 import com.alkemy.ong.repository.CategoryRepository;
 import com.alkemy.ong.repository.model.CategoryModel;
@@ -16,10 +15,9 @@ public class CategoryService {
     }
 
     @Transactional
-    public CategoryDTO createCategory(Category category) {
+    public Category createCategory(Category category) {
         CategoryModel categoryModel = CategoryMapper.mapDomainToModel(category);
         CategoryModel save = categoryRepository.save(categoryModel);
-        Category categoryDomain = CategoryMapper.mapModelToDomain(save);
-        return CategoryMapper.mapDomainToDTO(categoryDomain);
+        return CategoryMapper.mapModelToDomain(save);
     }
 }
