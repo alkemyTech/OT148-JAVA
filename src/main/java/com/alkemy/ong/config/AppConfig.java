@@ -1,10 +1,12 @@
 package com.alkemy.ong.config;
 
 import com.alkemy.ong.repository.NewsRepository;
+import com.alkemy.ong.repository.CategoryRepository;
 import com.alkemy.ong.repository.OrganizationRepository;
 import com.alkemy.ong.repository.RoleRepository;
 import com.alkemy.ong.repository.UserRepository;
 import com.alkemy.ong.service.AmazonService;
+import com.alkemy.ong.service.CategoryService;
 import com.alkemy.ong.service.EmailService;
 import com.alkemy.ong.service.NewsService;
 import com.alkemy.ong.service.OrganizationService;
@@ -40,6 +42,11 @@ public class AppConfig {
     @Bean
     public OrganizationService organizationService(OrganizationRepository organizationRepository) {
         return new OrganizationService(organizationRepository);
+    }
+
+    @Bean
+    public CategoryService categoryService(CategoryRepository categoryRepository) {
+        return new CategoryService(categoryRepository);
     }
 
     @Bean

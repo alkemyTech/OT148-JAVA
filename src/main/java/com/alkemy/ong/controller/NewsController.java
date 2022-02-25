@@ -1,11 +1,13 @@
 package com.alkemy.ong.controller;
 
+import com.alkemy.ong.dto.ErrorDTO;
 import com.alkemy.ong.dto.NewsDTO;
+import com.alkemy.ong.exception.NewsNotFoundException;
 import com.alkemy.ong.mapper.NewsMapper;
 import com.alkemy.ong.service.NewsService;
-import com.alkemy.ong.service.UserService;
-import javassist.NotFoundException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,7 +24,17 @@ public class NewsController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<NewsDTO> getById(@PathVariable Long id) throws NotFoundException {
+    public ResponseEntity<NewsDTO> getById(@PathVariable Long id) throws NewsNotFoundException {
         return ResponseEntity.ok(NewsMapper.mapDomainToDTO(newsService.getById(id)));
+    }
+
+    @ExceptionHandler(NewsNotFoundException.class)
+    public ResponseEntity<ErrorDTO> handleNewsNotFoundExceptions(NewsNotFoundException ex){
+        ErrorDTO newsNotFound =
+                ErrorDTO.builder()
+                        .code(HttpStatus.NOT_FOUND)
+                        .message(ex.getMessage()).build();
+        return new ResponseEntity(newsNotFound, HttpStatus.NOT_FOUND);
+
     }
 }
