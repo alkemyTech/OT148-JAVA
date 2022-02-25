@@ -16,9 +16,9 @@ public class EmailService {
     private final SendGrid sendGrid;
     private final String welcome;
 
-    public EmailService(SendGrid sengrid, String emailSender, String welcome) {
+    public EmailService(String apikey, String emailSender, String welcome) {
         this.emailSender = emailSender;
-        this.sendGrid = sengrid;
+        this.sendGrid = new SendGrid(apikey);
         this.welcome = welcome;
     }
 
