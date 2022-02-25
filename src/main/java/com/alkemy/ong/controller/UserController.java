@@ -9,7 +9,9 @@ import com.alkemy.ong.exception.InvalidPasswordException;
 import com.alkemy.ong.exception.UserNotFoundException;
 import com.alkemy.ong.dto.UserLoginDTO;
 import com.alkemy.ong.mapper.UserMapper;
+import com.alkemy.ong.service.EmailService;
 import com.alkemy.ong.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -26,6 +28,9 @@ public class UserController {
 
     private final UserService userService;
 
+    @Autowired
+    EmailService emailService;
+
     public UserController(UserService userService) {
         this.userService = userService;
     }
@@ -33,6 +38,7 @@ public class UserController {
     @PostMapping("/auth/register")
     public ResponseEntity<UserDTO> userRegister(@Valid @RequestBody UserCreationDTO userCreationDto){
         User userDomain = UserMapper.mapDtoCreationToDomain(userCreationDto);
+        emailService.welcomeEmail(userDomain.getEmail());
         return ResponseEntity.ok(userService.registerUser(userDomain));
     }
 
