@@ -1,13 +1,16 @@
 package com.alkemy.ong.dto;
 
-import lombok.Builder;
-import lombok.Data;
-
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserUpdateDTO {
 
     @NotBlank
@@ -22,7 +25,4 @@ public class UserUpdateDTO {
     @NotBlank
     @NotNull
     private String password;
-    @NotBlank
-    @NotNull
-    private String photo;
 }

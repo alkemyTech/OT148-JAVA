@@ -44,14 +44,13 @@ public class OrganizationMapper {
     }
 
     public static Organization mapUpdateDTOToDomain(OrganizationUpdateDTO updateDTO) {
-        Organization organizationDomain = Organization.builder()
+        Organization organization = Organization.builder()
                 .name(updateDTO.getName())
-                .image(updateDTO.getImage())
                 .email(updateDTO.getEmail())
                 .phone(updateDTO.getPhone())
                 .welcomeText(updateDTO.getWelcomeText())
                 .aboutUsText(updateDTO.getAboutUsText())
                 .address(updateDTO.getAddress()).build();
-        return organizationDomain;
+        return organization;
     }
 }
