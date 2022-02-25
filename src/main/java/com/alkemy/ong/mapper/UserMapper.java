@@ -1,10 +1,7 @@
 package com.alkemy.ong.mapper;
 
 import com.alkemy.ong.domain.User;
-import com.alkemy.ong.dto.UserCreationDTO;
-import com.alkemy.ong.dto.UserDTO;
-import com.alkemy.ong.dto.UserLoginDTO;
-import com.alkemy.ong.dto.UserUpdateDTO;
+import com.alkemy.ong.dto.*;
 import com.alkemy.ong.repository.model.UserModel;
 
 public class UserMapper {

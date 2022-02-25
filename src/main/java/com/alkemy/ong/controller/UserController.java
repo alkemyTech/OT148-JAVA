@@ -1,16 +1,19 @@
 package com.alkemy.ong.controller;
 
 import com.alkemy.ong.domain.User;
-import com.alkemy.ong.dto.ErrorDTO;
-import com.alkemy.ong.dto.UserCreationDTO;
-import com.alkemy.ong.dto.UserDTO;
-import com.alkemy.ong.dto.UserUpdateDTO;
+import com.alkemy.ong.dto.*;
 import com.alkemy.ong.exception.InvalidPasswordException;
 import com.alkemy.ong.exception.UserNotFoundException;
-import com.alkemy.ong.dto.UserLoginDTO;
 import com.alkemy.ong.mapper.UserMapper;
+import com.alkemy.ong.security.JwtProvider;
 import com.alkemy.ong.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +26,12 @@ import java.util.Map;
 
 @RestController
 public class UserController {
+
+    @Autowired
+    AuthenticationManager authenticationManager;
+
+    @Autowired
+    JwtProvider jwtProvider;
 
     private final UserService userService;
 
@@ -72,10 +81,16 @@ public class UserController {
     }
 
     @PostMapping("/auth/login")
-    public ResponseEntity<UserDTO> userRegister(@Valid @RequestBody UserLoginDTO userLoginDTO) throws UserNotFoundException, InvalidPasswordException {
+    public ResponseEntity<JwtDTO> userRegister(@Valid @RequestBody UserLoginDTO userLoginDTO) throws UserNotFoundException, InvalidPasswordException {
         User userDomain = UserMapper.mapLoginDTOToDomain(userLoginDTO);
         UserDTO userDTO = UserMapper.mapDomainToDTO(userService.loginUser(userDomain));
-        return ResponseEntity.ok(userDTO);
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(userLoginDTO.getEmail(), userLoginDTO.getPassword()));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String jwt = jwtProvider.generateToken(authentication);
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        JwtDTO jwtDto = new JwtDTO(jwt, userDetails.getUsername(), userDetails.getAuthorities());
+        return new ResponseEntity(jwtDto, HttpStatus.OK);
     }
 
     @ExceptionHandler(InvalidPasswordException.class)

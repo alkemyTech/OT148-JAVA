@@ -5,8 +5,11 @@ import com.alkemy.ong.util.RoleName;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface RoleRepository extends CrudRepository<RoleModel,Long> {
 
-    RoleModel findByRolName(RoleName rolName);
+    RoleModel findByName(String name);
+
 }
