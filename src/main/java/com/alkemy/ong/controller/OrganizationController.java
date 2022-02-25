@@ -38,16 +38,16 @@ public class OrganizationController {
 
     @PatchMapping("/organization/{id}")
     public ResponseEntity<OrganizationDTO> updateOrganization(
-            @PathVariable Integer id,
+            @PathVariable Long id,
             @RequestPart("image") MultipartFile image,
-            @RequestPart("organizationUpdateDTO") OrganizationUpdateDTO organizationUpdateDTO)
+            @RequestPart("organization") OrganizationUpdateDTO organizationUpdateDTO)
             throws OrganizationNotFoundException {
 
-        Organization organizationDomain = OrganizationMapper
+        Organization organization = OrganizationMapper
                 .mapUpdateDTOToDomain(organizationUpdateDTO);
         OrganizationDTO organizationDTO =
                 OrganizationMapper.mapDomainToDTO(
-                        organizationService.updateOrganization(id, organizationDomain, image));
+                        organizationService.updateOrganization(id, organization, image));
         return ResponseEntity.ok(organizationDTO);
     }
 

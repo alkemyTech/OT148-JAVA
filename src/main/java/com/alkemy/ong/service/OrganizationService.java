@@ -29,9 +29,9 @@ public class OrganizationService {
     }
 
     @Transactional
-    public Organization updateOrganization(Integer id, Organization organization, MultipartFile image)
+    public Organization updateOrganization(Long id, Organization organization, MultipartFile image)
             throws OrganizationNotFoundException {
-        Optional<OrganizationModel> optionalOrg = organizationRepository.findById(Long.valueOf(id));
+        Optional<OrganizationModel> optionalOrg = organizationRepository.findById(id);
         if (optionalOrg.isEmpty()) {
             throw new OrganizationNotFoundException(
                     String.format("Organization with ID: %s not found", id));

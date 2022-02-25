@@ -77,10 +77,10 @@ public class UserController {
     public ResponseEntity<UserDTO> updateUser(
             @PathVariable Integer userId,
             @RequestPart("photo") MultipartFile photo,
-            @RequestPart("userUpdateDTO") UserUpdateDTO updateDTO) throws UserNotFoundException {
-        User toDomain = mapUpdateDTOToDomain(updateDTO);
-        UserDTO toDTO = mapDomainToDTO(userService.updateUser(userId, toDomain, photo));
-        return ResponseEntity.ok(toDTO);
+            @RequestPart("user") UserUpdateDTO updateDTO) throws UserNotFoundException {
+        User user = mapUpdateDTOToDomain(updateDTO);
+        UserDTO userDTO = mapDomainToDTO(userService.updateUser(userId, user, photo));
+        return ResponseEntity.ok(userDTO);
     }
 
     @PostMapping("/auth/login")
