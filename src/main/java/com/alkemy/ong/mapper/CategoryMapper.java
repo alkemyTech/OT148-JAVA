@@ -29,6 +29,17 @@ public class CategoryMapper {
         return categoryModel;
     }
 
+    public static Category mapDTOToDomain(CategoryDTO dto) {
+        Category category = Category.builder()
+                .id(dto.getId())
+                .name(dto.getName())
+                .description(dto.getDescription())
+                .image(dto.getImage())
+                .creationDate(dto.getCreationDate())
+                .build();
+        return category;
+    }
+
     public static CategoryDTO mapDomainToDTO(Category categoryDomain) {
         CategoryDTO categoryDTO = CategoryDTO.builder()
                 .id(categoryDomain.getId())

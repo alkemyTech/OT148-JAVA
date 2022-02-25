@@ -3,17 +3,17 @@ package com.alkemy.ong.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
 import lombok.Data;
+
 import java.time.LocalDateTime;
-import java.io.Serializable;
 
 @Data
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class CategoryDTO implements Serializable {
-
+public class NewsDTO {
     private Long id;
     private String name;
-    private String description;
+    private String content;
     private String image;
+    private CategoryDTO category;
     private LocalDateTime creationDate;
 }
