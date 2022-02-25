@@ -41,7 +41,6 @@ public class CategoryMapper {
 
     public static Category mapCreationDTOToDomain(CategoryCreationDTO categoryCreationDTO) {
         Category category = Category.builder()
-                .id(categoryCreationDTO.getId())
                 .name(categoryCreationDTO.getName())
                 .description(categoryCreationDTO.getDescription())
                 .image(categoryCreationDTO.getImage()).build();
