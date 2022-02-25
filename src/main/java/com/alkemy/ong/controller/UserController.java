@@ -9,13 +9,11 @@ import com.alkemy.ong.dto.UserUpdateDTO;
 import com.alkemy.ong.exception.InvalidPasswordException;
 import com.alkemy.ong.exception.UserNotFoundException;
 import com.alkemy.ong.mapper.UserMapper;
-import com.alkemy.ong.service.EmailService;
 import com.alkemy.ong.service.UserService;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -33,9 +31,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
     private final UserService userService;
-
-    @Autowired
-    EmailService emailService;
 
     public UserController(UserService userService) {
         this.userService = userService;

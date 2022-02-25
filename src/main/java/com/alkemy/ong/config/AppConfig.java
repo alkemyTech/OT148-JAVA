@@ -27,12 +27,14 @@ public class AppConfig {
     @Bean
     public UserService userService(UserRepository userRepository,
                                    RoleRepository roleRepository,
-                                   PasswordEncoder passwordEncoder) {
+                                   PasswordEncoder passwordEncoder,
+                                   EmailService emailTemplate) {
         return new UserService(userRepository,
                 roleRepository,
-                passwordEncoder);
+                passwordEncoder,
+                emailTemplate);
     }
-    
+
     @Bean
     public String emailTemplate() throws IOException {
         File template = ResourceUtils.getFile("classpath:template/plantilla_email.html");

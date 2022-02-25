@@ -14,12 +14,12 @@ public class EmailService {
 
     private final String emailSender;
     private final SendGrid sendGrid;
-    private final String welcome;
+    private final String emailTemplate;
 
     public EmailService(String apikey, String emailSender, String emailTemplate) {
         this.emailSender = emailSender;
         this.sendGrid = new SendGrid(apikey);
-        this.welcome = emailTemplate;
+        this.emailTemplate = emailTemplate;
     }
 
     public void sendEmailTo(String to, String message, String subject) {
@@ -41,7 +41,7 @@ public class EmailService {
 
     public void welcomeEmail(String email) {
         String subject = "Welcome ONG-Somos Más";
-        String message = this.welcome;
+        String message = this.emailTemplate;
 
         this.sendEmailTo(email, message, subject);
     }

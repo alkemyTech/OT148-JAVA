@@ -12,7 +12,6 @@ import com.alkemy.ong.repository.model.RoleModel;
 import com.alkemy.ong.repository.model.UserModel;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,13 +23,13 @@ public class UserService {
 
     private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private EmailService emailService;
+    private final EmailService emailService;
 
-    public UserService(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, EmailService emailService) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
+        this.emailService = emailService;
     }
 
     @Transactional
