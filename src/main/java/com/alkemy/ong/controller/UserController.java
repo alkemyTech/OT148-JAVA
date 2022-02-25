@@ -9,6 +9,8 @@ import com.alkemy.ong.dto.UserUpdateDTO;
 import com.alkemy.ong.exception.InvalidPasswordException;
 import com.alkemy.ong.exception.UserNotFoundException;
 import com.alkemy.ong.mapper.UserMapper;
+import static com.alkemy.ong.mapper.UserMapper.mapDomainToDTO;
+import static com.alkemy.ong.mapper.UserMapper.mapUpdateDTOToDomain;
 import com.alkemy.ong.service.UserService;
 import java.util.HashMap;
 import java.util.List;
@@ -24,8 +26,10 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 public class UserController {
@@ -72,15 +76,17 @@ public class UserController {
     @PatchMapping("/users/{userId}")
     public ResponseEntity<UserDTO> updateUser(
             @PathVariable Integer userId,
-            @Valid @RequestBody UserUpdateDTO updateDTO) throws UserNotFoundException {
-        User toDomain = UserMapper.mapUpdateDTOToDomain(updateDTO);
-        return ResponseEntity.ok(userService.updateUser(userId, toDomain));
+            @RequestPart("photo") MultipartFile photo,
+            @RequestPart("user") UserUpdateDTO updateDTO) throws UserNotFoundException {
+        User user = mapUpdateDTOToDomain(updateDTO);
+        UserDTO userDTO = mapDomainToDTO(userService.updateUser(userId, user, photo));
+        return ResponseEntity.ok(userDTO);
     }
 
     @PostMapping("/auth/login")
     public ResponseEntity<UserDTO> userRegister(@Valid @RequestBody UserLoginDTO userLoginDTO) throws UserNotFoundException, InvalidPasswordException {
         User userDomain = UserMapper.mapLoginDTOToDomain(userLoginDTO);
-        UserDTO userDTO = UserMapper.mapDomainToDTO(userService.loginUser(userDomain));
+        UserDTO userDTO = mapDomainToDTO(userService.loginUser(userDomain));
         return ResponseEntity.ok(userDTO);
     }
 

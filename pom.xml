@@ -33,6 +33,7 @@
             <groupId>org.springframework.session</groupId>
             <artifactId>spring-session-core</artifactId>
         </dependency>
+
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
@@ -87,6 +88,11 @@
             <groupId>com.sendgrid</groupId>
             <artifactId>smtpapi-java</artifactId>
             <version>1.2.10</version>
+        </dependency>
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk</artifactId>
+            <version>1.11.133</version>
         </dependency>
     </dependencies>
 
