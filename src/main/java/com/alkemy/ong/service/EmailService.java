@@ -7,44 +7,44 @@ import com.sendgrid.SendGrid;
 import com.sendgrid.helpers.mail.Mail;
 import com.sendgrid.helpers.mail.objects.Content;
 import com.sendgrid.helpers.mail.objects.Email;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.io.IOException;
+
 
 public class EmailService {
 
     private final String emailSender;
     private final SendGrid sendGrid;
+    private final String welcome;
 
-    public EmailService(String apiKey, String emailSender) {
+    public EmailService(SendGrid sengrid, String emailSender, String welcome) {
         this.emailSender = emailSender;
-        this.sendGrid = new SendGrid(apiKey);
+        this.sendGrid = sengrid;
+        this.welcome = welcome;
     }
 
-    public void sendEmailTo(String to,String message, String subject){
-        Email fromEmail= new Email(emailSender);
-        Email toEmail= new Email(to);
-        Content content = new Content("text/html",message);
-        Mail mail=new Mail(fromEmail,subject,toEmail,content);
-        Request request= new Request();
-        try{
+    public Response sendEmailTo(String to, String messege, String subject) {
+        Email fromEmail = new Email(emailSender);
+        Email toEmail = new Email(to);
+        Content content1 = new Content("text/html", messege);
+        Mail mail = new Mail(fromEmail, subject, toEmail, content1);
+        Request request = new Request();
+        Response response = null;
+        try {
             request.setMethod(Method.POST);
             request.setEndpoint("mail/send");
             request.setBody(mail.build());
-            Response response=sendGrid.api(request);
+            response = this.sendGrid.api(request);
 
-        }catch (IOException ex){
+        } catch (IOException ex) {
             System.out.println("Error trying to send the email");
         }
-
+        return response;
     }
 
-    public void welcomeEmail(String email,String username){
-        String message= "Bienvenid@ " + username +" !!";
+    public void welcomeEmail(String email) {
         String subject = "Welcome ONG-Somos Más";
+        String messege = this.welcome;
 
-        sendEmailTo(email,message,subject);
+        this.sendEmailTo(email, messege, subject);
     }
-
 }
