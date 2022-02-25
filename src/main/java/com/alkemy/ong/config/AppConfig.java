@@ -6,6 +6,7 @@ import com.alkemy.ong.repository.UserRepository;
 import com.alkemy.ong.service.EmailService;
 import com.alkemy.ong.service.OrganizationService;
 import com.alkemy.ong.service.UserService;
+import com.sendgrid.SendGrid;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,19 +24,25 @@ public class AppConfig {
     @Bean
     public UserService userService(UserRepository userRepository,
                                    RoleRepository roleRepository,
-                                   PasswordEncoder passwordEncoder){
+                                   PasswordEncoder passwordEncoder) {
         return new UserService(userRepository,
                 roleRepository,
                 passwordEncoder);
     }
 
     @Bean
-    public EmailService emailService(@Value("${sendgrid.api.key}") String apiKey,@Value("${alkemy.ong.email.sender}") String emailSender){
-        return new EmailService(apiKey,emailSender);
+    public EmailService emailService(@Value("${sendgrid.api.key}") String apiKey, @Value("${alkemy.ong.email.sender}") String emailSender,
+                                     @Value("/template/plantilla_email.html") String welcomeMail) {
+        SendGrid sendGrid = new SendGrid(apiKey);
+        return new EmailService(sendGrid, emailSender, welcomeMail);
     }
 
+    //@Bean
+    //public TemplateEngine templateEngine (){
+    //  return new TemplateEngine();
+    //}
     @Bean
-    public OrganizationService organizationService(OrganizationRepository organizationRepository){
+    public OrganizationService organizationService(OrganizationRepository organizationRepository) {
         return new OrganizationService(organizationRepository);
     }
 
