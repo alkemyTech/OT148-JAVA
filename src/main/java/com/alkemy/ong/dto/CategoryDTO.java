@@ -9,11 +9,10 @@ import java.time.LocalDateTime;
 @Data
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class NewsDTO {
+public class CategoryDTO {
     private Long id;
     private String name;
-    private String content;
+    private String description;
     private String image;
-    private CategoryDTO category;
     private LocalDateTime creationDate;
 }

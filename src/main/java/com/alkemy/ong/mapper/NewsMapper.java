@@ -36,7 +36,7 @@ public class NewsMapper {
                 .name(dto.getName())
                 .content(dto.getContent())
                 .image(dto.getImage())
-                .category(dto.getCategory())
+                .category(CategoryMapper.mapDTOToDomain(dto.getCategory()))
                 .creationDate(dto.getCreationDate())
                 .build();
         return news;
@@ -48,9 +48,9 @@ public class NewsMapper {
                 .name(news.getName())
                 .content(news.getContent())
                 .image(news.getImage())
-               // .categoryModel(CategoryMapper.mapDomainToDTO(news.getCategory()))
+                .category(CategoryMapper.mapDomainToDTO(news.getCategory()))
                 .creationDate(news.getCreationDate())
                 .build();
-
+        return newsDTO;
     }
 }
