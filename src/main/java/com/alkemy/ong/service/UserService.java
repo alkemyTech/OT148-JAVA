@@ -2,19 +2,19 @@ package com.alkemy.ong.service;
 
 import com.alkemy.ong.domain.User;
 import com.alkemy.ong.dto.UserDTO;
-import com.alkemy.ong.exception.UserNotFoundException;
 import com.alkemy.ong.exception.InvalidPasswordException;
+import com.alkemy.ong.exception.UserNotFoundException;
 import com.alkemy.ong.mapper.RoleMapper;
 import com.alkemy.ong.mapper.UserMapper;
 import com.alkemy.ong.repository.RoleRepository;
 import com.alkemy.ong.repository.UserRepository;
 import com.alkemy.ong.repository.model.RoleModel;
 import com.alkemy.ong.repository.model.UserModel;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 
 public class UserService {
 
@@ -23,6 +23,9 @@ public class UserService {
     private final RoleRepository roleRepository;
 
     private final PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private EmailService emailService;
 
     public UserService(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
@@ -38,6 +41,7 @@ public class UserService {
         userModel.setPassword(encryptPassword(user));
         UserModel save = userRepository.save(userModel);
         User userDomain = UserMapper.mapModelToDomain(save);
+        emailService.welcomeEmail(userDomain.getEmail());
         return UserMapper.mapDomainToDTO(userDomain);
     }
 

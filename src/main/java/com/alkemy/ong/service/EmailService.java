@@ -16,35 +16,33 @@ public class EmailService {
     private final SendGrid sendGrid;
     private final String welcome;
 
-    public EmailService(String apikey, String emailSender, String welcome) {
+    public EmailService(String apikey, String emailSender, String emailTemplate) {
         this.emailSender = emailSender;
         this.sendGrid = new SendGrid(apikey);
-        this.welcome = welcome;
+        this.welcome = emailTemplate;
     }
 
-    public Response sendEmailTo(String to, String messege, String subject) {
+    public void sendEmailTo(String to, String message, String subject) {
         Email fromEmail = new Email(emailSender);
         Email toEmail = new Email(to);
-        Content content1 = new Content("text/html", messege);
-        Mail mail = new Mail(fromEmail, subject, toEmail, content1);
+        Content content = new Content("text/html", message);
+        Mail mail = new Mail(fromEmail, subject, toEmail, content);
         Request request = new Request();
-        Response response = null;
         try {
             request.setMethod(Method.POST);
             request.setEndpoint("mail/send");
             request.setBody(mail.build());
-            response = this.sendGrid.api(request);
+            Response response = this.sendGrid.api(request);
 
         } catch (IOException ex) {
             System.out.println("Error trying to send the email");
         }
-        return response;
     }
 
     public void welcomeEmail(String email) {
         String subject = "Welcome ONG-Somos Más";
-        String messege = this.welcome;
+        String message = this.welcome;
 
-        this.sendEmailTo(email, messege, subject);
+        this.sendEmailTo(email, message, subject);
     }
 }
