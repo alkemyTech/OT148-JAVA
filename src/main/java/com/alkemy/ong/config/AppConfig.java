@@ -1,9 +1,11 @@
 package com.alkemy.ong.config;
 
+import com.alkemy.ong.repository.NewsRepository;
 import com.alkemy.ong.repository.OrganizationRepository;
 import com.alkemy.ong.repository.RoleRepository;
 import com.alkemy.ong.repository.UserRepository;
 import com.alkemy.ong.service.EmailService;
+import com.alkemy.ong.service.NewsService;
 import com.alkemy.ong.service.OrganizationService;
 import com.alkemy.ong.service.UserService;
 import org.springframework.beans.factory.annotation.Value;
@@ -39,5 +41,9 @@ public class AppConfig {
         return new OrganizationService(organizationRepository);
     }
 
+    @Bean
+    public NewsService newsService(NewsRepository newsRepository){
+        return new NewsService(newsRepository);
+    }
 }
 
