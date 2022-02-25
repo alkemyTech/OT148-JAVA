@@ -2,6 +2,7 @@ package com.alkemy.ong.controller;
 
 import com.alkemy.ong.domain.Category;
 import com.alkemy.ong.dto.CategoryCreationDTO;
+import com.alkemy.ong.dto.CategoryDTO;
 import com.alkemy.ong.mapper.CategoryMapper;
 import com.alkemy.ong.service.CategoryService;
 import javax.validation.Valid;
@@ -20,8 +21,9 @@ public class CategoryController {
     }
 
     @PostMapping("/categories")
-    public ResponseEntity<Category> createCategory(@Valid @RequestBody CategoryCreationDTO categoryCreationDTO) {
-        Category categoryDomain = CategoryMapper.mapDTOCreationToDomain(categoryCreationDTO);
-        return ResponseEntity.ok(categoryService.createCategory(categoryDomain));
+    public ResponseEntity<CategoryDTO> createCategory(@Valid @RequestBody CategoryCreationDTO categoryCreationDTO) {
+        Category categoryDomain = CategoryMapper.mapCreationDTOToDomain(categoryCreationDTO);
+        CategoryDTO categoryDTO = CategoryMapper.mapDomainToDTO(categoryService.createCategory(categoryDomain));
+        return ResponseEntity.ok(categoryDTO);
     }
 }
