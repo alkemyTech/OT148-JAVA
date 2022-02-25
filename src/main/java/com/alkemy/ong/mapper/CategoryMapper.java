@@ -39,7 +39,7 @@ public class CategoryMapper {
         return categoryDTO;
     }
 
-    public static Category mapDTOCreationToDomain(CategoryCreationDTO categoryCreationDTO) {
+    public static Category mapCreationDTOToDomain(CategoryCreationDTO categoryCreationDTO) {
         Category category = Category.builder()
                 .name(categoryCreationDTO.getName()).build();
         return category;
