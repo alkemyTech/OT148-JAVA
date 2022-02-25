@@ -4,7 +4,7 @@ import com.alkemy.ong.repository.CategoryRepository;
 import com.alkemy.ong.repository.OrganizationRepository;
 import com.alkemy.ong.repository.RoleRepository;
 import com.alkemy.ong.repository.UserRepository;
-import com.alkemy.ong.service.CategoryService;
+import com.alkemy.ong.service.AmazonService;
 import com.alkemy.ong.service.EmailService;
 import com.alkemy.ong.service.OrganizationService;
 import com.alkemy.ong.service.UserService;
@@ -42,8 +42,13 @@ public class AppConfig {
     }
 
     @Bean
-    public CategoryService categoryService(CategoryRepository categoryRepository) {
-        return new CategoryService(categoryRepository);
+    public AmazonService amazonService(
+            @Value("${aws.s3.bucketName}") String bucketName,
+            @Value("${aws.s3.accessKey}") String accessKey,
+            @Value("${aws.s3.secretKey}") String secretKey,
+            @Value("${aws.s3.endpointUrl}") String endpointUrl
+    ) {
+        return new AmazonService(bucketName, accessKey, secretKey, endpointUrl);
     }
 }
 
