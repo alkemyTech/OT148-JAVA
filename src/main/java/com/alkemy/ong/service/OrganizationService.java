@@ -9,13 +9,16 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.transaction.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 public class OrganizationService {
 
-    private OrganizationRepository organizationRepository;
+    private final OrganizationRepository organizationRepository;
+    private final AmazonService amazonService;
 
-    public OrganizationService(OrganizationRepository organizationRepository) {
+    public OrganizationService(OrganizationRepository organizationRepository, AmazonService amazonService) {
         this.organizationRepository = organizationRepository;
+        this.amazonService = amazonService;
     }
 
     @Transactional
@@ -26,7 +29,7 @@ public class OrganizationService {
     }
 
     @Transactional
-    public Organization updateOrganization(Integer id, Organization organization)
+    public Organization updateOrganization(Integer id, Organization organization, MultipartFile image)
             throws OrganizationNotFoundException {
         Optional<OrganizationModel> optionalOrg = organizationRepository.findById(Long.valueOf(id));
         if (optionalOrg.isEmpty()) {
@@ -38,10 +41,14 @@ public class OrganizationService {
         organizationOld.setAboutUsText(organization.getAboutUsText());
         organizationOld.setCreationDate(organization.getCreationDate());
         organizationOld.setEmail(organization.getEmail());
-        organizationOld.setImage(organization.getImage());
+        organizationOld.setImage(uploadImage(image));
         organizationOld.setName(organization.getName());
         organizationOld.setPhone(organization.getPhone());
         return OrganizationMapper.mapModelToDomain(organizationRepository.save(organizationOld));
     }
-    
+
+    private String uploadImage(MultipartFile file) {
+        return amazonService.uploadFile(file);
+    }
+
 }

@@ -9,15 +9,15 @@ import com.alkemy.ong.mapper.OrganizationMapper;
 import com.alkemy.ong.service.OrganizationService;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 public class OrganizationController {
@@ -38,13 +38,16 @@ public class OrganizationController {
 
     @PatchMapping("/organization/{id}")
     public ResponseEntity<OrganizationDTO> updateOrganization(
-            @PathVariable Integer id, @Valid @RequestBody OrganizationUpdateDTO organizationUpdateDTO)
+            @PathVariable Integer id,
+            @RequestPart("image") MultipartFile image,
+            @RequestPart("organizationUpdateDTO") OrganizationUpdateDTO organizationUpdateDTO)
             throws OrganizationNotFoundException {
+
         Organization organizationDomain = OrganizationMapper
                 .mapUpdateDTOToDomain(organizationUpdateDTO);
         OrganizationDTO organizationDTO =
                 OrganizationMapper.mapDomainToDTO(
-                        organizationService.updateOrganization(id, organizationDomain));
+                        organizationService.updateOrganization(id, organizationDomain, image));
         return ResponseEntity.ok(organizationDTO);
     }
 
