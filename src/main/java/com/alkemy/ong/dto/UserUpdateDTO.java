@@ -1,13 +1,17 @@
 package com.alkemy.ong.dto;
 
-import lombok.Builder;
-import lombok.Data;
-
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserUpdateDTO {
 
     @NotBlank
@@ -22,7 +26,5 @@ public class UserUpdateDTO {
     @NotBlank
     @NotNull
     private String password;
-    @NotBlank
-    @NotNull
-    private String photo;
+    private MultipartFile photo;
 }

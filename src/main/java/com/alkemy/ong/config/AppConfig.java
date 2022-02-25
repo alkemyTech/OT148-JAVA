@@ -24,10 +24,12 @@ public class AppConfig {
     @Bean
     public UserService userService(UserRepository userRepository,
                                    RoleRepository roleRepository,
-                                   PasswordEncoder passwordEncoder) {
+                                   PasswordEncoder passwordEncoder,
+                                   AmazonService amazonService) {
         return new UserService(userRepository,
                 roleRepository,
-                passwordEncoder);
+                passwordEncoder,
+                amazonService);
     }
 
     @Bean
@@ -36,8 +38,10 @@ public class AppConfig {
     }
 
     @Bean
-    public OrganizationService organizationService(OrganizationRepository organizationRepository) {
-        return new OrganizationService(organizationRepository);
+    public OrganizationService organizationService(
+            OrganizationRepository organizationRepository,
+            AmazonService amazonService) {
+        return new OrganizationService(organizationRepository, amazonService);
     }
 
     @Bean
