@@ -2,19 +2,20 @@ package com.alkemy.ong.service;
 
 import com.alkemy.ong.domain.User;
 import com.alkemy.ong.dto.UserDTO;
-import com.alkemy.ong.exception.UserNotFoundException;
 import com.alkemy.ong.exception.InvalidPasswordException;
+import com.alkemy.ong.exception.UserNotFoundException;
 import com.alkemy.ong.mapper.RoleMapper;
 import com.alkemy.ong.mapper.UserMapper;
+import static com.alkemy.ong.mapper.UserMapper.mapModelToDomain;
 import com.alkemy.ong.repository.RoleRepository;
 import com.alkemy.ong.repository.UserRepository;
 import com.alkemy.ong.repository.model.RoleModel;
 import com.alkemy.ong.repository.model.UserModel;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 public class UserService {
 
@@ -24,10 +25,16 @@ public class UserService {
 
     private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
+    private final AmazonService amazonService;
+
+    public UserService(UserRepository userRepository,
+                       RoleRepository roleRepository,
+                       PasswordEncoder passwordEncoder,
+                       AmazonService amazonService) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
+        this.amazonService = amazonService;
     }
 
     @Transactional
@@ -37,7 +44,7 @@ public class UserService {
         UserModel userModel = UserMapper.mapDomainToModel(user);
         userModel.setPassword(encryptPassword(user));
         UserModel save = userRepository.save(userModel);
-        User userDomain = UserMapper.mapModelToDomain(save);
+        User userDomain = mapModelToDomain(save);
         return UserMapper.mapDomainToDTO(userDomain);
     }
 
@@ -56,20 +63,26 @@ public class UserService {
     }
 
     @Transactional
-    public UserDTO updateUser(Integer id, User user) throws UserNotFoundException {
+    public User updateUser(Integer id,
+                           User user,
+                           MultipartFile image) throws UserNotFoundException {
         if (userRepository.existsById(Long.valueOf(id))) {
             UserModel userModel = userRepository.findById(Long.valueOf(id)).get();
             userModel.setEmail(user.getEmail());
             userModel.setFirstName(user.getFirstName());
             userModel.setLastName(user.getLastName());
-            userModel.setPhoto(user.getPhoto());
+            userModel.setPhoto(uploadImage(image));
             userModel.setPassword(passwordEncoder.encode(user.getPassword()));
             UserModel save = userRepository.save(userModel);
-            return UserMapper.mapDomainToDTO(UserMapper.mapModelToDomain(save));
+            return mapModelToDomain(save);
         } else {
             throw new UserNotFoundException(String.format("User with ID: %s not found", id));
         }
 
+    }
+
+    private String uploadImage(MultipartFile file) {
+        return amazonService.uploadFile(file);
     }
 
     public User loginUser(User user) throws UserNotFoundException, InvalidPasswordException {
@@ -86,7 +99,7 @@ public class UserService {
     private User getUserPasswordChecked
             (String password, UserModel userModel) throws InvalidPasswordException {
         if (passwordMatches(password, userModel.getPassword())) {
-            User userDomain = UserMapper.mapModelToDomain(userModel);
+            User userDomain = mapModelToDomain(userModel);
             return userDomain;
         } else {
             throw new InvalidPasswordException("The password is invalid");
