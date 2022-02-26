@@ -1,7 +1,5 @@
 package com.alkemy.ong.security;
 
-import com.alkemy.ong.domain.User;
-import com.alkemy.ong.mapper.UserMapper;
 import com.alkemy.ong.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
