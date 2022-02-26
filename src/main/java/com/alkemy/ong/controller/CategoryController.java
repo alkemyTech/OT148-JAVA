@@ -8,6 +8,7 @@ import com.alkemy.ong.exception.CategoryNotFoundException;
 import com.alkemy.ong.mapper.CategoryMapper;
 import com.alkemy.ong.service.CategoryService;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,7 +37,10 @@ public class CategoryController {
 
     @GetMapping("/categories")
     public ResponseEntity<List<CategoryDTO>> getAll() {
-        return ResponseEntity.ok(categoryService.getAll());
+        List<CategoryDTO> categoryDTOS = categoryService.getAll()
+                .stream().map(CategoryMapper::mapDomainToDTO)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(categoryDTOS);
     }
 
     @GetMapping("/categories/{id}")

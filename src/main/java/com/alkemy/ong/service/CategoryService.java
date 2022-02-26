@@ -1,7 +1,6 @@
 package com.alkemy.ong.service;
 
 import com.alkemy.ong.domain.Category;
-import com.alkemy.ong.dto.CategoryDTO;
 import com.alkemy.ong.exception.CategoryNotFoundException;
 import com.alkemy.ong.mapper.CategoryMapper;
 import com.alkemy.ong.repository.CategoryRepository;
@@ -27,10 +26,9 @@ public class CategoryService {
     }
 
     @Transactional
-    public List<CategoryDTO> getAll() {
+    public List<Category> getAll() {
         List<CategoryModel> categoryModelList = categoryRepository.findAll();
         return categoryModelList.stream().map(CategoryMapper::mapModelToDomain)
-                .map(CategoryMapper::mapDomainToDTO)
                 .collect(Collectors.toList());
     }
 
@@ -41,7 +39,7 @@ public class CategoryService {
             CategoryModel categoryModel = modelOptional.get();
             return CategoryMapper.mapModelToDomain(categoryModel);
         } else {
-            throw new CategoryNotFoundException(String.format("Categories with ID: %s not found", id));
+            throw new CategoryNotFoundException(String.format("Category with ID: %s not found", id));
         }
     }
 }
