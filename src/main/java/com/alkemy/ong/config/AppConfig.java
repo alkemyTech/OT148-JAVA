@@ -29,16 +29,27 @@ public class AppConfig {
     public UserService userService(UserRepository userRepository,
                                    RoleRepository roleRepository,
                                    PasswordEncoder passwordEncoder,
-                                   AmazonService amazonService) {
+                                   AmazonService amazonService,
+                                   EmailService emailTemplate) {
         return new UserService(userRepository,
                 roleRepository,
                 passwordEncoder,
-                amazonService);
+                amazonService,
+                emailTemplate);
     }
 
     @Bean
-    public EmailService emailService(@Value("${sendgrid.api.key}") String apiKey, @Value("${alkemy.ong.email.sender}") String emailSender) {
-        return new EmailService(apiKey, emailSender);
+    public String emailTemplate() throws IOException {
+        File template = ResourceUtils.getFile("classpath:template/plantilla_email.html");
+        return new String(Files.readAllBytes(template.toPath()));
+    }
+
+    @Bean
+    public EmailService emailService(
+            @Value("${sendgrid.api.key}") String apiKey,
+            @Value("${alkemy.ong.email.sender}") String emailSender,
+            String emailTemplate) {
+        return new EmailService(apiKey, emailSender, emailTemplate);
     }
 
     @Bean
@@ -68,4 +79,3 @@ public class AppConfig {
         return new NewsService(newsRepository);
     }
 }
-
