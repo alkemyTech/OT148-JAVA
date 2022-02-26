@@ -17,7 +17,6 @@ public class TestimonialMapper {
 
     public static TestimonialModel mapDomainToModel(Testimonial testimonial) {
         TestimonialModel testimonialModel = TestimonialModel.builder()
-                .id(testimonial.getId())
                 .name(testimonial.getName())
                 .image(testimonial.getImage())
                 .content(testimonial.getContent())

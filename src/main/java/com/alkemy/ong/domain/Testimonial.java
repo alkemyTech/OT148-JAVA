@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 @Data
 @Builder
 public class Testimonial {
-    private long id;
+    private Long id;
     private String name;
     private String image;
     private String content;

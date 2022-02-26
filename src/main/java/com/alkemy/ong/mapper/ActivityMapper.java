@@ -17,7 +17,6 @@ public class ActivityMapper {
 
     public static ActivityModel mapDomainToModel(Activity activity) {
         ActivityModel activityModel = ActivityModel.builder()
-                .id(activity.getId())
                 .name(activity.getName())
                 .content(activity.getContent())
                 .image(activity.getImage())
