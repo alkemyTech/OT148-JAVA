@@ -6,6 +6,7 @@ import com.alkemy.ong.repository.model.TestimonialModel;
 public class TestimonialMapper {
     public static Testimonial mapModelToDomain(TestimonialModel testimonialModel) {
         Testimonial testimonial = Testimonial.builder()
+                .id(testimonialModel.getId())
                 .name(testimonialModel.getName())
                 .image(testimonialModel.getImage())
                 .content(testimonialModel.getContent())
@@ -16,6 +17,7 @@ public class TestimonialMapper {
 
     public static TestimonialModel mapDomainToModel(Testimonial testimonial) {
         TestimonialModel testimonialModel = TestimonialModel.builder()
+                .id(testimonial.getId())
                 .name(testimonial.getName())
                 .image(testimonial.getImage())
                 .content(testimonial.getContent())
