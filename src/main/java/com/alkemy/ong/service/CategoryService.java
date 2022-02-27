@@ -1,9 +1,13 @@
 package com.alkemy.ong.service;
 
 import com.alkemy.ong.domain.Category;
+import com.alkemy.ong.exception.CategoryNotFoundException;
 import com.alkemy.ong.mapper.CategoryMapper;
 import com.alkemy.ong.repository.CategoryRepository;
 import com.alkemy.ong.repository.model.CategoryModel;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 
 public class CategoryService {
@@ -19,5 +23,23 @@ public class CategoryService {
         CategoryModel categoryModel = CategoryMapper.mapDomainToModel(category);
         CategoryModel save = categoryRepository.save(categoryModel);
         return CategoryMapper.mapModelToDomain(save);
+    }
+
+    @Transactional
+    public List<Category> getAll() {
+        List<CategoryModel> categoryModelList = categoryRepository.findAll();
+        return categoryModelList.stream().map(CategoryMapper::mapModelToDomain)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public Category getById(Long id) throws CategoryNotFoundException {
+        Optional<CategoryModel> modelOptional = categoryRepository.findById(id);
+        if (!modelOptional.isEmpty()) {
+            CategoryModel categoryModel = modelOptional.get();
+            return CategoryMapper.mapModelToDomain(categoryModel);
+        } else {
+            throw new CategoryNotFoundException(String.format("Category with ID: %s not found", id));
+        }
     }
 }

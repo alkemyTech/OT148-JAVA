@@ -26,15 +26,19 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
     private final AmazonService amazonService;
+  
+    private final EmailService emailService;
 
     public UserService(UserRepository userRepository,
                        RoleRepository roleRepository,
                        PasswordEncoder passwordEncoder,
-                       AmazonService amazonService) {
+                       AmazonService amazonService,
+                       EmailService emailService) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
         this.amazonService = amazonService;
+        this.emailService = emailService;
     }
 
     @Transactional
@@ -45,6 +49,7 @@ public class UserService {
         userModel.setPassword(encryptPassword(user));
         UserModel save = userRepository.save(userModel);
         User userDomain = mapModelToDomain(save);
+        emailService.welcomeEmail(userDomain.getEmail());
         return UserMapper.mapDomainToDTO(userDomain);
     }
 
