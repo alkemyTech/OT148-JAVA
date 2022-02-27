@@ -6,7 +6,7 @@ import com.alkemy.ong.repository.model.OrganizationModel;
 
 public class OrganizationMapper {
 
-    public static Organization mapModelToDomain(OrganizationModel organizationModel){
+    public static Organization mapModelToDomain(OrganizationModel organizationModel) {
         Organization organizationDomain = Organization.builder().
                 name(organizationModel.getName()).
                 image(organizationModel.getImage()).
@@ -18,7 +18,7 @@ public class OrganizationMapper {
         return organizationDomain;
     }
 
-    public static OrganizationModel mapDomainToModel(Organization organizationDomain){
+    public static OrganizationModel mapDomainToModel(Organization organizationDomain) {
         OrganizationModel organizationModel = OrganizationModel.builder().
                 name(organizationDomain.getName()).
                 image(organizationDomain.getImage()).
@@ -30,7 +30,7 @@ public class OrganizationMapper {
         return organizationModel;
     }
 
-    public static OrganizationDTO mapDomainToDTO(Organization organizationDomain){
+    public static OrganizationDTO mapDomainToDTO(Organization organizationDomain) {
         OrganizationDTO organizationDTO = OrganizationDTO.builder()
                 .name(organizationDomain.getName())
                 .image(organizationDomain.getImage())

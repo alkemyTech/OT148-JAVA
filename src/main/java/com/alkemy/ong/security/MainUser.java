@@ -1,6 +1,5 @@
 package com.alkemy.ong.security;
 
-import com.alkemy.ong.domain.Role;
 import com.alkemy.ong.repository.model.UserModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,7 +10,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Data
 @AllArgsConstructor

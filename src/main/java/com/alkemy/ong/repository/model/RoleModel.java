@@ -21,14 +21,14 @@ import java.time.LocalDateTime;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table (name = "roles")
+@Table(name = "roles")
 public class RoleModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private RoleName roleName;
+    private RoleName roleName = getRoleName();
     private String name;
     private String description;
     @Column(name = "creation_date")

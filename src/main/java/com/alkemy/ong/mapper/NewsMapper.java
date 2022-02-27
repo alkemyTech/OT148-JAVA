@@ -5,7 +5,7 @@ import com.alkemy.ong.repository.model.NewsModel;
 
 public class NewsMapper {
 
-    public static News mapModelToDomain(NewsModel newsModel){
+    public static News mapModelToDomain(NewsModel newsModel) {
         News news = News.builder()
                 .id(newsModel.getId())
                 .name(newsModel.getName())
@@ -17,7 +17,7 @@ public class NewsMapper {
         return news;
     }
 
-    public static NewsModel mapDomainToModel(News news){
+    public static NewsModel mapDomainToModel(News news) {
         NewsModel newsModel = NewsModel.builder()
                 .id(news.getId())
                 .name(news.getName())
