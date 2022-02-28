@@ -26,7 +26,7 @@ public class NewsService {
         }
     }
 
-    public News saveNews(News news) {
+    public News createNews(News news) {
         NewsModel newsModel = newsRepository.save(NewsMapper.mapDomainToModel(news));
         News newsSaved = NewsMapper.mapModelToDomain(newsModel);
         return newsSaved;

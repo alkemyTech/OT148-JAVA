@@ -44,8 +44,8 @@ public class NewsController {
     }
 
     @PostMapping
-    public ResponseEntity<NewsDTO> save(@Valid @RequestBody NewsDTO newsDTO) {
-        News news = newsService.saveNews((NewsMapper.mapDTOToDomain(newsDTO)));
+    public ResponseEntity<NewsDTO> createNews(@Valid @RequestBody NewsDTO newsDTO) {
+        News news = newsService.createNews((NewsMapper.mapDTOToDomain(newsDTO)));
         NewsDTO result = NewsMapper.mapDomainToDTO(news);
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
