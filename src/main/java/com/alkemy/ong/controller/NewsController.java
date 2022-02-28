@@ -3,6 +3,7 @@ package com.alkemy.ong.controller;
 import com.alkemy.ong.domain.News;
 import com.alkemy.ong.dto.ErrorDTO;
 import com.alkemy.ong.dto.NewsDTO;
+import com.alkemy.ong.dto.NewsUpdateDTO;
 import com.alkemy.ong.exception.NewsNotFoundException;
 import com.alkemy.ong.mapper.NewsMapper;
 import com.alkemy.ong.service.NewsService;
@@ -46,8 +47,8 @@ public class NewsController {
 
     @PutMapping("{id}")
     public ResponseEntity<NewsDTO> updateNews(@PathVariable Long id,
-                                              @RequestBody NewsDTO newsDTO) throws NewsNotFoundException {
-        News news = NewsMapper.mapDTOToDomain(newsDTO);
+                                              @RequestBody NewsUpdateDTO newsUpdateDTO) throws NewsNotFoundException {
+        News news = NewsMapper.mapUpdateDTOToDomain(newsUpdateDTO);
         NewsDTO newsUpdated = NewsMapper.mapDomainToDTO(newsService.updateNews(id, news));
         return ResponseEntity.ok().body(newsUpdated);
     }
