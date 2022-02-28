@@ -2,6 +2,7 @@ package com.alkemy.ong.mapper;
 
 import com.alkemy.ong.domain.Organization;
 import com.alkemy.ong.dto.OrganizationDTO;
+import com.alkemy.ong.dto.OrganizationUpdateDTO;
 import com.alkemy.ong.repository.model.OrganizationModel;
 
 public class OrganizationMapper {
@@ -40,5 +41,16 @@ public class OrganizationMapper {
                 .welcomeText(organizationDomain.getWelcomeText())
                 .aboutUsText(organizationDomain.getAboutUsText()).build();
         return organizationDTO;
+    }
+
+    public static Organization mapUpdateDTOToDomain(OrganizationUpdateDTO updateDTO) {
+        Organization organization = Organization.builder()
+                .name(updateDTO.getName())
+                .email(updateDTO.getEmail())
+                .phone(updateDTO.getPhone())
+                .welcomeText(updateDTO.getWelcomeText())
+                .aboutUsText(updateDTO.getAboutUsText())
+                .address(updateDTO.getAddress()).build();
+        return organization;
     }
 }

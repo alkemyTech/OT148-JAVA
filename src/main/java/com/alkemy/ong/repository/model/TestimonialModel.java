@@ -1,8 +1,12 @@
 package com.alkemy.ong.repository.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
-import java.io.Serializable;
-import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,19 +14,17 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import java.time.LocalDateTime;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "organizations")
-public class OrganizationModel implements Serializable {
-
+@SQLDelete(sql = "UPDATE news SET deleted = true WHERE id=?")
+@Where(clause = "deleted = false")
+@Table(name = "testimonials")
+public class TestimonialModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -30,23 +32,14 @@ public class OrganizationModel implements Serializable {
     private String name;
     @Column(nullable = false)
     private String image;
-    @Column()
-    private String address;
-    @Column()
-    private Integer phone;
     @Column(nullable = false)
-    private String email;
-    @Column(nullable = false)
-    private String welcomeText;
-    @Column()
-    private String aboutUsText;
+    private String content;
     @Column(name = "creation_date")
     private LocalDateTime creationDate;
-
+    private boolean deleted;
 
     @PrePersist
     private void beforePersisting() {
         this.creationDate = LocalDateTime.now();
     }
-
 }
