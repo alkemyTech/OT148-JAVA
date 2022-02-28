@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -52,7 +51,7 @@ public class CategoryController {
     }
 
     @PutMapping("/categories/{id}")
-    public ResponseEntity<CategoryDTO> updateCategory(@PathVariable Long id, @RequestPart("category") CategoryUpdateDTO categoryUpdateDTO) throws CategoryNotFoundException {
+    public ResponseEntity<CategoryDTO> updateCategory(@PathVariable Long id, @RequestBody CategoryUpdateDTO categoryUpdateDTO) throws CategoryNotFoundException {
         Category category = CategoryMapper.mapUpdateDTOToDomain(categoryUpdateDTO);
         CategoryDTO categoryDTO = CategoryMapper.mapDomainToDTO(categoryService.updateCategory(id, category));
         return ResponseEntity.ok(categoryDTO);
