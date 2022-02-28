@@ -2,6 +2,7 @@ package com.alkemy.ong.service;
 
 import com.alkemy.ong.domain.News;
 import com.alkemy.ong.exception.NewsNotFoundException;
+import com.alkemy.ong.mapper.CategoryMapper;
 import com.alkemy.ong.mapper.NewsMapper;
 import com.alkemy.ong.repository.NewsRepository;
 import com.alkemy.ong.repository.model.NewsModel;
@@ -30,6 +31,22 @@ public class NewsService {
         NewsModel newsModel = newsRepository.save(NewsMapper.mapDomainToModel(news));
         News newsSaved = NewsMapper.mapModelToDomain(newsModel);
         return newsSaved;
+    }
+
+    public News updateNews(Long id, News news) throws NewsNotFoundException {
+        if (newsRepository.existsById(id)) {
+            NewsModel newsModel = newsRepository.findById(Long.valueOf(id)).get();
+            newsModel.setId(news.getId());
+            newsModel.setName(news.getName());
+            newsModel.setContent(news.getContent());
+            newsModel.setImage(news.getImage());
+            newsModel.setCategoryModel(CategoryMapper.mapDomainToModel(news.getCategory()));
+            newsModel.setCreationDate(news.getCreationDate());
+            NewsModel newsSaved = newsRepository.save(newsModel);
+            return NewsMapper.mapModelToDomain(newsSaved);
+        } else {
+            throw new NewsNotFoundException(String.format("News with ID: %s not found", id));
+        }
     }
 
 }
