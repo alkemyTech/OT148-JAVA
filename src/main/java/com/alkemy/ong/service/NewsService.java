@@ -25,12 +25,11 @@ public class NewsService {
         }
     }
 
-    public News deleteNews(Long id) throws NewsNotFoundException {
-        if (newsRepository.existsById(id)) {
-            NewsModel newsModel = newsRepository.findById(Long.valueOf(id)).get();
-            newsModel.setDeleted(true);
-            NewsModel newsSaved = newsRepository.save(newsModel);
-            return NewsMapper.mapModelToDomain(newsSaved);
+    public void deleteNews(Long id) throws NewsNotFoundException {
+        Optional<NewsModel> modelOptional = newsRepository.findById(id);
+        if (!modelOptional.isEmpty()) {
+            NewsModel newsModel = modelOptional.get();
+            newsRepository.delete(newsModel);
         } else {
             throw new NewsNotFoundException(String.format("News with ID: %s not found", id));
         }
