@@ -7,6 +7,7 @@ import com.alkemy.ong.mapper.NewsMapper;
 import com.alkemy.ong.service.NewsService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,7 +20,7 @@ public class NewsController {
 
     private final NewsService newsService;
 
-    public NewsController(NewsService newsService){
+    public NewsController(NewsService newsService) {
         this.newsService = newsService;
     }
 
@@ -29,12 +30,18 @@ public class NewsController {
     }
 
     @ExceptionHandler(NewsNotFoundException.class)
-    public ResponseEntity<ErrorDTO> handleNewsNotFoundExceptions(NewsNotFoundException ex){
+    public ResponseEntity<ErrorDTO> handleNewsNotFoundExceptions(NewsNotFoundException ex) {
         ErrorDTO newsNotFound =
                 ErrorDTO.builder()
                         .code(HttpStatus.NOT_FOUND)
                         .message(ex.getMessage()).build();
         return new ResponseEntity(newsNotFound, HttpStatus.NOT_FOUND);
 
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteNews(@PathVariable Long id) throws NewsNotFoundException {
+        newsService.deleteNews(id);
+        return new ResponseEntity(HttpStatus.OK);
     }
 }
