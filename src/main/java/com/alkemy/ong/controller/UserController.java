@@ -9,17 +9,22 @@ import com.alkemy.ong.dto.UserUpdateDTO;
 import com.alkemy.ong.exception.InvalidPasswordException;
 import com.alkemy.ong.exception.UserNotFoundException;
 import com.alkemy.ong.mapper.UserMapper;
+
 import static com.alkemy.ong.mapper.UserMapper.mapDomainToDTO;
 import static com.alkemy.ong.mapper.UserMapper.mapUpdateDTOToDomain;
+
 import com.alkemy.ong.service.UserService;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.validation.Valid;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -97,5 +102,11 @@ public class UserController {
                         .code(HttpStatus.BAD_REQUEST)
                         .message(ex.getMessage()).build();
         return new ResponseEntity(notExistsPassword, HttpStatus.BAD_REQUEST);
+    }
+
+    @DeleteMapping("/users/{userId}")
+    public ResponseEntity<?> deleteUser(@PathVariable Long userId) throws UserNotFoundException {
+        userService.deleteUser(userId);
+        return new ResponseEntity(HttpStatus.OK);
     }
 }

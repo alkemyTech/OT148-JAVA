@@ -6,15 +6,22 @@ import com.alkemy.ong.exception.InvalidPasswordException;
 import com.alkemy.ong.exception.UserNotFoundException;
 import com.alkemy.ong.mapper.RoleMapper;
 import com.alkemy.ong.mapper.UserMapper;
+
 import static com.alkemy.ong.mapper.UserMapper.mapModelToDomain;
+
 import com.alkemy.ong.repository.RoleRepository;
 import com.alkemy.ong.repository.UserRepository;
 import com.alkemy.ong.repository.model.RoleModel;
 import com.alkemy.ong.repository.model.UserModel;
+
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
+
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.multipart.MultipartFile;
 
 public class UserService {
@@ -26,7 +33,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
     private final AmazonService amazonService;
-  
+
     private final EmailService emailService;
 
     public UserService(UserRepository userRepository,
@@ -115,4 +122,14 @@ public class UserService {
         return passwordEncoder.matches(password, passwordEncrypted);
     }
 
+    @Transactional
+    public void deleteUser(Long id) throws UserNotFoundException {
+        Optional<UserModel> modelOptional = userRepository.findById(id);
+        if (!modelOptional.isEmpty()) {
+            UserModel userModel = modelOptional.get();
+            userRepository.delete(userModel);
+        } else {
+            throw new UserNotFoundException(String.format("User with this ID " + id + "is not found", id));
+        }
+    }
 }
