@@ -57,8 +57,7 @@ public class UserMapper {
                 .firstName(updateDTO.getFirstName())
                 .lastName(updateDTO.getLastName())
                 .email(updateDTO.getEmail())
-                .password(updateDTO.getPassword())
-                .photo(updateDTO.getPhoto()).build();
+                .password(updateDTO.getPassword()).build();
         return userDomain;
     }
 

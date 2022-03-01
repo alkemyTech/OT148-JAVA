@@ -9,11 +9,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrganizationUpdateDTO {
+public class CategoryUpdateDTO {
+
     private String name;
-    private String address;
-    private Integer phone;
-    private String email;
-    private String welcomeText;
-    private String aboutUsText;
+    private String description;
+    private String image;
 }

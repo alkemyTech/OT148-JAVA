@@ -17,14 +17,18 @@ import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.multipart.MultipartFile;
 
 public class UserServiceTest {
 
     private final UserRepository userRepository = mock(UserRepository.class);
     private final RoleRepository roleRepository = mock(RoleRepository.class);
     private final PasswordEncoder passwordEncoder = mock(PasswordEncoder.class);
-    private final UserService userService = new UserService(userRepository, roleRepository, passwordEncoder);
+    private final AmazonService amazonService = mock(AmazonService.class);
+    private final EmailService emailService = mock(EmailService.class);
+    private final UserService userService = new UserService(userRepository, roleRepository, passwordEncoder, amazonService, emailService);
 
     @Test
     @DisplayName("Should create user")
@@ -84,12 +88,13 @@ public class UserServiceTest {
         // Given
         User user = getTestUser();
         Integer userId = 1;
+        MultipartFile file = Mockito.mock(MultipartFile.class);
 
         // When
         when(userRepository.existsById(any())).thenReturn(false);
 
         // Then
-        assertThrows(UserNotFoundException.class, () -> userService.updateUser(userId, user));
+        assertThrows(UserNotFoundException.class, () -> userService.updateUser(userId, user, file));
     }
 
     private RoleModel getRoleModel() {
