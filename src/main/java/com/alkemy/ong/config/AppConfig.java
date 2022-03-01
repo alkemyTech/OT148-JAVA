@@ -86,7 +86,7 @@ public class AppConfig {
     }
 
     @Bean
-    public ActivityService activityRepository(ActivityRepository activityRepository) {
+    public ActivityService activityService(ActivityRepository activityRepository) {
         return new ActivityService(activityRepository);
     }
 }
