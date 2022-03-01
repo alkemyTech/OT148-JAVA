@@ -66,7 +66,7 @@ public class CategoryService {
             CategoryModel categoryModel = categoryOptional.get();
             categoryRepository.delete(categoryModel);
         } else {
-            throw new NewsNotFoundException(String.format("Category with ID: " + id + " not found", id));
+            throw new CategoryNotFoundException(String.format("Category with ID: " + id + " not found", id));
         }
     }
 }
