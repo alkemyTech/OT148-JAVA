@@ -5,7 +5,7 @@ import com.alkemy.ong.repository.model.MemberModel;
 
 public class MemberMapper {
 
-    public static Member mapModelToDomain(MemberModel memberModel){
+    public static Member mapModelToDomain(MemberModel memberModel) {
         Member memberDomain = Member.builder()
                 .id(memberModel.getId())
                 .name(memberModel.getName())
@@ -17,7 +17,7 @@ public class MemberMapper {
         return memberDomain;
     }
 
-    public static MemberModel mapDomainToModel(Member memberDomain){
+    public static MemberModel mapDomainToModel(Member memberDomain) {
         MemberModel memberModel = MemberModel.builder()
                 .id(memberDomain.getId())
                 .name(memberDomain.getName())

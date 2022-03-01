@@ -26,7 +26,7 @@ public class NewsService {
         }
     }
 
- public News createNews(News news) {
+    public News createNews(News news) {
         NewsModel newsModel = newsRepository.save(NewsMapper.mapDomainToModel(news));
         News newsSaved = NewsMapper.mapModelToDomain(newsModel);
         return newsSaved;
@@ -47,8 +47,8 @@ public class NewsService {
             throw new NewsNotFoundException(String.format("News with ID: %s not found", id));
         }
     }
-  
-  public void deleteNews(Long id) throws NewsNotFoundException {
+
+    public void deleteNews(Long id) throws NewsNotFoundException {
         Optional<NewsModel> modelOptional = newsRepository.findById(id);
         if (!modelOptional.isEmpty()) {
             NewsModel newsModel = modelOptional.get();
@@ -57,5 +57,4 @@ public class NewsService {
             throw new NewsNotFoundException(String.format("News with ID: %s not found", id));
         }
     }
-
 }

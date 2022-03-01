@@ -50,5 +50,4 @@ public class OrganizationService {
     private String uploadImage(MultipartFile file) {
         return amazonService.uploadFile(file);
     }
-
 }

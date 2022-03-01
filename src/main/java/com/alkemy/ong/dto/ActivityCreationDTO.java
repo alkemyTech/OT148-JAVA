@@ -11,7 +11,6 @@ import lombok.Data;
 @Builder
 @AllArgsConstructor
 public class ActivityCreationDTO implements Serializable {
-
     @NotNull
     @NotBlank
     private String name;
@@ -19,5 +18,4 @@ public class ActivityCreationDTO implements Serializable {
     @NotBlank
     private String content;
     private String image;
-
 }
