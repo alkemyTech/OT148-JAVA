@@ -1,7 +1,7 @@
 package com.alkemy.ong.config;
 
-import com.alkemy.ong.repository.NewsRepository;
 import com.alkemy.ong.repository.CategoryRepository;
+import com.alkemy.ong.repository.NewsRepository;
 import com.alkemy.ong.repository.OrganizationRepository;
 import com.alkemy.ong.repository.RoleRepository;
 import com.alkemy.ong.repository.UserRepository;
@@ -11,11 +11,15 @@ import com.alkemy.ong.service.EmailService;
 import com.alkemy.ong.service.NewsService;
 import com.alkemy.ong.service.OrganizationService;
 import com.alkemy.ong.service.UserService;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.util.ResourceUtils;
 
 @Configuration
 public class AppConfig {

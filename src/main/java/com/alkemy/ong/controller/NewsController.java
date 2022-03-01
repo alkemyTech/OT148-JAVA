@@ -59,4 +59,10 @@ public class NewsController {
         NewsDTO result = NewsMapper.mapDomainToDTO(news);
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
+  
+  @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteNews(@PathVariable Long id) throws NewsNotFoundException {
+        newsService.deleteNews(id);
+        return new ResponseEntity(HttpStatus.OK);
+    }
 }
