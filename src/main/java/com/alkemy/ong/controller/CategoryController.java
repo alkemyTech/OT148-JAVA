@@ -6,13 +6,17 @@ import com.alkemy.ong.dto.CategoryDTO;
 import com.alkemy.ong.dto.CategoryUpdateDTO;
 import com.alkemy.ong.dto.ErrorDTO;
 import com.alkemy.ong.exception.CategoryNotFoundException;
+import com.alkemy.ong.exception.NewsNotFoundException;
 import com.alkemy.ong.mapper.CategoryMapper;
 import com.alkemy.ong.service.CategoryService;
+
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -63,5 +67,11 @@ public class CategoryController {
                 .code(HttpStatus.NOT_FOUND)
                 .message(ex.getMessage()).build();
         return new ResponseEntity(categoryNotFound, HttpStatus.NOT_FOUND);
+    }
+
+    @DeleteMapping("/categories/{id}")
+    public ResponseEntity<?> deleteCategory(@PathVariable Long id) throws CategoryNotFoundException {
+        categoryService.deleteCategory(id);
+        return new ResponseEntity(HttpStatus.OK);
     }
 }
