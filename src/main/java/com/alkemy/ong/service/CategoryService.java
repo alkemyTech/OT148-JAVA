@@ -2,9 +2,12 @@ package com.alkemy.ong.service;
 
 import com.alkemy.ong.domain.Category;
 import com.alkemy.ong.exception.CategoryNotFoundException;
+import com.alkemy.ong.exception.NewsNotFoundException;
 import com.alkemy.ong.mapper.CategoryMapper;
 import com.alkemy.ong.repository.CategoryRepository;
 import com.alkemy.ong.repository.model.CategoryModel;
+import com.alkemy.ong.repository.model.NewsModel;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -55,5 +58,15 @@ public class CategoryService {
         categoryModel.setImage(category.getImage());
         categoryModel.setCreationDate(category.getCreationDate());
         return CategoryMapper.mapModelToDomain(categoryRepository.save(categoryModel));
+    }
+
+    public void deleteCategory(Long id) throws CategoryNotFoundException {
+        Optional<CategoryModel> categoryOptional = categoryRepository.findById(id);
+        if (!categoryOptional.isEmpty()) {
+            CategoryModel categoryModel = categoryOptional.get();
+            categoryRepository.delete(categoryModel);
+        } else {
+            throw new NewsNotFoundException(String.format("Category with ID: " + id + " not found", id));
+        }
     }
 }
