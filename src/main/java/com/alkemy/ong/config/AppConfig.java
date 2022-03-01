@@ -1,21 +1,27 @@
 package com.alkemy.ong.config;
 
-import com.alkemy.ong.repository.NewsRepository;
+import com.alkemy.ong.repository.ActivityRepository;
 import com.alkemy.ong.repository.CategoryRepository;
+import com.alkemy.ong.repository.NewsRepository;
 import com.alkemy.ong.repository.OrganizationRepository;
 import com.alkemy.ong.repository.RoleRepository;
 import com.alkemy.ong.repository.UserRepository;
+import com.alkemy.ong.service.ActivityService;
 import com.alkemy.ong.service.AmazonService;
 import com.alkemy.ong.service.CategoryService;
 import com.alkemy.ong.service.EmailService;
 import com.alkemy.ong.service.NewsService;
 import com.alkemy.ong.service.OrganizationService;
 import com.alkemy.ong.service.UserService;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.util.ResourceUtils;
 
 @Configuration
 public class AppConfig {
@@ -77,5 +83,10 @@ public class AppConfig {
     @Bean
     public NewsService newsService(NewsRepository newsRepository) {
         return new NewsService(newsRepository);
+    }
+
+    @Bean
+    public ActivityService activityRepository(ActivityRepository activityRepository) {
+        return new ActivityService(activityRepository);
     }
 }
