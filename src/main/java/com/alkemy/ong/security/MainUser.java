@@ -25,7 +25,7 @@ public class MainUser implements UserDetails {
 
     public static MainUser build(UserModel userModel) {
         List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority((userModel.getRole()
-                .getRoleName()).name()));
+                .getName())));
         return new MainUser(userModel.getFirstName(), userModel.getLastName()
                 , userModel.getEmail(), userModel.getPassword(),
                 userModel.getPhoto(), authorities, userModel.getCreationDate());
