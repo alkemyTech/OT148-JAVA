@@ -6,7 +6,6 @@ import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Data;
 
-
 @Data
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)

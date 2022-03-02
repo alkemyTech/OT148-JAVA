@@ -1,14 +1,6 @@
 package com.alkemy.ong.repository.model;
 
-import com.alkemy.ong.domain.Category;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
-
+import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -18,7 +10,13 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
-import java.time.LocalDateTime;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 @Entity
 @Getter
@@ -41,13 +39,14 @@ public class NewsModel {
     @Column(nullable = false)
     private String image;
     @ManyToOne
-    @JoinColumn(name = "id",insertable = false, updatable = false)
+    @JoinColumn(name = "id", insertable = false, updatable = false)
     private CategoryModel categoryModel;
     private boolean deleted;
     @Column(name = "creation_date")
     private LocalDateTime creationDate;
 
     @PrePersist
-    private void beforePersisting(){ this.creationDate = LocalDateTime.now(); }
-
+    private void beforePersisting() {
+        this.creationDate = LocalDateTime.now();
+    }
 }

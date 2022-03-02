@@ -1,9 +1,8 @@
 package com.alkemy.ong.domain;
 
+import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Data;
-
-import java.time.LocalDateTime;
 
 @Data
 @Builder

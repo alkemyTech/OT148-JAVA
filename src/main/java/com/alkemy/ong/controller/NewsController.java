@@ -7,8 +7,10 @@ import com.alkemy.ong.dto.NewsUpdateDTO;
 import com.alkemy.ong.exception.NewsNotFoundException;
 import com.alkemy.ong.mapper.NewsMapper;
 import com.alkemy.ong.service.NewsService;
+import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,8 +19,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/news")
@@ -59,8 +59,8 @@ public class NewsController {
         NewsDTO result = NewsMapper.mapDomainToDTO(news);
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
-  
-  @DeleteMapping("/{id}")
+
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteNews(@PathVariable Long id) throws NewsNotFoundException {
         newsService.deleteNews(id);
         return new ResponseEntity(HttpStatus.OK);

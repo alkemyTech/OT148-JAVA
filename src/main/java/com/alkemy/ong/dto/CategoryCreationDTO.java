@@ -11,7 +11,6 @@ import lombok.Data;
 @Builder
 @AllArgsConstructor
 public class CategoryCreationDTO implements Serializable {
-
     @NotNull
     @NotBlank
     private String name;
