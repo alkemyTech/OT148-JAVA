@@ -20,8 +20,6 @@ public class OrganizationServiceTest {
 
     @Autowired
     private OrganizationService organizationService;
-    @Autowired
-    private OrganizationRepository organizationRepository;
 
     @Test
     void testGetAll() {
