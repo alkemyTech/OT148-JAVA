@@ -32,8 +32,7 @@ public class EmailService {
             request.setMethod(Method.POST);
             request.setEndpoint("mail/send");
             request.setBody(mail.build());
-            Response response = this.sendGrid.api(request);
-
+            this.sendGrid.api(request);
         } catch (IOException ex) {
             System.out.println("Error trying to send the email");
         }

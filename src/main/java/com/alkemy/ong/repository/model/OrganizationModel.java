@@ -22,7 +22,6 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "organizations")
 public class OrganizationModel implements Serializable {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -43,10 +42,8 @@ public class OrganizationModel implements Serializable {
     @Column(name = "creation_date")
     private LocalDateTime creationDate;
 
-
     @PrePersist
     private void beforePersisting() {
         this.creationDate = LocalDateTime.now();
     }
-
 }

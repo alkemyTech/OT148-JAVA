@@ -20,5 +20,4 @@ public class ActivityService {
         Activity activitySave = ActivityMapper.mapModelToDomain(activityModel);
         return activitySave;
     }
-
 }

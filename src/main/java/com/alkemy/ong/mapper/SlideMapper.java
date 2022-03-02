@@ -4,7 +4,7 @@ import com.alkemy.ong.domain.Slide;
 import com.alkemy.ong.repository.model.SlideModel;
 
 public class SlideMapper {
-    public static Slide mapModelToDomain(SlideModel slideModel){
+    public static Slide mapModelToDomain(SlideModel slideModel) {
         Slide slideDomain = Slide.builder()
                 .image(slideModel.getImage())
                 .text(slideModel.getText())
@@ -13,7 +13,7 @@ public class SlideMapper {
         return slideDomain;
     }
 
-    public static SlideModel mapDomainToModel(Slide slideDomain){
+    public static SlideModel mapDomainToModel(Slide slideDomain) {
         SlideModel slideModel = SlideModel.builder()
                 .image(slideDomain.getImage())
                 .text(slideDomain.getText())

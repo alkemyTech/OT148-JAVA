@@ -1,39 +1,29 @@
 package com.alkemy.ong.service;
 
+import static com.alkemy.ong.mapper.UserMapper.mapModelToDomain;
 import com.alkemy.ong.domain.User;
 import com.alkemy.ong.dto.UserDTO;
 import com.alkemy.ong.exception.InvalidPasswordException;
 import com.alkemy.ong.exception.UserNotFoundException;
 import com.alkemy.ong.mapper.RoleMapper;
 import com.alkemy.ong.mapper.UserMapper;
-
-import static com.alkemy.ong.mapper.UserMapper.mapModelToDomain;
-
 import com.alkemy.ong.repository.RoleRepository;
 import com.alkemy.ong.repository.UserRepository;
 import com.alkemy.ong.repository.model.RoleModel;
 import com.alkemy.ong.repository.model.UserModel;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.multipart.MultipartFile;
 
 public class UserService {
 
     private final UserRepository userRepository;
-
     private final RoleRepository roleRepository;
-
     private final PasswordEncoder passwordEncoder;
-
     private final AmazonService amazonService;
-
     private final EmailService emailService;
 
     public UserService(UserRepository userRepository,
