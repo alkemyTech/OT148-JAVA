@@ -22,6 +22,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -119,5 +120,11 @@ public class UserController {
                         .code(HttpStatus.BAD_REQUEST)
                         .message(ex.getMessage()).build();
         return new ResponseEntity(notExistsPassword, HttpStatus.BAD_REQUEST);
+    }
+
+    @DeleteMapping("/users/{userId}")
+    public ResponseEntity<?> deleteUser(@PathVariable Long userId) throws UserNotFoundException {
+        userService.deleteUser(userId);
+        return new ResponseEntity(HttpStatus.OK);
     }
 }

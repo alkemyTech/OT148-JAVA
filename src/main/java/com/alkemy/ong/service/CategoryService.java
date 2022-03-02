@@ -42,4 +42,28 @@ public class CategoryService {
             throw new CategoryNotFoundException(String.format("Category with ID: %s not found", id));
         }
     }
+
+    @Transactional
+    public Category updateCategory(Long id, Category category) throws CategoryNotFoundException {
+        Optional<CategoryModel> optionalCategoryModel = categoryRepository.findById(id);
+        if (optionalCategoryModel.isEmpty()) {
+            throw new CategoryNotFoundException(String.format("Category with ID: %s not found", id));
+        }
+        CategoryModel categoryModel = optionalCategoryModel.get();
+        categoryModel.setName(category.getName());
+        categoryModel.setDescription(category.getDescription());
+        categoryModel.setImage(category.getImage());
+        categoryModel.setCreationDate(category.getCreationDate());
+        return CategoryMapper.mapModelToDomain(categoryRepository.save(categoryModel));
+    }
+
+    public void deleteCategory(Long id) throws CategoryNotFoundException {
+        Optional<CategoryModel> categoryOptional = categoryRepository.findById(id);
+        if (!categoryOptional.isEmpty()) {
+            CategoryModel categoryModel = categoryOptional.get();
+            categoryRepository.delete(categoryModel);
+        } else {
+            throw new CategoryNotFoundException(String.format("Category with ID: " + id + " not found", id));
+        }
+    }
 }

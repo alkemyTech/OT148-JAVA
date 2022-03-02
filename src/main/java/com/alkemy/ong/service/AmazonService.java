@@ -67,5 +67,4 @@ public class AmazonService {
         s3client.deleteObject(new DeleteObjectRequest(bucketName + "/", fileName));
         return "Successfully deleted";
     }
-
 }

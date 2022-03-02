@@ -1,8 +1,8 @@
 package com.alkemy.ong.dto;
 
+import com.sun.istack.NotNull;
 import java.io.Serializable;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,17 +10,12 @@ import lombok.Data;
 @Data
 @Builder
 @AllArgsConstructor
-public class UserCreationDTO implements Serializable {
+public class ActivityCreationDTO implements Serializable {
     @NotNull
     @NotBlank
     private String name;
     @NotNull
     @NotBlank
-    private String lastName;
-    @NotNull
-    @NotBlank
-    private String email;
-    @NotNull
-    @NotBlank
-    private String password;
+    private String content;
+    private String image;
 }

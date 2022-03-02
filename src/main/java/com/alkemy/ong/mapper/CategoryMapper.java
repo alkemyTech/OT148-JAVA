@@ -3,6 +3,7 @@ package com.alkemy.ong.mapper;
 import com.alkemy.ong.domain.Category;
 import com.alkemy.ong.dto.CategoryCreationDTO;
 import com.alkemy.ong.dto.CategoryDTO;
+import com.alkemy.ong.dto.CategoryUpdateDTO;
 import com.alkemy.ong.repository.model.CategoryModel;
 
 public class CategoryMapper {
@@ -55,6 +56,14 @@ public class CategoryMapper {
                 .name(categoryCreationDTO.getName())
                 .description(categoryCreationDTO.getDescription())
                 .image(categoryCreationDTO.getImage()).build();
+        return category;
+    }
+
+    public static Category mapUpdateDTOToDomain(CategoryUpdateDTO categoryUpdateDTO) {
+        Category category = Category.builder()
+                .name(categoryUpdateDTO.getName())
+                .description(categoryUpdateDTO.getDescription())
+                .image(categoryUpdateDTO.getImage()).build();
         return category;
     }
 }

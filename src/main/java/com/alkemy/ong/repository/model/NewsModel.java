@@ -40,13 +40,14 @@ public class NewsModel {
     @Column(nullable = false)
     private String image;
     @ManyToOne
-    @JoinColumn(name = "id",insertable = false, updatable = false)
+    @JoinColumn(name = "id", insertable = false, updatable = false)
     private CategoryModel categoryModel;
     private boolean deleted;
     @Column(name = "creation_date")
     private LocalDateTime creationDate;
 
     @PrePersist
-    private void beforePersisting(){ this.creationDate = LocalDateTime.now(); }
-
+    private void beforePersisting() {
+        this.creationDate = LocalDateTime.now();
+    }
 }

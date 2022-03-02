@@ -22,7 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 public class OrganizationController {
 
-    private OrganizationService organizationService;
+    private final OrganizationService organizationService;
 
     public OrganizationController(OrganizationService organizationService) {
         this.organizationService = organizationService;

@@ -2,6 +2,7 @@ package com.alkemy.ong.mapper;
 
 import com.alkemy.ong.domain.News;
 import com.alkemy.ong.dto.NewsDTO;
+import com.alkemy.ong.dto.NewsUpdateDTO;
 import com.alkemy.ong.repository.model.NewsModel;
 
 public class NewsMapper {
@@ -30,7 +31,7 @@ public class NewsMapper {
         return newsModel;
     }
 
-    public static News mapDTOToDomain(NewsDTO dto){
+    public static News mapDTOToDomain(NewsDTO dto) {
         News news = News.builder()
                 .id(dto.getId())
                 .name(dto.getName())
@@ -42,7 +43,17 @@ public class NewsMapper {
         return news;
     }
 
-    public static NewsDTO mapDomainToDTO(News news){
+    public static News mapUpdateDTOToDomain(NewsUpdateDTO updateDTO) {
+        News news = News.builder()
+                .name(updateDTO.getName())
+                .content(updateDTO.getContent())
+                .image(updateDTO.getImage())
+                .category(CategoryMapper.mapDTOToDomain(updateDTO.getCategory()))
+                .build();
+        return news;
+    }
+
+    public static NewsDTO mapDomainToDTO(News news) {
         NewsDTO newsDTO = NewsDTO.builder()
                 .id(news.getId())
                 .name(news.getName())
