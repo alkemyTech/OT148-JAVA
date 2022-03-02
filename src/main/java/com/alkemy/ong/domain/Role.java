@@ -1,5 +1,6 @@
 package com.alkemy.ong.domain;
 
+import com.alkemy.ong.util.RoleName;
 import lombok.Builder;
 import lombok.Data;
 
@@ -9,7 +10,7 @@ import java.time.LocalDateTime;
 @Builder
 public class Role {
     private Integer id;
-    private String name;
+    private RoleName roleName;
     private String description;
     private LocalDateTime creationDate;
 }

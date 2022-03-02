@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository;
 public interface RoleRepository extends CrudRepository<RoleModel,Long> {
 
     RoleModel findByName(String name);
+
 }
