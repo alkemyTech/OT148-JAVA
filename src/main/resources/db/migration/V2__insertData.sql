@@ -7,5 +7,5 @@ INSERT INTO ORGANIZATIONS (name, image, address, phone, email, welcome_text, abo
                                         ('Unicef', 'unicef.jpg', 'Direccion u', 1212321, 'unicef@gmail.com', 'Welcome to Unicef', 'Somos una organizacion',NOW());
 
 INSERT INTO ACTIVITIES (name, content, image, deleted, creation_date) values
-                                        ('Actividades deportivas', 'Deporte para los niños','img.jpg','false',NOW()),
-                                        ('Colecta de alimentos', 'Colecta de ropa','img.jpg','false',NOW());
+                                        ('Actividades deportivas', 'Deporte para los niños','img.jpg',false,NOW()),
+                                        ('Colecta de alimentos', 'Colecta de ropa','img.jpg',false,NOW());
