@@ -25,7 +25,7 @@ CREATE TABLE ACTIVITIES(
     id            INTEGER      NOT NULL AUTO_INCREMENT,
     content       VARCHAR(128) NOT NULL,
     creation_date DATE,
-    deleted       BOOLEAN(128),
+    deleted       BOOLEAN,
     image         VARCHAR(128) NOT NULL,
     name          VARCHAR(128) NOT NULL,
     PRIMARY KEY (id)
