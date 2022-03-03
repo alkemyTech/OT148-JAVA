@@ -24,10 +24,7 @@ public class OrganizationDTO implements Serializable {
     @JsonIgnore
     private String aboutUsText;
     private LocalDateTime creationDate;
-    @JsonIgnore
     private String urlFacebook;
-    @JsonIgnore
     private String urlInstagram;
-    @JsonIgnore
     private String urlLinkedin;
 }
