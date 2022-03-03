@@ -1,6 +1,7 @@
 package com.alkemy.ong.service;
 
 import com.alkemy.ong.domain.Slide;
+import com.alkemy.ong.mapper.OrganizationMapper;
 import com.alkemy.ong.mapper.SlideMapper;
 import com.alkemy.ong.repository.SlideRepository;
 import com.alkemy.ong.repository.model.SlideModel;
@@ -21,15 +22,19 @@ public class SlideService {
     @Transactional
     public Slide createSlide(Slide slide) {
         SlideModel slideModel = SlideMapper.mapDomainToModel(slide);
-        slideModel.setImage(decodeImage(slideModel.getImage()));
+        uploadImage(decodeImage(slideModel.getImage()));
+        if (slideModel.getOrder() == null) {
+            slideModel.setOrder(slide.getOrder() + 1);
+        }
+        slideModel.setOrganizationModel(OrganizationMapper.mapDomainToModel(slide.getOrganization()));
         SlideModel save = slideRepository.save(slideModel);
         return SlideMapper.mapModelToDomain(save);
     }
 
-    private String decodeImage(String image) {
+    private Base64DecodedMultiPartFileService decodeImage(String image) {
         byte[] decodeBytes = Base64.getDecoder().decode(image);
-        String decodeString = new String(decodeBytes);
-        return decodeString;
+        Base64DecodedMultiPartFileService decodedMultipart = new Base64DecodedMultiPartFileService(decodeBytes);
+        return decodedMultipart;
     }
 
     private String uploadImage(MultipartFile file) {
