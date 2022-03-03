@@ -45,9 +45,9 @@ public class OrganizationService {
         organizationOld.setImage(uploadImage(image));
         organizationOld.setName(organization.getName());
         organizationOld.setPhone(organization.getPhone());
-        organizationOld.setUrlFacebook(organization.getUrlFacebook());
-        organizationOld.setUrlInstagram(organization.getUrlInstagram());
-        organizationOld.setUrlLinkedin(organization.getUrlLinkedin());
+        organizationOld.setFacebookUrl(organization.getFacebookUrl());
+        organizationOld.setInstagramUrl(organization.getInstagramUrl());
+        organizationOld.setLinkedinUrl(organization.getLinkedinUrl());
         return OrganizationMapper.mapModelToDomain(organizationRepository.save(organizationOld));
     }
 

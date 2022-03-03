@@ -43,11 +43,11 @@ public class OrganizationModel implements Serializable {
     @Column(name = "creation_date")
     private LocalDateTime creationDate;
     @Column(name = "facebook_url")
-    private String urlInstagram;
+    private String facebookUrl;
     @Column(name = "instagram_url")
-    private String urlFacebook;
+    private String instagramUrl;
     @Column(name = "linkedin_url")
-    private String urlLinkedin;
+    private String linkedinUrl;
 
     @PrePersist
     private void beforePersisting() {

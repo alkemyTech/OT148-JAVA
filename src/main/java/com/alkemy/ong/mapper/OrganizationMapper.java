@@ -16,9 +16,9 @@ public class OrganizationMapper {
                 .email(organizationModel.getEmail())
                 .welcomeText(organizationModel.getWelcomeText())
                 .aboutUsText(organizationModel.getAboutUsText())
-                .urlFacebook(organizationModel.getUrlFacebook())
-                .urlInstagram(organizationModel.getUrlInstagram())
-                .urlLinkedin(organizationModel.getUrlLinkedin())
+                .facebookUrl(organizationModel.getFacebookUrl())
+                .instagramUrl(organizationModel.getInstagramUrl())
+                .linkedinUrl(organizationModel.getLinkedinUrl())
                 .build();
         return organizationDomain;
     }
@@ -32,9 +32,9 @@ public class OrganizationMapper {
                 .email(organizationDomain.getEmail())
                 .welcomeText(organizationDomain.getWelcomeText())
                 .aboutUsText(organizationDomain.getAboutUsText())
-                .urlFacebook(organizationDomain.getUrlFacebook())
-                .urlInstagram(organizationDomain.getUrlInstagram())
-                .urlLinkedin(organizationDomain.getUrlLinkedin())
+                .facebookUrl(organizationDomain.getFacebookUrl())
+                .instagramUrl(organizationDomain.getInstagramUrl())
+                .linkedinUrl(organizationDomain.getLinkedinUrl())
                 .build();
         return organizationModel;
     }
