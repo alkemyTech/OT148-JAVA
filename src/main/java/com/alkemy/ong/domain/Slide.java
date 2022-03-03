@@ -9,6 +9,6 @@ public class Slide {
     private Long id;
     private String image;
     private String text;
-    private Integer order;
+    private Integer organizationOrder;
     private Organization organization;
 }

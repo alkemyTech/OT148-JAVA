@@ -1,11 +1,13 @@
 package com.alkemy.ong.repository.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Set;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -43,8 +45,12 @@ public class OrganizationModel implements Serializable {
     private String aboutUsText;
     @Column(name = "creation_date")
     private LocalDateTime creationDate;
-    @OneToMany
-    private Set<SlideModel> slides;
+    @OneToMany(
+            mappedBy = "organizationModel",
+            fetch = FetchType.LAZY
+    )
+    @JsonIgnoreProperties({"organizationModel"})
+    private List<SlideModel> slides;
 
 
     @PrePersist
