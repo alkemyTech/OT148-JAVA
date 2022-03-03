@@ -20,3 +20,13 @@ CREATE TABLE ORGANIZATIONS
     creation_date VARCHAR(128),
     PRIMARY KEY (id)
 );
+
+CREATE TABLE ACTIVITIES(
+    id            INTEGER      NOT NULL AUTO_INCREMENT,
+    content       VARCHAR(128) NOT NULL,
+    creation_date VARCHAR(128),
+    deleted       VARCHAR(128) NOT NULL,
+    image         VARCHAR(128) NOT NULL,
+    name          VARCHAR(128) NOT NULL,
+    PRIMARY KEY (id)
+);
