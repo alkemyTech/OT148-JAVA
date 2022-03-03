@@ -3,6 +3,8 @@ package com.alkemy.ong.controller;
 import com.alkemy.ong.domain.Activity;
 import com.alkemy.ong.dto.ActivityCreationDTO;
 import com.alkemy.ong.dto.ActivityDTO;
+import com.alkemy.ong.dto.ActivityUpdateDTO;
+import com.alkemy.ong.exception.ActivityNotFoundException;
 import com.alkemy.ong.mapper.ActivityMapper;
 import com.alkemy.ong.service.ActivityService;
 import java.util.HashMap;
@@ -13,7 +15,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,6 +36,13 @@ public class ActivityController {
         Activity activity = activityService.createActivity(ActivityMapper.mapCreationDTOToDomain(activityCreationDTO));
         ActivityDTO activityDTO = ActivityMapper.mapDomainToDTO(activity);
         return ResponseEntity.status(HttpStatus.CREATED).body(activityDTO);
+    }
+
+    @PutMapping("/activities/{id}")
+    public ResponseEntity<ActivityDTO> updateActivity(@PathVariable Long id, @RequestBody ActivityUpdateDTO activityUpdateDTO) throws ActivityNotFoundException {
+        Activity activityDomain = ActivityMapper.mapUpdateDTOToDomain(activityUpdateDTO);
+        ActivityDTO activityDTO = ActivityMapper.mapDomainToDTO(activityService.updateActivity(id, activityDomain));
+        return ResponseEntity.ok(activityDTO);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
