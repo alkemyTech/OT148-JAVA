@@ -1,6 +1,7 @@
 package com.alkemy.ong.domain;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 import lombok.Builder;
 import lombok.Data;
 
@@ -14,5 +15,6 @@ public class Organization {
     private String email;
     private String welcomeText;
     private String aboutUsText;
+    private Set<Slide> slides;
     private LocalDateTime creationDate;
 }

@@ -6,8 +6,10 @@ import com.alkemy.ong.mapper.OrganizationMapper;
 import com.alkemy.ong.repository.OrganizationRepository;
 import com.alkemy.ong.repository.SlideRepository;
 import com.alkemy.ong.repository.model.OrganizationModel;
+import com.alkemy.ong.repository.model.SlideModel;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,6 +31,11 @@ public class OrganizationService {
     @Transactional
     public List<Organization> findAll() {
         List<OrganizationModel> organizationModelList = organizationRepository.findAll();
+        organizationModelList.stream().forEach(organizationModel -> {
+            List<SlideModel> slides = slideRepository.
+                    findByOrganizationModel_IdOrderByOrder(organizationModel.getId());
+            organizationModel.setSlides((Set<SlideModel>) slides);
+        });
         return organizationModelList.stream().map(OrganizationMapper::mapModelToDomain)
                 .collect(Collectors.toList());
     }

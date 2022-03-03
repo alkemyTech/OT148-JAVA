@@ -3,11 +3,13 @@ package com.alkemy.ong.repository.model;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -41,6 +43,9 @@ public class OrganizationModel implements Serializable {
     private String aboutUsText;
     @Column(name = "creation_date")
     private LocalDateTime creationDate;
+    @OneToMany
+    private Set<SlideModel> slides;
+
 
     @PrePersist
     private void beforePersisting() {
