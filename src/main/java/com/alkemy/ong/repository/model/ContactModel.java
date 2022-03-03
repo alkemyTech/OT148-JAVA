@@ -1,5 +1,6 @@
 package com.alkemy.ong.repository.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -25,8 +26,10 @@ public class ContactModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(nullable = false)
     private String name;
     private Integer phone;
+    @Column(nullable = false)
     private String email;
     private String message;
     private boolean deleted;
