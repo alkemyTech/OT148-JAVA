@@ -1,8 +1,11 @@
 package com.alkemy.ong.repository.model;
 
 
-import java.io.Serializable;
-import java.time.LocalDateTime;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,10 +13,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import java.io.Serializable;
+import java.time.LocalDateTime;
 
 @Data
 @Builder
@@ -41,6 +42,12 @@ public class OrganizationModel implements Serializable {
     private String aboutUsText;
     @Column(name = "creation_date")
     private LocalDateTime creationDate;
+    @Column(name = "facebook_url")
+    private String facebookUrl;
+    @Column(name = "instagram_url")
+    private String instagramUrl;
+    @Column(name = "linkedin_url")
+    private String linkedinUrl;
 
     @PrePersist
     private void beforePersisting() {
