@@ -4,6 +4,7 @@ import com.alkemy.ong.domain.Organization;
 import com.alkemy.ong.exception.OrganizationNotFoundException;
 import com.alkemy.ong.mapper.OrganizationMapper;
 import com.alkemy.ong.repository.OrganizationRepository;
+import com.alkemy.ong.repository.SlideRepository;
 import com.alkemy.ong.repository.model.OrganizationModel;
 import java.util.List;
 import java.util.Optional;
@@ -14,10 +15,14 @@ import org.springframework.web.multipart.MultipartFile;
 public class OrganizationService {
 
     private final OrganizationRepository organizationRepository;
+    private final SlideRepository slideRepository;
     private final AmazonService amazonService;
 
-    public OrganizationService(OrganizationRepository organizationRepository, AmazonService amazonService) {
+    public OrganizationService(OrganizationRepository organizationRepository,
+                               SlideRepository slideRepository,
+                               AmazonService amazonService) {
         this.organizationRepository = organizationRepository;
+        this.slideRepository = slideRepository;
         this.amazonService = amazonService;
     }
 
