@@ -18,7 +18,6 @@ public class ContactService {
     @Transactional
     public Contact addContact(Contact contact) {
         ContactModel contactModel = mapDomainToModel(contact);
-        ContactModel save = contactRepository.save(contactModel);
-        return mapModelToDomain(save);
+        return mapModelToDomain(contactRepository.save(contactModel));
     }
 }
