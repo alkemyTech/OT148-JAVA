@@ -1,6 +1,8 @@
 package com.alkemy.ong.mapper;
 
 import com.alkemy.ong.domain.Testimonial;
+import com.alkemy.ong.dto.TestimonialCreationDTO;
+import com.alkemy.ong.dto.TestimonialDTO;
 import com.alkemy.ong.repository.model.TestimonialModel;
 
 public class TestimonialMapper {
@@ -23,5 +25,23 @@ public class TestimonialMapper {
                 .creationDate(testimonial.getCreationDate())
                 .build();
         return testimonialModel;
+    }
+
+    public static TestimonialDTO mapDomainToDTO(Testimonial testimonial){
+        TestimonialDTO testimonialDTO = TestimonialDTO.builder()
+                .name(testimonial.getName())
+                .image(testimonial.getImage())
+                .content(testimonial.getContent())
+                .creationDate(testimonial.getCreationDate())
+                .build();
+        return testimonialDTO;
+    }
+
+    public static Testimonial mapCreationDTOtoDomain (TestimonialCreationDTO testimonialCreationDTO){
+        Testimonial testimonial = Testimonial.builder()
+                .name(testimonialCreationDTO.getName())
+                .content(testimonialCreationDTO.getContent())
+                .build();
+        return testimonial;
     }
 }
