@@ -6,6 +6,7 @@ import com.alkemy.ong.repository.ContactRepository;
 import com.alkemy.ong.repository.NewsRepository;
 import com.alkemy.ong.repository.OrganizationRepository;
 import com.alkemy.ong.repository.RoleRepository;
+import com.alkemy.ong.repository.SlideRepository;
 import com.alkemy.ong.repository.UserRepository;
 import com.alkemy.ong.service.ActivityService;
 import com.alkemy.ong.service.AmazonService;
@@ -14,6 +15,7 @@ import com.alkemy.ong.service.ContactService;
 import com.alkemy.ong.service.EmailService;
 import com.alkemy.ong.service.NewsService;
 import com.alkemy.ong.service.OrganizationService;
+import com.alkemy.ong.service.SlideService;
 import com.alkemy.ong.service.UserService;
 import java.io.File;
 import java.io.IOException;
@@ -95,6 +97,11 @@ public class AppConfig {
     @Bean
     public ContactService contactService(ContactRepository contactRepository) {
         return new ContactService(contactRepository);
+    }
+
+    @Bean
+    public SlideService slideService(SlideRepository slideRepository, AmazonService amazonService) {
+        return new SlideService(slideRepository, amazonService);
     }
 
 }
