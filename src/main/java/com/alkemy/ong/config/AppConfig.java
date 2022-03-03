@@ -8,6 +8,7 @@ import com.alkemy.ong.repository.OrganizationRepository;
 import com.alkemy.ong.repository.RoleRepository;
 import com.alkemy.ong.repository.SlideRepository;
 import com.alkemy.ong.repository.UserRepository;
+import com.alkemy.ong.security.UserDetailsServiceImpl;
 import com.alkemy.ong.service.ActivityService;
 import com.alkemy.ong.service.AmazonService;
 import com.alkemy.ong.service.CategoryService;
@@ -22,17 +23,11 @@ import java.nio.file.Files;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.ResourceUtils;
 
 @Configuration
 public class AppConfig {
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
 
     @Bean
     public UserService userService(UserRepository userRepository,
@@ -84,6 +79,10 @@ public class AppConfig {
         return new AmazonService(bucketName, accessKey, secretKey, endpointUrl);
     }
 
+    @Bean
+    public UserDetailsServiceImpl userDetailsServiceImpl(UserRepository userRepository) {
+        return new UserDetailsServiceImpl(userRepository);
+    }
     @Bean
     public NewsService newsService(NewsRepository newsRepository) {
         return new NewsService(newsRepository);

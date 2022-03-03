@@ -17,4 +17,7 @@ public class Organization {
     private String aboutUsText;
     private List<Slide> slides;
     private LocalDateTime creationDate;
+    private String facebookUrl;
+    private String instagramUrl;
+    private String linkedinUrl;
 }
