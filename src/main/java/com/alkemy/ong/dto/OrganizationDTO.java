@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.Builder;
 import lombok.Data;
 
@@ -23,4 +24,5 @@ public class OrganizationDTO implements Serializable {
     @JsonIgnore
     private String aboutUsText;
     private LocalDateTime creationDate;
+    private List<SlideDTO> slides;
 }

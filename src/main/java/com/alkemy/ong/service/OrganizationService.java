@@ -2,14 +2,13 @@ package com.alkemy.ong.service;
 
 import com.alkemy.ong.domain.Organization;
 import com.alkemy.ong.exception.OrganizationNotFoundException;
-import com.alkemy.ong.mapper.OrganizationMapper;
+import static com.alkemy.ong.mapper.OrganizationMapper.mapModelToDomain;
 import com.alkemy.ong.repository.OrganizationRepository;
 import com.alkemy.ong.repository.SlideRepository;
 import com.alkemy.ong.repository.model.OrganizationModel;
 import com.alkemy.ong.repository.model.SlideModel;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,13 +29,15 @@ public class OrganizationService {
 
     @Transactional
     public List<Organization> findAll() {
-        List<OrganizationModel> organizationModelList = organizationRepository.findAll();
-        organizationModelList.stream().forEach(organizationModel -> {
-            List<SlideModel> slides = slideRepository.
-                    findByOrganizationModel_IdOrderByOrder(organizationModel.getId());
-            organizationModel.setSlides((Set<SlideModel>) slides);
-        });
-        return organizationModelList.stream().map(OrganizationMapper::mapModelToDomain)
+        return organizationRepository.findAll()
+                .stream()
+                .parallel()
+                .map(organizationModel -> {
+                    List<SlideModel> slides = slideRepository.
+                            findByOrganizationModel_IdOrderByOrganizationOrder(organizationModel.getId());
+                    organizationModel.setSlides(slides);
+                    return mapModelToDomain(organizationModel);
+                })
                 .collect(Collectors.toList());
     }
 
@@ -56,7 +57,7 @@ public class OrganizationService {
         organizationOld.setImage(uploadImage(image));
         organizationOld.setName(organization.getName());
         organizationOld.setPhone(organization.getPhone());
-        return OrganizationMapper.mapModelToDomain(organizationRepository.save(organizationOld));
+        return mapModelToDomain(organizationRepository.save(organizationOld));
     }
 
     private String uploadImage(MultipartFile file) {

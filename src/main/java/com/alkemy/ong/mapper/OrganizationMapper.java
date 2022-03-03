@@ -4,6 +4,7 @@ import com.alkemy.ong.domain.Organization;
 import com.alkemy.ong.dto.OrganizationDTO;
 import com.alkemy.ong.dto.OrganizationUpdateDTO;
 import com.alkemy.ong.repository.model.OrganizationModel;
+import java.util.stream.Collectors;
 
 public class OrganizationMapper {
 
@@ -15,7 +16,11 @@ public class OrganizationMapper {
                 phone(organizationModel.getPhone()).
                 email(organizationModel.getEmail()).
                 welcomeText(organizationModel.getWelcomeText()).
-                aboutUsText(organizationModel.getAboutUsText()).build();
+                aboutUsText(organizationModel.getAboutUsText()).
+                slides(organizationModel
+                        .getSlides().stream()
+                        .map(SlideMapper::mapModelToDomain)
+                        .collect(Collectors.toList())).build();
         return organizationDomain;
     }
 
@@ -39,7 +44,11 @@ public class OrganizationMapper {
                 .phone(organizationDomain.getPhone())
                 .email(organizationDomain.getEmail())
                 .welcomeText(organizationDomain.getWelcomeText())
-                .aboutUsText(organizationDomain.getAboutUsText()).build();
+                .aboutUsText(organizationDomain.getAboutUsText())
+                .slides(organizationDomain
+                        .getSlides().stream()
+                        .map(SlideMapper::mapDomainToDto)
+                        .collect(Collectors.toList())).build();
         return organizationDTO;
     }
 
