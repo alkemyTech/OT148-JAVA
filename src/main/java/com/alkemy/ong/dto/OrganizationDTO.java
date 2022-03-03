@@ -2,10 +2,11 @@ package com.alkemy.ong.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import java.io.Serializable;
-import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Data;
+
+import java.io.Serializable;
+import java.time.LocalDateTime;
 
 @Data
 @Builder
@@ -23,4 +24,10 @@ public class OrganizationDTO implements Serializable {
     @JsonIgnore
     private String aboutUsText;
     private LocalDateTime creationDate;
+    @JsonIgnore
+    private String urlFacebook;
+    @JsonIgnore
+    private String urlInstagram;
+    @JsonIgnore
+    private String urlLinkedin;
 }
