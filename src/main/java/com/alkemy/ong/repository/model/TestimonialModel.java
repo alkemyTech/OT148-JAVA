@@ -29,7 +29,7 @@ public class TestimonialModel {
     private Long id;
     @Column(nullable = false)
     private String name;
-    @Column(nullable = false)
+    @Column
     private String image;
     @Column(nullable = false)
     private String content;
