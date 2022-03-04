@@ -5,11 +5,12 @@ import com.alkemy.ong.exception.OrganizationNotFoundException;
 import com.alkemy.ong.mapper.OrganizationMapper;
 import com.alkemy.ong.repository.OrganizationRepository;
 import com.alkemy.ong.repository.model.OrganizationModel;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import javax.transaction.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 public class OrganizationService {
 
@@ -44,6 +45,9 @@ public class OrganizationService {
         organizationOld.setImage(uploadImage(image));
         organizationOld.setName(organization.getName());
         organizationOld.setPhone(organization.getPhone());
+        organizationOld.setFacebookUrl(organization.getFacebookUrl());
+        organizationOld.setInstagramUrl(organization.getInstagramUrl());
+        organizationOld.setLinkedinUrl(organization.getLinkedinUrl());
         return OrganizationMapper.mapModelToDomain(organizationRepository.save(organizationOld));
     }
 

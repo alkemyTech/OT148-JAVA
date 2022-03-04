@@ -3,6 +3,7 @@ package com.alkemy.ong.mapper;
 import com.alkemy.ong.domain.Activity;
 import com.alkemy.ong.dto.ActivityCreationDTO;
 import com.alkemy.ong.dto.ActivityDTO;
+import com.alkemy.ong.dto.ActivityUpdateDTO;
 import com.alkemy.ong.repository.model.ActivityModel;
 
 public class ActivityMapper {
@@ -43,6 +44,15 @@ public class ActivityMapper {
                 .name(creationDTO.getName())
                 .content(creationDTO.getContent())
                 .image(creationDTO.getImage())
+                .build();
+        return activity;
+    }
+
+    public static Activity mapUpdateDTOToDomain(ActivityUpdateDTO activityUpdateDTO) {
+        Activity activity = Activity.builder()
+                .name(activityUpdateDTO.getName())
+                .content(activityUpdateDTO.getContent())
+                .image(activityUpdateDTO.getImage())
                 .build();
         return activity;
     }
