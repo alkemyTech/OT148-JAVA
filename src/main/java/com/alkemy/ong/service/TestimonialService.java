@@ -1,7 +1,6 @@
 package com.alkemy.ong.service;
 
 import com.alkemy.ong.domain.Testimonial;
-import com.alkemy.ong.exception.CategoryNotFoundException;
 import com.alkemy.ong.exception.TestimonialNotFoundException;
 import com.alkemy.ong.mapper.TestimonialMapper;
 import com.alkemy.ong.repository.TestimonialRepository;
@@ -31,7 +30,7 @@ public class TestimonialService {
             TestimonialModel testimonialModel = testimonialOptional.get();
             testimonialRepository.delete(testimonialModel);
         } else {
-            throw new CategoryNotFoundException(String.format("Testimonial with ID: %s not found", id));
+            throw new TestimonialNotFoundException(String.format("Testimonial with ID: %s not found", id));
         }
     }
 }
