@@ -40,5 +40,5 @@ public class SlideModel {
     )
     @JoinColumn(name = "organization_id")
     @JsonIgnoreProperties({"slides"})
-    private OrganizationModel organizationModel;
+    private OrganizationModel organization;
 }

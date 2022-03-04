@@ -20,11 +20,11 @@ public class OrganizationMapper {
                 .facebookUrl(organizationModel.getFacebookUrl())
                 .instagramUrl(organizationModel.getInstagramUrl())
                 .linkedinUrl(organizationModel.getLinkedinUrl())
-                .
-                slides(organizationModel
+                .slides(organizationModel
                         .getSlides().stream()
                         .map(SlideMapper::mapModelToDomain)
-                        .collect(Collectors.toList())).build();
+                        .collect(Collectors.toList()))
+                .build();
         return organizationDomain;
     }
 
@@ -56,7 +56,8 @@ public class OrganizationMapper {
                 .slides(organizationDomain
                         .getSlides().stream()
                         .map(SlideMapper::mapDomainToDto)
-                        .collect(Collectors.toList())).build();
+                        .collect(Collectors.toList()))
+                .build();
         return organizationDTO;
     }
 

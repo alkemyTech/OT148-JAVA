@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface SlideRepository extends CrudRepository<SlideModel, Long> {
 
-    List<SlideModel> findByOrganizationModel_IdOrderByOrganizationOrder(Long id);
+    List<SlideModel> findByOrganization_IdOrderByOrganizationOrder(Long id);
 }

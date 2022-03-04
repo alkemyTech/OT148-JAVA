@@ -8,5 +8,5 @@ import lombok.Data;
 public class SlideDTO {
     private String image;
     private String text;
-    private Integer organizationOrder;
+    private Integer order;
 }

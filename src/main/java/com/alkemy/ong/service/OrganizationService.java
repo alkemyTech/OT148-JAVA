@@ -7,11 +7,11 @@ import com.alkemy.ong.repository.OrganizationRepository;
 import com.alkemy.ong.repository.SlideRepository;
 import com.alkemy.ong.repository.model.OrganizationModel;
 import com.alkemy.ong.repository.model.SlideModel;
-import org.springframework.web.multipart.MultipartFile;
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import javax.transaction.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 public class OrganizationService {
 
@@ -34,7 +34,7 @@ public class OrganizationService {
                 .parallel()
                 .map(organizationModel -> {
                     List<SlideModel> slides = slideRepository.
-                            findByOrganizationModel_IdOrderByOrganizationOrder(organizationModel.getId());
+                            findByOrganization_IdOrderByOrganizationOrder(organizationModel.getId());
                     organizationModel.setSlides(slides);
                     return mapModelToDomain(organizationModel);
                 })
