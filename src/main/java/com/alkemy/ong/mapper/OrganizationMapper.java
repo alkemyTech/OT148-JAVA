@@ -47,7 +47,11 @@ public class OrganizationMapper {
                 .phone(organizationDomain.getPhone())
                 .email(organizationDomain.getEmail())
                 .welcomeText(organizationDomain.getWelcomeText())
-                .aboutUsText(organizationDomain.getAboutUsText()).build();
+                .aboutUsText(organizationDomain.getAboutUsText())
+                .facebookUrl(organizationDomain.getFacebookUrl())
+                .instagramUrl(organizationDomain.getInstagramUrl())
+                .linkedinUrl(organizationDomain.getLinkedinUrl())
+                .build();
         return organizationDTO;
     }
 
@@ -58,7 +62,11 @@ public class OrganizationMapper {
                 .phone(updateDTO.getPhone())
                 .welcomeText(updateDTO.getWelcomeText())
                 .aboutUsText(updateDTO.getAboutUsText())
-                .address(updateDTO.getAddress()).build();
+                .address(updateDTO.getAddress())
+                .facebookUrl(updateDTO.getFacebookUrl())
+                .instagramUrl(updateDTO.getInstagramUrl())
+                .linkedinUrl(updateDTO.getLinkedinUrl())
+                .build();
         return organization;
     }
 }
