@@ -25,16 +25,17 @@ public class TestimonialController {
     private final TestimonialService testimonialService;
 
     public TestimonialController(TestimonialService testimonialService) {
-        this.testimonialService= testimonialService;
+        this.testimonialService = testimonialService;
     }
 
     @PostMapping("/testimonials")
-    public ResponseEntity<TestimonialDTO> createTestimonial(@Valid@RequestBody TestimonialCreationDTO testimonialCreationDTO){
+    public ResponseEntity<TestimonialDTO> createTestimonial(@Valid @RequestBody TestimonialCreationDTO testimonialCreationDTO) {
         Testimonial testimonial = TestimonialMapper.mapCreationDTOtoDomain(testimonialCreationDTO);
         testimonialService.createTestimonial(testimonial);
         TestimonialDTO testimonialDTO = TestimonialMapper.mapDomainToDTO(testimonial);
         return ResponseEntity.status(HttpStatus.CREATED).body(testimonialDTO);
     }
+
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public Map<String, String> handleValidationExceptions(MethodArgumentNotValidException ex) {

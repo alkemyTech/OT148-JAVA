@@ -15,5 +15,4 @@ public class TestimonialDTO implements Serializable {
     private String name;
     private String image;
     private String content;
-    private LocalDateTime creationDate;
 }
