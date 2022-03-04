@@ -7,6 +7,7 @@ import com.alkemy.ong.repository.NewsRepository;
 import com.alkemy.ong.repository.OrganizationRepository;
 import com.alkemy.ong.repository.RoleRepository;
 import com.alkemy.ong.repository.TestimonialRepository;
+import com.alkemy.ong.repository.SlideRepository;
 import com.alkemy.ong.repository.UserRepository;
 import com.alkemy.ong.security.UserDetailsServiceImpl;
 import com.alkemy.ong.service.ActivityService;
@@ -60,8 +61,9 @@ public class AppConfig {
     @Bean
     public OrganizationService organizationService(
             OrganizationRepository organizationRepository,
+            SlideRepository slideRepository,
             AmazonService amazonService) {
-        return new OrganizationService(organizationRepository, amazonService);
+        return new OrganizationService(organizationRepository, slideRepository, amazonService);
     }
 
     @Bean

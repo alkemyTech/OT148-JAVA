@@ -1,6 +1,7 @@
 package com.alkemy.ong.mapper;
 
 import com.alkemy.ong.domain.Slide;
+import com.alkemy.ong.dto.SlideDTO;
 import com.alkemy.ong.repository.model.SlideModel;
 
 public class SlideMapper {
@@ -8,8 +9,8 @@ public class SlideMapper {
         Slide slideDomain = Slide.builder()
                 .image(slideModel.getImage())
                 .text(slideModel.getText())
-                .order(slideModel.getOrder())
-                .organization(OrganizationMapper.mapModelToDomain(slideModel.getOrganizationModel())).build();
+                .organizationOrder(slideModel.getOrganizationOrder())
+                .build();
         return slideDomain;
     }
 
@@ -17,8 +18,18 @@ public class SlideMapper {
         SlideModel slideModel = SlideModel.builder()
                 .image(slideDomain.getImage())
                 .text(slideDomain.getText())
-                .order(slideDomain.getOrder())
-                .organizationModel(OrganizationMapper.mapDomainToModel(slideDomain.getOrganization())).build();
+                .organizationOrder(slideDomain.getOrganizationOrder())
+                .build();
         return slideModel;
     }
+
+    public static SlideDTO mapDomainToDto(Slide slideDomain) {
+        SlideDTO slideDTO = SlideDTO.builder()
+                .image(slideDomain.getImage())
+                .text(slideDomain.getText())
+                .order(slideDomain.getOrganizationOrder())
+                .build();
+        return slideDTO;
+    }
+
 }

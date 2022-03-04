@@ -2,6 +2,9 @@ package com.alkemy.ong.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.List;
 import lombok.Builder;
 import lombok.Data;
 
@@ -27,4 +30,5 @@ public class OrganizationDTO implements Serializable {
     private String facebookUrl;
     private String instagramUrl;
     private String linkedinUrl;
+    private List<SlideDTO> slides;
 }

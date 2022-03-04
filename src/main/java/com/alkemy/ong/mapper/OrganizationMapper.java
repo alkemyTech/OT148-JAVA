@@ -4,6 +4,7 @@ import com.alkemy.ong.domain.Organization;
 import com.alkemy.ong.dto.OrganizationDTO;
 import com.alkemy.ong.dto.OrganizationUpdateDTO;
 import com.alkemy.ong.repository.model.OrganizationModel;
+import java.util.stream.Collectors;
 
 public class OrganizationMapper {
 
@@ -19,6 +20,10 @@ public class OrganizationMapper {
                 .facebookUrl(organizationModel.getFacebookUrl())
                 .instagramUrl(organizationModel.getInstagramUrl())
                 .linkedinUrl(organizationModel.getLinkedinUrl())
+                .slides(organizationModel
+                        .getSlides().stream()
+                        .map(SlideMapper::mapModelToDomain)
+                        .collect(Collectors.toList()))
                 .build();
         return organizationDomain;
     }
@@ -47,7 +52,15 @@ public class OrganizationMapper {
                 .phone(organizationDomain.getPhone())
                 .email(organizationDomain.getEmail())
                 .welcomeText(organizationDomain.getWelcomeText())
-                .aboutUsText(organizationDomain.getAboutUsText()).build();
+                .aboutUsText(organizationDomain.getAboutUsText())
+                .facebookUrl(organizationDomain.getFacebookUrl())
+                .instagramUrl(organizationDomain.getInstagramUrl())
+                .linkedinUrl(organizationDomain.getLinkedinUrl())
+                .slides(organizationDomain
+                        .getSlides().stream()
+                        .map(SlideMapper::mapDomainToDto)
+                        .collect(Collectors.toList()))
+                .build();
         return organizationDTO;
     }
 
@@ -58,7 +71,11 @@ public class OrganizationMapper {
                 .phone(updateDTO.getPhone())
                 .welcomeText(updateDTO.getWelcomeText())
                 .aboutUsText(updateDTO.getAboutUsText())
-                .address(updateDTO.getAddress()).build();
+                .address(updateDTO.getAddress())
+                .facebookUrl(updateDTO.getFacebookUrl())
+                .instagramUrl(updateDTO.getInstagramUrl())
+                .linkedinUrl(updateDTO.getLinkedinUrl())
+                .build();
         return organization;
     }
 }
