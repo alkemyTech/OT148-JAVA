@@ -32,8 +32,7 @@ public class TestimonialMapper {
                 .id(testimonial.getId())
                 .name(testimonial.getName())
                 .image(testimonial.getImage())
-                .content(testimonial.getContent())
-                .creationDate(testimonial.getCreationDate())
+                .content(testimonial.getContent())g
                 .build();
         return testimonialDTO;
     }
