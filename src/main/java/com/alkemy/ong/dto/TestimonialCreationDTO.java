@@ -19,4 +19,5 @@ public class TestimonialCreationDTO implements Serializable {
         @NotNull
         @NotBlank
         private String content;
+        private String image;
 }

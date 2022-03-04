@@ -8,11 +8,17 @@ import com.alkemy.ong.service.CategoryService;
 import com.alkemy.ong.service.TestimonialService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 public class TestimonialController {
@@ -29,8 +35,6 @@ public class TestimonialController {
         TestimonialDTO testimonialDTO = TestimonialMapper.mapDomainToDTO(testimonial);
         return ResponseEntity.status(HttpStatus.CREATED).body(testimonialDTO);
     }
-}
-/*
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public Map<String, String> handleValidationExceptions(MethodArgumentNotValidException ex) {
@@ -43,4 +47,3 @@ public class TestimonialController {
         return errors;
     }
 }
- */

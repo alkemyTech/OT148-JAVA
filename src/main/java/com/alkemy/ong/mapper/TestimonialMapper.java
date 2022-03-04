@@ -29,6 +29,7 @@ public class TestimonialMapper {
 
     public static TestimonialDTO mapDomainToDTO(Testimonial testimonial){
         TestimonialDTO testimonialDTO = TestimonialDTO.builder()
+                .id(testimonial.getId())
                 .name(testimonial.getName())
                 .image(testimonial.getImage())
                 .content(testimonial.getContent())
@@ -41,6 +42,7 @@ public class TestimonialMapper {
         Testimonial testimonial = Testimonial.builder()
                 .name(testimonialCreationDTO.getName())
                 .content(testimonialCreationDTO.getContent())
+                .image(testimonialCreationDTO.getImage())
                 .build();
         return testimonial;
     }
