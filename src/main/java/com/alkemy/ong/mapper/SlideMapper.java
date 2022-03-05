@@ -49,6 +49,7 @@ public class SlideMapper {
                 .image(slideCreationDTO.getImage())
                 .text(slideCreationDTO.getText())
                 .order(slideCreationDTO.getOrder())
+                .organization(OrganizationMapper.mapDTOToDomain(slideCreationDTO.getOrganization()))
                 .build();
         return slide;
     }

@@ -43,6 +43,19 @@ public class OrganizationMapper {
         return organizationDTO;
     }
 
+    public static Organization mapDTOToDomain(OrganizationDTO dto) {
+        Organization organizationDomain = Organization.builder()
+                .name(dto.getName())
+                .image(dto.getImage())
+                .address(dto.getAddress())
+                .phone(dto.getPhone())
+                .email(dto.getEmail())
+                .welcomeText(dto.getWelcomeText())
+                .aboutUsText(dto.getAboutUsText())
+                .build();
+        return organizationDomain;
+    }
+
     public static Organization mapUpdateDTOToDomain(OrganizationUpdateDTO updateDTO) {
         Organization organization = Organization.builder()
                 .name(updateDTO.getName())
