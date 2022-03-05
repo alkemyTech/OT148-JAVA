@@ -100,8 +100,8 @@ public class AppConfig {
     }
 
     @Bean
-    public SlideService slideService(SlideRepository slideRepository, AmazonService amazonService) {
-        return new SlideService(slideRepository, amazonService);
+    public SlideService slideService(SlideRepository slideRepository, OrganizationRepository organizationRepository) {
+        return new SlideService(slideRepository, organizationRepository);
     }
 
 }
