@@ -31,4 +31,14 @@ public class SlideService {
             throw new SlideNotFoundException(String.format("Slide with id: %s not found", idSlide));
         }
     }
+
+    @Transactional
+    public void deleteSlide(Long idSlide) throws SlideNotFoundException {
+        Optional<SlideModel> slide = slideRepository.findById(idSlide);
+        if (!slide.isEmpty()) {
+            slideRepository.delete(slide.get());
+        } else {
+            throw new SlideNotFoundException(String.format("Slide with id: %s not found", idSlide));
+        }
+    }
 }

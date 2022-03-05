@@ -7,6 +7,7 @@ import com.alkemy.ong.mapper.SlideMapper;
 import com.alkemy.ong.service.SlideService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,6 +27,11 @@ public class SlideController {
         return ResponseEntity.ok(SlideMapper.mapDomainToDto(slideService.slideDetails(id)));
     }
 
+    @DeleteMapping("/slides/{id}")
+    public ResponseEntity deleteSlide(@PathVariable("id") Long id) throws SlideNotFoundException {
+        slideService.deleteSlide(id);
+        return ResponseEntity.ok(HttpStatus.OK);
+    }
 
     @ExceptionHandler(SlideNotFoundException.class)
     public ResponseEntity<ErrorDTO> handleUserNotFoundExceptions(SlideNotFoundException ex) {
