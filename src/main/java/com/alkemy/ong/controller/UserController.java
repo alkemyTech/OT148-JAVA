@@ -13,6 +13,10 @@ import com.alkemy.ong.mapper.UserMapper;
 import com.alkemy.ong.security.JwtProvider;
 import com.alkemy.ong.security.MainUser;
 import com.alkemy.ong.service.UserService;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +24,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -30,16 +33,11 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
-import javax.validation.Valid;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import static com.alkemy.ong.mapper.UserMapper.mapDomainToDTO;
 import static com.alkemy.ong.mapper.UserMapper.mapUpdateDTOToDomain;
 
@@ -128,4 +126,10 @@ public class UserController {
         userService.deleteUser(userId);
         return new ResponseEntity(HttpStatus.OK);
     }
+
+    @GetMapping("/auth/me")
+    public ResponseEntity<UserDTO> userInfo(@RequestHeader(value = "Authorization") String auth) throws UserNotFoundException {
+        return ResponseEntity.ok(userService.getAuthenticatedUser(auth));
+    }
+
 }
