@@ -10,7 +10,7 @@ import com.alkemy.ong.repository.RoleRepository;
 import com.alkemy.ong.repository.UserRepository;
 import com.alkemy.ong.repository.model.RoleModel;
 import com.alkemy.ong.repository.model.UserModel;
-import com.alkemy.ong.security.JwtProvider;
+import com.alkemy.ong.security.JwtTokenFilter;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -29,7 +29,7 @@ public class UserService {
     private final EmailService emailService;
 
     @Autowired
-    JwtProvider jwtProvider;
+    JwtTokenFilter jwtTokenFilter;
 
 
     public UserService(UserRepository userRepository,
@@ -131,8 +131,7 @@ public class UserService {
 
     @Transactional
     public UserDTO getAuthenticatedUser(String auth) throws UserNotFoundException {
-        String email = jwtProvider.getEmailFromToken(auth);
-        UserModel userModel = userRepository.findByEmail(email);
+        UserModel userModel = userRepository.findByEmail(auth);
         User user = UserMapper.mapModelToDomain(userModel);
         return UserMapper.mapDomainToDTO(user);
     }
