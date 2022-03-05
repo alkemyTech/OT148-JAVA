@@ -3,14 +3,16 @@ package com.alkemy.ong.controller;
 import com.alkemy.ong.domain.Testimonial;
 import com.alkemy.ong.dto.TestimonialCreationDTO;
 import com.alkemy.ong.dto.TestimonialDTO;
+import com.alkemy.ong.exception.TestimonialNotFoundException;
 import com.alkemy.ong.mapper.TestimonialMapper;
-import com.alkemy.ong.service.CategoryService;
 import com.alkemy.ong.service.TestimonialService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -46,5 +48,11 @@ public class TestimonialController {
             errors.put(fieldName, errorMessage);
         });
         return errors;
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<?> deleteTestimonial(@PathVariable Long id) throws TestimonialNotFoundException {
+        testimonialService.deleteTestimonial(id);
+        return new ResponseEntity(HttpStatus.OK);
     }
 }
