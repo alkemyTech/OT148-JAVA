@@ -7,8 +7,8 @@ import com.alkemy.ong.repository.MemberRepository;
 import com.alkemy.ong.repository.NewsRepository;
 import com.alkemy.ong.repository.OrganizationRepository;
 import com.alkemy.ong.repository.RoleRepository;
-import com.alkemy.ong.repository.TestimonialRepository;
 import com.alkemy.ong.repository.SlideRepository;
+import com.alkemy.ong.repository.TestimonialRepository;
 import com.alkemy.ong.repository.UserRepository;
 import com.alkemy.ong.security.UserDetailsServiceImpl;
 import com.alkemy.ong.service.ActivityService;
@@ -19,17 +19,17 @@ import com.alkemy.ong.service.EmailService;
 import com.alkemy.ong.service.MemberService;
 import com.alkemy.ong.service.NewsService;
 import com.alkemy.ong.service.OrganizationService;
+import com.alkemy.ong.service.SlideService;
 import com.alkemy.ong.service.TestimonialService;
 import com.alkemy.ong.service.UserService;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.ResourceUtils;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 
 @Configuration
 public class AppConfig {
@@ -110,7 +110,12 @@ public class AppConfig {
     }
 
     @Bean
-    public TestimonialService testimonialService (TestimonialRepository testimonialRepository){
+    public TestimonialService testimonialService(TestimonialRepository testimonialRepository) {
         return new TestimonialService(testimonialRepository);
+    }
+
+    @Bean
+    public SlideService slideService(SlideRepository slideRepository, AmazonService amazonService) {
+        return new SlideService(slideRepository, amazonService);
     }
 }
