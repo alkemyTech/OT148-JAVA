@@ -1,18 +1,18 @@
 package com.alkemy.ong.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import java.io.Serializable;
-
 import lombok.Builder;
 import lombok.Data;
+
+import java.io.Serializable;
+import java.time.LocalDateTime;
 
 @Data
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class SlideDTO implements Serializable {
+public class TestimonialDTO implements Serializable {
     private Long id;
+    private String name;
     private String image;
-    private String text;
-    private Integer order;
-    private OrganizationDTO organization;
+    private String content;
 }

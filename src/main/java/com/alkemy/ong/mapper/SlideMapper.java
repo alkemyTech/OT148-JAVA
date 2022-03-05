@@ -10,8 +10,8 @@ public class SlideMapper {
         Slide slideDomain = Slide.builder()
                 .image(slideModel.getImage())
                 .text(slideModel.getText())
-                .order(slideModel.getOrder())
-                .organization(OrganizationMapper.mapModelToDomain(slideModel.getOrganizationModel())).build();
+                .organizationOrder(slideModel.getOrganizationOrder())
+                .build();
         return slideDomain;
     }
 
@@ -19,8 +19,8 @@ public class SlideMapper {
         SlideModel slideModel = SlideModel.builder()
                 .image(slideDomain.getImage())
                 .text(slideDomain.getText())
-                .order(slideDomain.getOrder())
-                .organizationModel(OrganizationMapper.mapDomainToModel(slideDomain.getOrganization())).build();
+                .organizationOrder(slideDomain.getOrganizationOrder())
+                .build();
         return slideModel;
     }
 

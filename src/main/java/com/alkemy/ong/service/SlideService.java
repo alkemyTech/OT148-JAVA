@@ -11,15 +11,21 @@ import com.alkemy.ong.utils.Base64DecodedMultiPartFile;
 import java.util.Base64;
 import javax.transaction.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import com.alkemy.ong.exception.SlideNotFoundException;
+import java.util.Optional;
+import org.springframework.transaction.annotation.Transactional;
+
 
 public class SlideService {
 
     private final SlideRepository slideRepository;
     private final OrganizationRepository organizationRepository;
-
-    public SlideService(SlideRepository slideRepository, OrganizationRepository organizationRepository) {
+    private final AmazonService amazonService;
+  
+    public SlideService(SlideRepository slideRepository, OrganizationRepository organizationRepository, AmazonService amazonService) {
         this.slideRepository = slideRepository;
         this.organizationRepository = organizationRepository;
+        this.amazonService = amazonService;
     }
 
     @Transactional
@@ -46,5 +52,20 @@ public class SlideService {
     }
 
     private void uploadImage(MultipartFile file) {
+    }   
+
+    @Transactional(readOnly = true)
+    public Slide slideDetails(Long idSlide) throws SlideNotFoundException {
+        Optional<SlideModel> slideModel = slideRepository.findById(idSlide);
+        if (!slideModel.isEmpty()) {
+            Slide slide = Slide.builder()
+                    .image(slideModel.get().getImage())
+                    .organizationOrder(slideModel.get().getOrganizationOrder())
+                    .text(slideModel.get().getText())
+                    .build();
+            return slide;
+        } else {
+            throw new SlideNotFoundException(String.format("Slide with id: %s not found", idSlide));
+        }
     }
 }
