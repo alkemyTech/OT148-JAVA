@@ -13,4 +13,5 @@ public class SlideDTO implements Serializable {
     private String image;
     private String text;
     private Integer order;
+    private OrganizationDTO organization;
 }

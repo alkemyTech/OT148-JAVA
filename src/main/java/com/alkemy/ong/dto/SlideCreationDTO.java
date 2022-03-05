@@ -17,4 +17,5 @@ public class SlideCreationDTO {
     @NotBlank
     private String text;
     private Integer order;
+    private OrganizationDTO organization;
 }
