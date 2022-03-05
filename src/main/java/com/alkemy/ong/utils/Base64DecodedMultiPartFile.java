@@ -1,4 +1,4 @@
-package com.alkemy.ong.service;
+package com.alkemy.ong.utils;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -7,11 +7,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import org.springframework.web.multipart.MultipartFile;
 
-public class Base64DecodedMultiPartFileService implements MultipartFile {
+public class Base64DecodedMultiPartFile implements MultipartFile {
 
     private final byte[] imageContent;
 
-    public Base64DecodedMultiPartFileService(byte[] imageContent) {
+    public Base64DecodedMultiPartFile(byte[] imageContent) {
         this.imageContent = imageContent;
     }
 
