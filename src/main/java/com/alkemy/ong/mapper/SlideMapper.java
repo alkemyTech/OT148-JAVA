@@ -1,6 +1,7 @@
 package com.alkemy.ong.mapper;
 
 import com.alkemy.ong.domain.Slide;
+import com.alkemy.ong.dto.SlideCreationDTO;
 import com.alkemy.ong.dto.SlideDTO;
 import com.alkemy.ong.repository.model.SlideModel;
 
@@ -30,6 +31,22 @@ public class SlideMapper {
                 .order(slideDomain.getOrganizationOrder())
                 .build();
         return slideDTO;
+    }
+
+    public static Slide mapDTOToDomain(SlideDTO dto) {
+        Slide slideDomain = Slide.builder()
+                .image(dto.getImage())
+                .text(dto.getText())
+                .organizationOrder(dto.getOrder())
+                .build();
+        return slideDomain;
+    }
+
+    public static Slide mapCreationDTOToDomain(SlideCreationDTO slideCreationDTO) {
+        Slide slideDomain = Slide.builder()
+                .organization(OrganizationMapper.mapDTOToDomain(slideCreationDTO.getOrganization()))
+                .build();
+        return slideDomain;
     }
 
 }
