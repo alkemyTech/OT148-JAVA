@@ -4,6 +4,7 @@ import com.alkemy.ong.domain.Organization;
 import com.alkemy.ong.dto.OrganizationDTO;
 import com.alkemy.ong.dto.OrganizationUpdateDTO;
 import com.alkemy.ong.repository.model.OrganizationModel;
+import java.util.stream.Collectors;
 
 public class OrganizationMapper {
 
@@ -19,6 +20,10 @@ public class OrganizationMapper {
                 .facebookUrl(organizationModel.getFacebookUrl())
                 .instagramUrl(organizationModel.getInstagramUrl())
                 .linkedinUrl(organizationModel.getLinkedinUrl())
+                .slides(organizationModel
+                        .getSlides().stream()
+                        .map(SlideMapper::mapModelToDomain)
+                        .collect(Collectors.toList()))
                 .build();
         return organizationDomain;
     }
@@ -51,6 +56,10 @@ public class OrganizationMapper {
                 .facebookUrl(organizationDomain.getFacebookUrl())
                 .instagramUrl(organizationDomain.getInstagramUrl())
                 .linkedinUrl(organizationDomain.getLinkedinUrl())
+                .slides(organizationDomain
+                        .getSlides().stream()
+                        .map(SlideMapper::mapDomainToDto)
+                        .collect(Collectors.toList()))
                 .build();
         return organizationDTO;
     }
