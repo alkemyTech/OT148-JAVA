@@ -28,6 +28,6 @@ public class SlideModel {
     @Column(name = "`order`")
     private Integer order;
     @ManyToOne
-    @JoinColumn(name = "id", insertable = false, updatable = false)
+    @JoinColumn(name = "organization_id", insertable = false, updatable = false)
     private OrganizationModel organizationModel;
 }

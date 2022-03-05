@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface SlideRepository extends CrudRepository<SlideModel, Long> {
+    SlideModel findFirstByOrganization_IdOrderByOrganizationOrderDesc(Long id);
 }
