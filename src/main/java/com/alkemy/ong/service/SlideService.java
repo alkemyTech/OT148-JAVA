@@ -52,6 +52,18 @@ public class SlideService {
     }
 
     @Transactional
+    public Slide updateSlide(Long id, Slide slide) throws SlideNotFoundException {
+        Optional<SlideModel> optionalSlideModel = slideRepository.findById(id);
+        if (optionalSlideModel.isEmpty()) {
+            throw new SlideNotFoundException(String.format("Slide with ID: %s not found", id));
+        }
+        SlideModel slideModel = optionalSlideModel.get();
+        slideModel.setImage(uploadImage(decodeImage(slide.getImage())));
+        slideModel.setText(slide.getText());
+        slideModel.setOrganizationOrder(slide.getOrganizationOrder());
+        return SlideMapper.mapModelToDomain(slideRepository.save(slideModel));
+    }
+  
     public Slide createSlide(Slide slide) {
         SlideModel slideModel = SlideMapper.mapDomainToModel(slide);
         Optional<OrganizationModel> organizationModelOptional = organizationRepository.findById(slideModel.getOrganization().getId());
