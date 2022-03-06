@@ -129,7 +129,7 @@ public class UserController {
 
     @GetMapping("/auth/me")
     public ResponseEntity<UserDTO> infoUser(@RequestHeader(value = "Authorization") String authorizationHeader) throws UserNotFoundException {
-        String jwt = authorizationHeader.substring(7);
+        String jwt = authorizationHeader.replace("Bearer ", "");
         String email = jwtProvider.getEmailFromToken(jwt);
         return ResponseEntity.ok(userService.getAuthenticatedUser(email));
     }
