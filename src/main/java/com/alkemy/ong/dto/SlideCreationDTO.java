@@ -12,6 +12,6 @@ public class SlideCreationDTO implements Serializable {
 
     private String image;
     private String text;
-    private String order;
-    private OrganizationDTO organization;
+    private Integer order;
+    private Long organizationId;
 }
