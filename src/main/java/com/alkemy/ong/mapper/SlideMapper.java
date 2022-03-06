@@ -38,6 +38,7 @@ public class SlideMapper {
                 .image(slideCreationDTO.getImage())
                 .text(slideCreationDTO.getText())
                 .organizationOrder(slideCreationDTO.getOrder())
+                .id(slideCreationDTO.getOrganizationId())
                 .build();
         return slideDomain;
     }
