@@ -36,7 +36,7 @@ public class MemberController {
 
     @PostMapping
     public ResponseEntity<MemberDTO> createMember(@Valid @RequestBody MemberCreationDTO memberCreationDTO) {
-        Member member = MemberMapper
+        Member member = MemberMapper.mapCreationDTOToDomain(memberCreationDTO);
         MemberDTO memberDTO = MemberMapper
     }
 
