@@ -5,6 +5,7 @@ import com.alkemy.ong.dto.MemberCreationDTO;
 import com.alkemy.ong.dto.MemberDTO;
 import com.alkemy.ong.mapper.MemberMapper;
 import com.alkemy.ong.service.MemberService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,7 +38,8 @@ public class MemberController {
     @PostMapping
     public ResponseEntity<MemberDTO> createMember(@Valid @RequestBody MemberCreationDTO memberCreationDTO) {
         Member member = MemberMapper.mapCreationDTOToDomain(memberCreationDTO);
-        MemberDTO memberDTO = MemberMapper
+        MemberDTO memberDTO = MemberMapper.mapDomainToDTO(memberService.createMember(member));
+        return ResponseEntity.status(HttpStatus.CREATED).body(memberDTO);
     }
 
 }
