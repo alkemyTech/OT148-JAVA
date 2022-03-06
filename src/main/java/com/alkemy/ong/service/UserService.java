@@ -10,11 +10,9 @@ import com.alkemy.ong.repository.RoleRepository;
 import com.alkemy.ong.repository.UserRepository;
 import com.alkemy.ong.repository.model.RoleModel;
 import com.alkemy.ong.repository.model.UserModel;
-import com.alkemy.ong.security.JwtTokenFilter;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,10 +25,6 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final AmazonService amazonService;
     private final EmailService emailService;
-
-    @Autowired
-    JwtTokenFilter jwtTokenFilter;
-
 
     public UserService(UserRepository userRepository,
                        RoleRepository roleRepository,
