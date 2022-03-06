@@ -3,7 +3,6 @@ package com.alkemy.ong.service;
 import com.alkemy.ong.domain.Slide;
 import com.alkemy.ong.exception.OrganizationNotFoundException;
 import com.alkemy.ong.exception.SlideNotFoundException;
-import com.alkemy.ong.mapper.OrganizationMapper;
 import com.alkemy.ong.mapper.SlideMapper;
 import com.alkemy.ong.repository.OrganizationRepository;
 import com.alkemy.ong.repository.SlideRepository;
@@ -59,12 +58,11 @@ public class SlideService {
         if (organizationModelOptional.isEmpty()) {
             throw new OrganizationNotFoundException(String.format("Organization with ID: %s not found", slideModel.getOrganization().getId()));
         }
-        slideModel.setOrganization(OrganizationMapper.mapDomainToModel(slide.getOrganization()));
+        slideModel.setOrganization(organizationModelOptional.get());
         if (slideModel.getOrganizationOrder() == null) {
-            SlideModel slideModelMaxOrder = slideRepository.findFirstByOrganization_IdOrderByOrganizationOrderDesc(slideModel.getOrganization().getId());
+            Optional<SlideModel> slideModelOptional = slideRepository.findFirstByOrganization_IdOrderByOrganizationOrderDesc(slideModel.getOrganization().getId());
+            SlideModel slideModelMaxOrder = slideModelOptional.get();
             slideModel.setOrganizationOrder(slideModelMaxOrder.getOrganizationOrder() + 1);
-        } else {
-            slideModel.setOrganizationOrder(slide.getOrganizationOrder());
         }
         slideModel.setImage(uploadImage(decodeImage(slide.getImage())));
         SlideModel save = slideRepository.save(slideModel);
