@@ -1,13 +1,17 @@
 package com.alkemy.ong.controller;
 
+import com.alkemy.ong.domain.Member;
 import com.alkemy.ong.dto.MemberDTO;
 import com.alkemy.ong.mapper.MemberMapper;
 import com.alkemy.ong.service.MemberService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,6 +31,12 @@ public class MemberController {
                 .stream().map(MemberMapper::mapDomainToDTO)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(memberDTOS);
+    }
+
+    @PostMapping
+    public ResponseEntity<MemberDTO> createMember(@Valid @RequestBody MemberDTO memberDTO) {
+        Member member = MemberMapper
+        Member member = MemberMapper
     }
 
 }
