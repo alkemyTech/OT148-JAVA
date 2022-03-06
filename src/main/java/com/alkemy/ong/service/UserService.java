@@ -124,8 +124,8 @@ public class UserService {
     }
 
     @Transactional
-    public UserDTO getAuthenticatedUser(String auth) throws UserNotFoundException {
-        UserModel userModel = userRepository.findByEmail(auth);
+    public UserDTO getAuthenticatedUser(String email) throws UserNotFoundException {
+        UserModel userModel = userRepository.findByEmail(email);
         User user = UserMapper.mapModelToDomain(userModel);
         return UserMapper.mapDomainToDTO(user);
     }
