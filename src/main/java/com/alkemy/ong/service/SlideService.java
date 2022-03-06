@@ -50,7 +50,7 @@ public class SlideService {
             throw new SlideNotFoundException(String.format("Slide with ID: %s not found", id));
         }
         SlideModel slideModel = optionalSlideModel.get();
-        slideModel.setImage(slide.getImage());
+        slideModel.setImage(uploadImage(decodeImage(slide.getImage())));
         slideModel.setText(slide.getText());
         slideModel.setOrganizationOrder(slide.getOrganizationOrder());
         return SlideMapper.mapModelToDomain(slideRepository.save(slideModel));
