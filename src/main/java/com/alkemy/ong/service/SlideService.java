@@ -61,8 +61,12 @@ public class SlideService {
         slideModel.setOrganization(organizationModelOptional.get());
         if (slideModel.getOrganizationOrder() == null) {
             Optional<SlideModel> slideModelOptional = slideRepository.findFirstByOrganization_IdOrderByOrganizationOrderDesc(slideModel.getOrganization().getId());
-            SlideModel slideModelMaxOrder = slideModelOptional.get();
-            slideModel.setOrganizationOrder(slideModelMaxOrder.getOrganizationOrder() + 1);
+            if (slideModelOptional.isEmpty()) {
+                slideModel.setOrganizationOrder(1);
+            } else {
+                SlideModel slideModelMaxOrder = slideModelOptional.get();
+                slideModel.setOrganizationOrder(slideModelMaxOrder.getOrganizationOrder() + 1);
+            }
         }
         slideModel.setImage(uploadImage(decodeImage(slide.getImage())));
         SlideModel save = slideRepository.save(slideModel);
