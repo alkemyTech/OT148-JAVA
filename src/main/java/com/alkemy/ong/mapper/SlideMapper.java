@@ -1,5 +1,6 @@
 package com.alkemy.ong.mapper;
 
+import com.alkemy.ong.domain.Organization;
 import com.alkemy.ong.domain.Slide;
 import com.alkemy.ong.dto.SlideCreationDTO;
 import com.alkemy.ong.dto.SlideDTO;
@@ -38,7 +39,7 @@ public class SlideMapper {
                 .image(slideCreationDTO.getImage())
                 .text(slideCreationDTO.getText())
                 .organizationOrder(slideCreationDTO.getOrder())
-                .id(slideCreationDTO.getOrganizationId())
+                .organization(Organization.builder().id(slideCreationDTO.getOrganizationId()).build())
                 .build();
         return slideDomain;
     }
