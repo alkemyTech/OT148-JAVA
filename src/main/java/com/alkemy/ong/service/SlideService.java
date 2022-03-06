@@ -2,6 +2,7 @@ package com.alkemy.ong.service;
 
 import com.alkemy.ong.domain.Slide;
 import com.alkemy.ong.exception.SlideNotFoundException;
+import com.alkemy.ong.mapper.SlideMapper;
 import com.alkemy.ong.repository.SlideRepository;
 import com.alkemy.ong.repository.model.SlideModel;
 import java.util.Optional;
@@ -40,5 +41,18 @@ public class SlideService {
         } else {
             throw new SlideNotFoundException(String.format("Slide with id: %s not found", idSlide));
         }
+    }
+
+    @Transactional
+    public Slide updateSlide(Long id, Slide slide) throws SlideNotFoundException {
+        Optional<SlideModel> optionalSlideModel = slideRepository.findById(id);
+        if (optionalSlideModel.isEmpty()) {
+            throw new SlideNotFoundException(String.format("Slide with ID: %s not found", id));
+        }
+        SlideModel slideModel = optionalSlideModel.get();
+        slideModel.setImage(slide.getImage());
+        slideModel.setText(slide.getText());
+        slideModel.setOrganizationOrder(slide.getOrganizationOrder());
+        return SlideMapper.mapModelToDomain(slideRepository.save(slideModel));
     }
 }
