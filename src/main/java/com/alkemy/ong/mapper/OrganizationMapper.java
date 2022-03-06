@@ -78,25 +78,4 @@ public class OrganizationMapper {
                 .build();
         return organization;
     }
-
-    public static Organization mapDTOToDomain(OrganizationDTO dto) {
-        Organization organizationDomain = Organization.builder()
-                .name(dto.getName())
-                .image(dto.getImage())
-                .address(dto.getAddress())
-                .phone(dto.getPhone())
-                .email(dto.getEmail())
-                .welcomeText(dto.getWelcomeText())
-                .aboutUsText(dto.getAboutUsText())
-                .facebookUrl(dto.getFacebookUrl())
-                .instagramUrl(dto.getInstagramUrl())
-                .linkedinUrl(dto.getLinkedinUrl())
-                .slides(dto
-                        .getSlides().stream()
-                        .map(SlideMapper::mapDTOToDomain)
-                        .collect(Collectors.toList()))
-                .build();
-        return organizationDomain;
-    }
-
 }

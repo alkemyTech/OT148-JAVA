@@ -33,18 +33,11 @@ public class SlideMapper {
         return slideDTO;
     }
 
-    public static Slide mapDTOToDomain(SlideDTO dto) {
-        Slide slideDomain = Slide.builder()
-                .image(dto.getImage())
-                .text(dto.getText())
-                .organizationOrder(dto.getOrder())
-                .build();
-        return slideDomain;
-    }
-
     public static Slide mapCreationDTOToDomain(SlideCreationDTO slideCreationDTO) {
         Slide slideDomain = Slide.builder()
-                .organization(OrganizationMapper.mapDTOToDomain(slideCreationDTO.getOrganization()))
+                .image(slideCreationDTO.getImage())
+                .text(slideCreationDTO.getText())
+                .organizationOrder(slideCreationDTO.getOrder())
                 .build();
         return slideDomain;
     }
