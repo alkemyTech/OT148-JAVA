@@ -54,11 +54,17 @@ public class AppConfig {
     }
 
     @Bean
+    public String emailTemplateContact() throws IOException {
+        File templateC = ResourceUtils.getFile("classpath:template/plantilla_email_contacto.html");
+        return new String(Files.readAllBytes(templateC.toPath()));
+    }
+
+    @Bean
     public EmailService emailService(
             @Value("${sendgrid.api.key}") String apiKey,
             @Value("${alkemy.ong.email.sender}") String emailSender,
-            String emailTemplate) {
-        return new EmailService(apiKey, emailSender, emailTemplate);
+            String emailTemplate, String emailTemplateContact) {
+        return new EmailService(apiKey, emailSender, emailTemplate, emailTemplateContact);
     }
 
     @Bean
@@ -100,8 +106,8 @@ public class AppConfig {
     }
 
     @Bean
-    public ContactService contactService(ContactRepository contactRepository) {
-        return new ContactService(contactRepository);
+    public ContactService contactService(ContactRepository contactRepository, EmailService emailService) {
+        return new ContactService(contactRepository, emailService);
     }
 
     @Bean
@@ -115,7 +121,7 @@ public class AppConfig {
     }
 
     @Bean
-    public SlideService slideService(SlideRepository slideRepository, AmazonService amazonService) {
-        return new SlideService(slideRepository, amazonService);
+    public SlideService slideService(SlideRepository slideRepository, AmazonService amazonService, OrganizationRepository organizationRepository) {
+        return new SlideService(slideRepository, amazonService, organizationRepository);
     }
 }

@@ -3,6 +3,7 @@ package com.alkemy.ong.mapper;
 import com.alkemy.ong.domain.Testimonial;
 import com.alkemy.ong.dto.TestimonialCreationDTO;
 import com.alkemy.ong.dto.TestimonialDTO;
+import com.alkemy.ong.dto.TestimonialUpdateDTO;
 import com.alkemy.ong.repository.model.TestimonialModel;
 
 public class TestimonialMapper {
@@ -27,7 +28,7 @@ public class TestimonialMapper {
         return testimonialModel;
     }
 
-    public static TestimonialDTO mapDomainToDTO(Testimonial testimonial){
+    public static TestimonialDTO mapDomainToDTO(Testimonial testimonial) {
         TestimonialDTO testimonialDTO = TestimonialDTO.builder()
                 .id(testimonial.getId())
                 .name(testimonial.getName())
@@ -37,11 +38,20 @@ public class TestimonialMapper {
         return testimonialDTO;
     }
 
-    public static Testimonial mapCreationDTOtoDomain (TestimonialCreationDTO testimonialCreationDTO){
+    public static Testimonial mapCreationDTOtoDomain(TestimonialCreationDTO testimonialCreationDTO) {
         Testimonial testimonial = Testimonial.builder()
                 .name(testimonialCreationDTO.getName())
                 .content(testimonialCreationDTO.getContent())
                 .image(testimonialCreationDTO.getImage())
+                .build();
+        return testimonial;
+    }
+
+    public static Testimonial mapUpdateDTOToDomain(TestimonialUpdateDTO testimonialUpdateDTO) {
+        Testimonial testimonial = Testimonial.builder()
+                .name(testimonialUpdateDTO.getName())
+                .image(testimonialUpdateDTO.getImage())
+                .content(testimonialUpdateDTO.getContent())
                 .build();
         return testimonial;
     }
