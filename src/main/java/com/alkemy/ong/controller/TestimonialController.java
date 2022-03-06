@@ -3,6 +3,7 @@ package com.alkemy.ong.controller;
 import com.alkemy.ong.domain.Testimonial;
 import com.alkemy.ong.dto.TestimonialCreationDTO;
 import com.alkemy.ong.dto.TestimonialDTO;
+import com.alkemy.ong.dto.TestimonialUpdateDTO;
 import com.alkemy.ong.exception.TestimonialNotFoundException;
 import com.alkemy.ong.mapper.TestimonialMapper;
 import com.alkemy.ong.service.TestimonialService;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,6 +38,14 @@ public class TestimonialController {
         testimonialService.createTestimonial(testimonial);
         TestimonialDTO testimonialDTO = TestimonialMapper.mapDomainToDTO(testimonial);
         return ResponseEntity.status(HttpStatus.CREATED).body(testimonialDTO);
+    }
+
+    @PutMapping("/testimonials/{id}")
+    public ResponseEntity<TestimonialDTO> updateTestimonials(@PathVariable Long id, @RequestBody TestimonialUpdateDTO testimonialUpdateDTO) throws TestimonialNotFoundException {
+        Testimonial testimonial =
+                TestimonialMapper.mapUpdateDTOToDomain(testimonialUpdateDTO);
+        TestimonialDTO testimonialDTO = TestimonialMapper.mapDomainToDTO(testimonialService.updateTestimonial(id, testimonial));
+        return ResponseEntity.ok(testimonialDTO);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
