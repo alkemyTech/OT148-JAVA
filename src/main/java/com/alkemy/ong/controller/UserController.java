@@ -16,7 +16,6 @@ import com.alkemy.ong.service.UserService;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -34,6 +33,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -128,12 +128,10 @@ public class UserController {
     }
 
     @GetMapping("/auth/me")
-    public ResponseEntity<UserDTO> infoUser(HttpServletRequest httpServletRequest) throws UserNotFoundException {
-        if (httpServletRequest.getHeader("Authorization") == null) {
-            throw new UserNotFoundException("User not logged");
-        }
-        String jwt = httpServletRequest.getHeader("Authorization").substring(7);
-        return ResponseEntity.ok(userService.getAuthenticatedUser(jwtProvider.getEmailFromToken(jwt)));
+    public ResponseEntity<UserDTO> infoUser(@RequestHeader(value = "Authorization") String authorizationHeader) throws UserNotFoundException {
+        String jwt = authorizationHeader.substring(7);
+        String email = jwtProvider.getEmailFromToken(jwt);
+        return ResponseEntity.ok(userService.getAuthenticatedUser(email));
     }
 
 
