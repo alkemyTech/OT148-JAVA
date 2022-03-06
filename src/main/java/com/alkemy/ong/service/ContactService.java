@@ -13,14 +13,17 @@ import static com.alkemy.ong.mapper.ContactMapper.mapModelToDomain;
 
 public class ContactService {
     private final ContactRepository contactRepository;
+    private final EmailService emailService;
 
-    public ContactService(ContactRepository contactRepository) {
+    public ContactService(ContactRepository contactRepository, EmailService emailService) {
         this.contactRepository = contactRepository;
+        this.emailService = emailService;
     }
 
     @Transactional
     public Contact addContact(Contact contact) {
         ContactModel contactModel = mapDomainToModel(contact);
+        emailService.greetingsContact(contactModel.getEmail());
         return mapModelToDomain(contactRepository.save(contactModel));
     }
 
