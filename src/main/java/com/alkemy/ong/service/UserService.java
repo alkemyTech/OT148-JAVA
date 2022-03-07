@@ -1,6 +1,5 @@
 package com.alkemy.ong.service;
 
-import static com.alkemy.ong.mapper.UserMapper.mapModelToDomain;
 import com.alkemy.ong.domain.User;
 import com.alkemy.ong.dto.UserDTO;
 import com.alkemy.ong.exception.InvalidPasswordException;
@@ -17,6 +16,7 @@ import java.util.stream.Collectors;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import static com.alkemy.ong.mapper.UserMapper.mapModelToDomain;
 
 public class UserService {
 
@@ -122,4 +122,12 @@ public class UserService {
             throw new UserNotFoundException(String.format("User with this ID " + id + "is not found", id));
         }
     }
+
+    @Transactional
+    public UserDTO getAuthenticatedUser(String email) throws UserNotFoundException {
+        UserModel userModel = userRepository.findByEmail(email);
+        User user = UserMapper.mapModelToDomain(userModel);
+        return UserMapper.mapDomainToDTO(user);
+    }
+
 }
