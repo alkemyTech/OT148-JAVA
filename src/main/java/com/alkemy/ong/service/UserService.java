@@ -40,6 +40,9 @@ public class UserService {
 
     @Transactional
     public UserDTO registerUser(User user) {
+        if (userRepository.existsByEmail(user.getEmail())) {
+            throw new UserNotFoundException(String.format("This email is in use"));
+        }
         RoleModel roleModel = roleRepository.findByName("USER");
         user.setRole(RoleMapper.mapModelToDomain(roleModel));
         UserModel userModel = UserMapper.mapDomainToModel(user);
