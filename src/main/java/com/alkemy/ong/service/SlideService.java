@@ -98,7 +98,7 @@ public class SlideService {
 
     @Transactional
     public List<Slide> getAll() {
-        List<SlideModel> slideModelsList = (List<SlideModel>) slideRepository.findAll();
+        List<SlideModel> slideModelsList = slideRepository.findAll();
         return slideModelsList.stream().map(SlideMapper::mapModelToDomain)
                 .collect(Collectors.toList());
     }

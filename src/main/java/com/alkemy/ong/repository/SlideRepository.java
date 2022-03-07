@@ -11,4 +11,6 @@ public interface SlideRepository extends CrudRepository<SlideModel, Long> {
     List<SlideModel> findByOrganization_IdOrderByOrganizationOrder(Long id);
 
     Optional<SlideModel> findFirstByOrganization_IdOrderByOrganizationOrderDesc(Long id);
+
+    List<SlideModel> findAll();
 }
