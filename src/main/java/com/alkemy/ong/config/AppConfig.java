@@ -10,6 +10,7 @@ import com.alkemy.ong.repository.RoleRepository;
 import com.alkemy.ong.repository.SlideRepository;
 import com.alkemy.ong.repository.TestimonialRepository;
 import com.alkemy.ong.repository.UserRepository;
+import com.alkemy.ong.security.JwtProvider;
 import com.alkemy.ong.security.UserDetailsServiceImpl;
 import com.alkemy.ong.service.ActivityService;
 import com.alkemy.ong.service.AmazonService;
@@ -39,12 +40,14 @@ public class AppConfig {
                                    RoleRepository roleRepository,
                                    PasswordEncoder passwordEncoder,
                                    AmazonService amazonService,
-                                   EmailService emailTemplate) {
+                                   EmailService emailTemplate,
+                                   JwtProvider jwtProvider) {
         return new UserService(userRepository,
                 roleRepository,
                 passwordEncoder,
                 amazonService,
-                emailTemplate);
+                emailTemplate,
+                jwtProvider);
     }
 
     @Bean
