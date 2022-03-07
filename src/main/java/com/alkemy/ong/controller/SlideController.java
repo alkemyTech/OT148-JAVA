@@ -8,6 +8,8 @@ import com.alkemy.ong.dto.SlideUpdateDTO;
 import com.alkemy.ong.exception.SlideNotFoundException;
 import com.alkemy.ong.mapper.SlideMapper;
 import com.alkemy.ong.service.SlideService;
+import java.util.List;
+import java.util.stream.Collectors;
 import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -62,5 +64,13 @@ public class SlideController {
         Slide slideDomain = SlideMapper.mapCreationDTOToDomain(slideCreationDTO);
         SlideDTO slideDTO = SlideMapper.mapDomainToDto(slideService.createSlide(slideDomain));
         return ResponseEntity.ok(slideDTO);
+    }
+
+    @GetMapping("/slides")
+    public ResponseEntity<List<SlideDTO>> getAll() {
+        List<SlideDTO> slidesDTOS = slideService.getAll()
+                .stream().map(SlideMapper::mapDomainToDto)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(slidesDTOS);
     }
 }
