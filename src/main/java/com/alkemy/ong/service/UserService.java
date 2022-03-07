@@ -54,9 +54,6 @@ public class UserService {
 
     @Transactional
     public UserDTO registerUser(User user) {
-        if (userRepository.existsByEmail(user.getEmail())) {
-            throw new UserNotFoundException(String.format("This email is in use"));
-        }
         RoleModel roleModel = roleRepository.findByName("USER");
         user.setRole(RoleMapper.mapModelToDomain(roleModel));
         UserModel userModel = UserMapper.mapDomainToModel(user);
@@ -141,16 +138,17 @@ public class UserService {
     }
 
     @Transactional
-    public UserDTO getAuthenticatedUser(String email) throws UserNotFoundException {
+    public UserDTO getAuthenticatedUser(String jwt) throws UserNotFoundException {
+        String email = jwtProvider.getEmailFromToken(jwt);
         UserModel userModel = userRepository.findByEmail(email);
         User user = UserMapper.mapModelToDomain(userModel);
         return UserMapper.mapDomainToDTO(user);
     }
 
     @Transactional
-    public JwtDTO getAuthenticatedToken(String email, String password) {
+    public JwtDTO getAuthenticatedToken(User userDomain) {
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(email, password));
+                new UsernamePasswordAuthenticationToken(userDomain.getEmail(), userDomain.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtProvider.generateToken(authentication);
         MainUser userLog = (MainUser) authentication.getPrincipal();
