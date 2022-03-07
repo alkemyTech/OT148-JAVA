@@ -10,7 +10,9 @@ import com.alkemy.ong.repository.model.OrganizationModel;
 import com.alkemy.ong.repository.model.SlideModel;
 import com.alkemy.ong.util.Base64DecodedMultiPartFile;
 import java.util.Base64;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -63,7 +65,7 @@ public class SlideService {
         slideModel.setOrganizationOrder(slide.getOrganizationOrder());
         return SlideMapper.mapModelToDomain(slideRepository.save(slideModel));
     }
-  
+
     public Slide createSlide(Slide slide) {
         SlideModel slideModel = SlideMapper.mapDomainToModel(slide);
         Optional<OrganizationModel> organizationModelOptional = organizationRepository.findById(slideModel.getOrganization().getId());
@@ -92,5 +94,12 @@ public class SlideService {
 
     private String uploadImage(MultipartFile file) {
         return amazonService.uploadFile(file);
+    }
+
+    @Transactional
+    public List<Slide> getAll() {
+        List<SlideModel> slideModelsList = (List<SlideModel>) slideRepository.findAll();
+        return slideModelsList.stream().map(SlideMapper::mapModelToDomain)
+                .collect(Collectors.toList());
     }
 }
