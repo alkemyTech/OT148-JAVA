@@ -57,9 +57,16 @@ public class UserController {
     }
 
     @PostMapping("/auth/register")
-    public ResponseEntity<UserDTO> userRegister(@Valid @RequestBody UserCreationDTO userCreationDto) {
+    public ResponseEntity<JwtDTO> userRegister(@Valid @RequestBody UserCreationDTO userCreationDto) throws UserNotFoundException {
         User userDomain = UserMapper.mapDtoCreationToDomain(userCreationDto);
-        return ResponseEntity.ok(userService.registerUser(userDomain));
+        userService.registerUser(userDomain);
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(userDomain.getEmail(), userDomain.getPassword()));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String jwt = jwtProvider.generateToken(authentication);
+        MainUser userLog = (MainUser) authentication.getPrincipal();
+        JwtDTO jwtDto = new JwtDTO(jwt, userLog.getEmail(), userLog.getAuthorities());
+        return ResponseEntity.ok(jwtDto);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
