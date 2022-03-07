@@ -10,13 +10,11 @@ import com.alkemy.ong.dto.UserUpdateDTO;
 import com.alkemy.ong.exception.InvalidPasswordException;
 import com.alkemy.ong.exception.UserNotFoundException;
 import com.alkemy.ong.mapper.UserMapper;
-import com.alkemy.ong.security.JwtProvider;
 import com.alkemy.ong.service.UserService;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -39,9 +37,6 @@ import static com.alkemy.ong.mapper.UserMapper.mapUpdateDTOToDomain;
 @RestController
 public class UserController {
 
-    @Autowired
-    JwtProvider jwtProvider;
-
     private final UserService userService;
 
     public UserController(UserService userService) {
@@ -49,10 +44,10 @@ public class UserController {
     }
 
     @PostMapping("/auth/register")
-    public ResponseEntity<JwtDTO> userRegister(@Valid @RequestBody UserCreationDTO userCreationDto) throws UserNotFoundException {
+    public ResponseEntity<JwtDTO> userRegister(@Valid @RequestBody UserCreationDTO userCreationDto) {
         User userDomain = UserMapper.mapDtoCreationToDomain(userCreationDto);
         userService.registerUser(userDomain);
-        JwtDTO jwtDto = userService.getAuthenticatedToken(userDomain.getEmail(), userDomain.getPassword());
+        JwtDTO jwtDto = userService.getAuthenticatedToken(userDomain);
         return ResponseEntity.ok(jwtDto);
     }
 
@@ -96,7 +91,7 @@ public class UserController {
     @PostMapping("/auth/login")
     public ResponseEntity<JwtDTO> userLogin(@Valid @RequestBody UserLoginDTO userLoginDTO) throws UserNotFoundException, InvalidPasswordException {
         User userDomain = UserMapper.mapLoginDTOToDomain(userLoginDTO);
-        JwtDTO jwtDto = userService.getAuthenticatedToken(userDomain.getEmail(), userDomain.getPassword());
+        JwtDTO jwtDto = userService.getAuthenticatedToken(userDomain);
         return ResponseEntity.ok(jwtDto);
     }
 
@@ -118,8 +113,7 @@ public class UserController {
     @GetMapping("/auth/me")
     public ResponseEntity<UserDTO> infoUser(@RequestHeader(value = "Authorization") String authorizationHeader) throws UserNotFoundException {
         String jwt = authorizationHeader.replace("Bearer ", "");
-        String email = jwtProvider.getEmailFromToken(jwt);
-        return ResponseEntity.ok(userService.getAuthenticatedUser(email));
+        return ResponseEntity.ok(userService.getAuthenticatedUser(jwt));
     }
 
 
