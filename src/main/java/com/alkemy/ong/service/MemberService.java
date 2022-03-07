@@ -27,8 +27,7 @@ public class MemberService {
     @Transactional
     public Member createMember(Member member) {
         MemberModel memberModel = MemberMapper.mapDomainToModel(member);
-        MemberModel save = memberRepository.save(memberModel);
-        return MemberMapper.mapModelToDomain(save);
+        return MemberMapper.mapModelToDomain(memberRepository.save(memberModel));
     }
 
 }
