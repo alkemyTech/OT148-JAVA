@@ -24,4 +24,10 @@ public class MemberService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
+    public Member createMember(Member member) {
+        MemberModel memberModel = MemberMapper.mapDomainToModel(member);
+        return MemberMapper.mapModelToDomain(memberRepository.save(memberModel));
+    }
+
 }
