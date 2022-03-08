@@ -9,8 +9,8 @@ import java.time.LocalDateTime;
 @Builder
 public class Comment {
     private Long id;
-    private Long idUser;
+    private Long user_id;
     private String body;
-    private Long idNews;
+    private Long news_id;
     private LocalDateTime creationDate;
 }

@@ -25,10 +25,10 @@ public class CommentModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(nullable = false)
-    private Long idUser;
+    private Long user_id;
     private String body;
     @Column(nullable = false)
-    private Long idNews;
+    private Long news_id;
     @Column(name = "creation_date")
     private LocalDateTime creationDate;
 
