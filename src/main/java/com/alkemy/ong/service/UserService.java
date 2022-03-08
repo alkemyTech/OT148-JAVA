@@ -3,6 +3,7 @@ package com.alkemy.ong.service;
 import com.alkemy.ong.domain.User;
 import com.alkemy.ong.dto.JwtDTO;
 import com.alkemy.ong.dto.UserDTO;
+import com.alkemy.ong.exception.DuplicateEmailException;
 import com.alkemy.ong.exception.InvalidPasswordException;
 import com.alkemy.ong.exception.UserNotFoundException;
 import com.alkemy.ong.mapper.RoleMapper;
@@ -16,7 +17,6 @@ import com.alkemy.ong.security.MainUser;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -34,26 +34,29 @@ public class UserService {
     private final AmazonService amazonService;
     private final EmailService emailService;
     private final JwtProvider jwtProvider;
+    private final AuthenticationManager authenticationManager;
 
     public UserService(UserRepository userRepository,
                        RoleRepository roleRepository,
                        PasswordEncoder passwordEncoder,
                        AmazonService amazonService,
                        EmailService emailService,
-                       JwtProvider jwtProvider) {
+                       JwtProvider jwtProvider,
+                       AuthenticationManager authenticationManager) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
         this.amazonService = amazonService;
         this.emailService = emailService;
         this.jwtProvider = jwtProvider;
+        this.authenticationManager = authenticationManager;
     }
-
-    @Autowired
-    AuthenticationManager authenticationManager;
 
     @Transactional
     public UserDTO registerUser(User user) {
+        if (userRepository.existsByEmail(user.getEmail())) {
+            throw new DuplicateEmailException(String.format("This email is in use"));
+        }
         RoleModel roleModel = roleRepository.findByName("USER");
         user.setRole(RoleMapper.mapModelToDomain(roleModel));
         UserModel userModel = UserMapper.mapDomainToModel(user);
@@ -146,7 +149,7 @@ public class UserService {
     }
 
     @Transactional
-    public JwtDTO getAuthenticatedToken(User userDomain) {
+    public JwtDTO generateAuthenticationToken(User userDomain) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(userDomain.getEmail(), userDomain.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
