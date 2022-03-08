@@ -10,6 +10,7 @@ import com.alkemy.ong.repository.RoleRepository;
 import com.alkemy.ong.repository.SlideRepository;
 import com.alkemy.ong.repository.TestimonialRepository;
 import com.alkemy.ong.repository.UserRepository;
+import com.alkemy.ong.security.JwtProvider;
 import com.alkemy.ong.security.UserDetailsServiceImpl;
 import com.alkemy.ong.service.ActivityService;
 import com.alkemy.ong.service.AmazonService;
@@ -28,6 +29,7 @@ import java.nio.file.Files;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.ResourceUtils;
 
@@ -39,12 +41,16 @@ public class AppConfig {
                                    RoleRepository roleRepository,
                                    PasswordEncoder passwordEncoder,
                                    AmazonService amazonService,
-                                   EmailService emailTemplate) {
+                                   EmailService emailTemplate,
+                                   JwtProvider jwtProvider,
+                                   AuthenticationManager authenticationManager) {
         return new UserService(userRepository,
                 roleRepository,
                 passwordEncoder,
                 amazonService,
-                emailTemplate);
+                emailTemplate,
+                jwtProvider,
+                authenticationManager);
     }
 
     @Bean
