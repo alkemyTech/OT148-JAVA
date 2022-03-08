@@ -7,6 +7,7 @@ import com.alkemy.ong.dto.UserCreationDTO;
 import com.alkemy.ong.dto.UserDTO;
 import com.alkemy.ong.dto.UserLoginDTO;
 import com.alkemy.ong.dto.UserUpdateDTO;
+import com.alkemy.ong.exception.DuplicateEmailException;
 import com.alkemy.ong.exception.InvalidPasswordException;
 import com.alkemy.ong.exception.UserNotFoundException;
 import com.alkemy.ong.mapper.UserMapper;
@@ -47,7 +48,7 @@ public class UserController {
     public ResponseEntity<JwtDTO> userRegister(@Valid @RequestBody UserCreationDTO userCreationDto) {
         User userDomain = UserMapper.mapDtoCreationToDomain(userCreationDto);
         userService.registerUser(userDomain);
-        JwtDTO jwtDto = userService.getAuthenticatedToken(userDomain);
+        JwtDTO jwtDto = userService.generateAuthenticationToken(userDomain);
         return ResponseEntity.ok(jwtDto);
     }
 
@@ -73,6 +74,16 @@ public class UserController {
 
     }
 
+    @ExceptionHandler(DuplicateEmailException.class)
+    public ResponseEntity<ErrorDTO> handleUserNotFoundExceptions(DuplicateEmailException ex) {
+        ErrorDTO emailDuplicate =
+                ErrorDTO.builder()
+                        .code(HttpStatus.NOT_FOUND)
+                        .message(ex.getMessage()).build();
+        return new ResponseEntity(emailDuplicate, HttpStatus.NOT_FOUND);
+
+    }
+
     @GetMapping("/users")
     public ResponseEntity<List<UserDTO>> getAll() {
         return ResponseEntity.ok(userService.getAll());
@@ -91,7 +102,8 @@ public class UserController {
     @PostMapping("/auth/login")
     public ResponseEntity<JwtDTO> userLogin(@Valid @RequestBody UserLoginDTO userLoginDTO) throws UserNotFoundException, InvalidPasswordException {
         User userDomain = UserMapper.mapLoginDTOToDomain(userLoginDTO);
-        JwtDTO jwtDto = userService.getAuthenticatedToken(userDomain);
+        UserMapper.mapDomainToDTO(userService.loginUser(userDomain));
+        JwtDTO jwtDto = userService.generateAuthenticationToken(userDomain);
         return ResponseEntity.ok(jwtDto);
     }
 
@@ -111,7 +123,7 @@ public class UserController {
     }
 
     @GetMapping("/auth/me")
-    public ResponseEntity<UserDTO> infoUser(@RequestHeader(value = "Authorization") String authorizationHeader) throws UserNotFoundException {
+    public ResponseEntity<UserDTO> getUserInfo(@RequestHeader(value = "Authorization") String authorizationHeader) throws UserNotFoundException {
         String jwt = authorizationHeader.replace("Bearer ", "");
         return ResponseEntity.ok(userService.getAuthenticatedUser(jwt));
     }
