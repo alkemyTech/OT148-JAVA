@@ -55,7 +55,7 @@ public class UserService {
     @Transactional
     public UserDTO registerUser(User user) {
         if (userRepository.existsByEmail(user.getEmail())) {
-            throw new DuplicateEmailException(String.format("This email is in use"));
+            throw new DuplicateEmailException("This email is in use");
         }
         RoleModel roleModel = roleRepository.findByName("USER");
         user.setRole(RoleMapper.mapModelToDomain(roleModel));
@@ -148,7 +148,6 @@ public class UserService {
         return UserMapper.mapDomainToDTO(user);
     }
 
-    @Transactional
     public JwtDTO generateAuthenticationToken(User userDomain) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(userDomain.getEmail(), userDomain.getPassword()));
