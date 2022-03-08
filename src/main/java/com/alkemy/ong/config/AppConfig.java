@@ -4,10 +4,12 @@ import com.alkemy.ong.repository.ActivityRepository;
 import com.alkemy.ong.repository.CategoryRepository;
 import com.alkemy.ong.repository.CommentRepository;
 import com.alkemy.ong.repository.ContactRepository;
+import com.alkemy.ong.repository.MemberRepository;
 import com.alkemy.ong.repository.NewsRepository;
 import com.alkemy.ong.repository.OrganizationRepository;
 import com.alkemy.ong.repository.RoleRepository;
 import com.alkemy.ong.repository.SlideRepository;
+import com.alkemy.ong.repository.TestimonialRepository;
 import com.alkemy.ong.repository.UserRepository;
 import com.alkemy.ong.security.UserDetailsServiceImpl;
 import com.alkemy.ong.service.ActivityService;
@@ -16,8 +18,11 @@ import com.alkemy.ong.service.CategoryService;
 import com.alkemy.ong.service.CommentService;
 import com.alkemy.ong.service.ContactService;
 import com.alkemy.ong.service.EmailService;
+import com.alkemy.ong.service.MemberService;
 import com.alkemy.ong.service.NewsService;
 import com.alkemy.ong.service.OrganizationService;
+import com.alkemy.ong.service.SlideService;
+import com.alkemy.ong.service.TestimonialService;
 import com.alkemy.ong.service.UserService;
 
 import java.io.File;
@@ -103,6 +108,20 @@ public class AppConfig {
         return new ContactService(contactRepository);
     }
 
+    @Bean
+    public MemberService memberService(MemberRepository memberRepository) {
+        return new MemberService(memberRepository);
+    }
+
+    @Bean
+    public TestimonialService testimonialService(TestimonialRepository testimonialRepository) {
+        return new TestimonialService(testimonialRepository);
+    }
+
+    @Bean
+    public SlideService slideService(SlideRepository slideRepository, AmazonService amazonService) {
+        return new SlideService(slideRepository, amazonService);
+    }
     @Bean
     public CommentService commentService(CommentRepository commentRepository) {
         return new CommentService(commentRepository);
