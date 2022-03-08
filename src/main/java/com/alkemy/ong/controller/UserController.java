@@ -75,12 +75,12 @@ public class UserController {
     }
 
     @ExceptionHandler(DuplicateEmailException.class)
-    public ResponseEntity<ErrorDTO> handleUserNotFoundExceptions(DuplicateEmailException ex) {
+    public ResponseEntity<ErrorDTO> handleDuplicateEmailExceptions(DuplicateEmailException ex) {
         ErrorDTO emailDuplicate =
                 ErrorDTO.builder()
-                        .code(HttpStatus.NOT_FOUND)
+                        .code(HttpStatus.BAD_REQUEST)
                         .message(ex.getMessage()).build();
-        return new ResponseEntity(emailDuplicate, HttpStatus.NOT_FOUND);
+        return new ResponseEntity(emailDuplicate, HttpStatus.BAD_REQUEST);
 
     }
 
