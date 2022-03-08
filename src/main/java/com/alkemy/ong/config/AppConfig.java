@@ -29,6 +29,7 @@ import java.nio.file.Files;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.ResourceUtils;
 
@@ -41,13 +42,15 @@ public class AppConfig {
                                    PasswordEncoder passwordEncoder,
                                    AmazonService amazonService,
                                    EmailService emailTemplate,
-                                   JwtProvider jwtProvider) {
+                                   JwtProvider jwtProvider,
+                                   AuthenticationManager authenticationManager) {
         return new UserService(userRepository,
                 roleRepository,
                 passwordEncoder,
                 amazonService,
                 emailTemplate,
-                jwtProvider);
+                jwtProvider,
+                authenticationManager);
     }
 
     @Bean
