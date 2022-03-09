@@ -10,9 +10,9 @@ import java.time.LocalDateTime;
 @Builder
 public class CommentDTO implements Serializable {
     private Long id;
-    private Long user_id;
+    private Long userId;
     private String body;
-    private Long news_id;
+    private Long newsId;
     private LocalDateTime creationDate;
 
 }

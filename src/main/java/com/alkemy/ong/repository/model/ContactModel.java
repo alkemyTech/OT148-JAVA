@@ -21,7 +21,7 @@ import org.hibernate.annotations.Where;
 @Where(clause = "deleted = false")
 @Entity
 @Table(name = "contacts")
-public class  ContactModel {
+public class ContactModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

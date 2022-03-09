@@ -30,9 +30,9 @@ public class CommentMapper {
     public static CommentDTO mapDomainToDto(Comment comment) {
         CommentDTO commentDTO = CommentDTO.builder()
                 .id(comment.getId())
-                .user_id(comment.getUserId())
+                .userId(comment.getUserId())
                 .body(comment.getBody())
-                .news_id(comment.getNewsId())
+                .newsId(comment.getNewsId())
                 .creationDate(comment.getCreationDate())
                 .build();
         return commentDTO;
@@ -41,9 +41,9 @@ public class CommentMapper {
     public static Comment mapDtoToDomain(CommentDTO commentDTO) {
         Comment comment = Comment.builder()
                 .id(commentDTO.getId())
-                .userId(commentDTO.getUser_id())
+                .userId(commentDTO.getUserId())
                 .body(commentDTO.getBody())
-                .newsId(commentDTO.getNews_id())
+                .newsId(commentDTO.getNewsId())
                 .creationDate(commentDTO.getCreationDate())
                 .build();
         return comment;
