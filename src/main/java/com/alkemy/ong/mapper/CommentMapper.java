@@ -8,9 +8,9 @@ public class CommentMapper {
     public static Comment mapModelToDomain(CommentModel commentModel) {
         Comment comment = Comment.builder()
                 .id(commentModel.getId())
-                .user_id(commentModel.getUser_id())
+                .userId(commentModel.getUserId())
                 .body(commentModel.getBody())
-                .news_id(commentModel.getNews_id())
+                .newsId(commentModel.getNewsId())
                 .creationDate(commentModel.getCreationDate())
                 .build();
         return comment;
@@ -19,9 +19,9 @@ public class CommentMapper {
     public static CommentModel mapDomainToModel(Comment comment) {
         CommentModel commentModel = CommentModel.builder()
                 .id(comment.getId())
-                .user_id(comment.getUser_id())
+                .userId(comment.getUserId())
                 .body(comment.getBody())
-                .news_id(comment.getNews_id())
+                .newsId(comment.getNewsId())
                 .creationDate(comment.getCreationDate())
                 .build();
         return commentModel;
@@ -30,9 +30,9 @@ public class CommentMapper {
     public static CommentDTO mapDomainToDto(Comment comment) {
         CommentDTO commentDTO = CommentDTO.builder()
                 .id(comment.getId())
-                .user_id(comment.getUser_id())
+                .user_id(comment.getUserId())
                 .body(comment.getBody())
-                .news_id(comment.getNews_id())
+                .news_id(comment.getNewsId())
                 .creationDate(comment.getCreationDate())
                 .build();
         return commentDTO;
@@ -41,9 +41,9 @@ public class CommentMapper {
     public static Comment mapDtoToDomain(CommentDTO commentDTO) {
         Comment comment = Comment.builder()
                 .id(commentDTO.getId())
-                .user_id(commentDTO.getUser_id())
+                .userId(commentDTO.getUser_id())
                 .body(commentDTO.getBody())
-                .news_id(commentDTO.getNews_id())
+                .newsId(commentDTO.getNews_id())
                 .creationDate(commentDTO.getCreationDate())
                 .build();
         return comment;

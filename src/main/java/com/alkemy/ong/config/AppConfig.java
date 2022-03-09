@@ -122,6 +122,7 @@ public class AppConfig {
     public SlideService slideService(SlideRepository slideRepository, AmazonService amazonService) {
         return new SlideService(slideRepository, amazonService);
     }
+
     @Bean
     public CommentService commentService(CommentRepository commentRepository) {
         return new CommentService(commentRepository);
