@@ -7,20 +7,17 @@ import com.alkemy.ong.dto.UserCreationDTO;
 import com.alkemy.ong.dto.UserDTO;
 import com.alkemy.ong.dto.UserLoginDTO;
 import com.alkemy.ong.dto.UserUpdateDTO;
+import com.alkemy.ong.exception.DuplicateEmailException;
 import com.alkemy.ong.exception.InvalidPasswordException;
 import com.alkemy.ong.exception.UserNotFoundException;
 import com.alkemy.ong.mapper.UserMapper;
-import com.alkemy.ong.security.JwtProvider;
-import com.alkemy.ong.security.MainUser;
 import com.alkemy.ong.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -30,27 +27,16 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
-import javax.validation.Valid;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import static com.alkemy.ong.mapper.UserMapper.mapDomainToDTO;
 import static com.alkemy.ong.mapper.UserMapper.mapUpdateDTOToDomain;
 
 @RestController
 public class UserController {
-
-    @Autowired
-    AuthenticationManager authenticationManager;
-
-    @Autowired
-    JwtProvider jwtProvider;
 
     private final UserService userService;
 
@@ -59,9 +45,11 @@ public class UserController {
     }
 
     @PostMapping("/auth/register")
-    public ResponseEntity<UserDTO> userRegister(@Valid @RequestBody UserCreationDTO userCreationDto) {
+    public ResponseEntity<JwtDTO> userRegister(@Valid @RequestBody UserCreationDTO userCreationDto) {
         User userDomain = UserMapper.mapDtoCreationToDomain(userCreationDto);
-        return ResponseEntity.ok(userService.registerUser(userDomain));
+        userService.registerUser(userDomain);
+        JwtDTO jwtDto = userService.generateAuthenticationToken(userDomain);
+        return ResponseEntity.ok(jwtDto);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -86,6 +74,16 @@ public class UserController {
 
     }
 
+    @ExceptionHandler(DuplicateEmailException.class)
+    public ResponseEntity<ErrorDTO> handleDuplicateEmailExceptions(DuplicateEmailException ex) {
+        ErrorDTO emailDuplicate =
+                ErrorDTO.builder()
+                        .code(HttpStatus.BAD_REQUEST)
+                        .message(ex.getMessage()).build();
+        return new ResponseEntity(emailDuplicate, HttpStatus.BAD_REQUEST);
+
+    }
+
     @GetMapping("/users")
     public ResponseEntity<List<UserDTO>> getAll() {
         return ResponseEntity.ok(userService.getAll());
@@ -105,13 +103,8 @@ public class UserController {
     public ResponseEntity<JwtDTO> userLogin(@Valid @RequestBody UserLoginDTO userLoginDTO) throws UserNotFoundException, InvalidPasswordException {
         User userDomain = UserMapper.mapLoginDTOToDomain(userLoginDTO);
         UserMapper.mapDomainToDTO(userService.loginUser(userDomain));
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(userLoginDTO.getEmail(), userLoginDTO.getPassword()));
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = jwtProvider.generateToken(authentication);
-        MainUser userLog = (MainUser) authentication.getPrincipal();
-        JwtDTO jwtDto = new JwtDTO(jwt, userLog.getEmail(), userLog.getAuthorities());
-        return new ResponseEntity(jwtDto, HttpStatus.OK);
+        JwtDTO jwtDto = userService.generateAuthenticationToken(userDomain);
+        return ResponseEntity.ok(jwtDto);
     }
 
     @ExceptionHandler(InvalidPasswordException.class)
@@ -128,4 +121,12 @@ public class UserController {
         userService.deleteUser(userId);
         return new ResponseEntity(HttpStatus.OK);
     }
+
+    @GetMapping("/auth/me")
+    public ResponseEntity<UserDTO> getUserInfo(@RequestHeader(value = "Authorization") String authorizationHeader) throws UserNotFoundException {
+        String jwt = authorizationHeader.replace("Bearer ", "");
+        return ResponseEntity.ok(userService.getAuthenticatedUser(jwt));
+    }
+
+
 }

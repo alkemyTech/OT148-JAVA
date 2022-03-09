@@ -3,6 +3,7 @@ package com.alkemy.ong.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -57,11 +58,24 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf()
                 .disable()
                 .authorizeRequests()
-                .antMatchers("/auth/**", "/h2/**", "/users/**", "/testimonials").permitAll()
+                .antMatchers("/auth/register", "/auth/login", "/h2/**").permitAll()
                 .and()
-                .antMatcher("/organization/**")
                 .addFilterBefore(jwtTokenFilter(), UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
-                .anyRequest().authenticated();
+                .antMatchers(HttpMethod.GET, "/users").hasAnyAuthority("ADMIN")
+                .antMatchers(HttpMethod.DELETE, "/user/{userId}").hasAnyAuthority("ADMIN", "USER")
+                .antMatchers(HttpMethod.PATCH, "/user/{userId}").hasAnyAuthority("ADMIN", "USER")
+                .antMatchers(HttpMethod.PATCH, "/organization/{id}").hasAnyAuthority("ADMIN")
+                .antMatchers(HttpMethod.GET, "/categories/**").hasAnyAuthority("ADMIN")
+                .antMatchers(HttpMethod.POST, "/categories/**").hasAnyAuthority("ADMIN")
+                .antMatchers(HttpMethod.PUT, "/categories/**").hasAnyAuthority("ADMIN")
+                .antMatchers(HttpMethod.DELETE, "/categories/**").hasAnyAuthority("ADMIN")
+                .antMatchers(HttpMethod.GET, "/news/**").hasAnyAuthority("ADMIN")
+                .antMatchers(HttpMethod.POST, "/news/**").hasAnyAuthority("ADMIN")
+                .antMatchers(HttpMethod.PUT, "/news/**").hasAnyAuthority("ADMIN")
+                .antMatchers(HttpMethod.DELETE, "/news/**").hasAnyAuthority("ADMIN")
+                .antMatchers(HttpMethod.POST, "/activities").hasAnyAuthority("ADMIN")
+                .anyRequest().authenticated()
+                .antMatchers("/organization/**", "/auth/me").authenticated();
     }
 }
