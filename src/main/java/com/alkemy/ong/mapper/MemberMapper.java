@@ -3,6 +3,7 @@ package com.alkemy.ong.mapper;
 import com.alkemy.ong.domain.Member;
 import com.alkemy.ong.dto.MemberCreationDTO;
 import com.alkemy.ong.dto.MemberDTO;
+import com.alkemy.ong.dto.MemberUpdateDTO;
 import com.alkemy.ong.repository.model.MemberModel;
 
 public class MemberMapper {
@@ -52,6 +53,18 @@ public class MemberMapper {
                 .linkedinUrl(memberCreationDTO.getLinkedinUrl())
                 .image(memberCreationDTO.getImage())
                 .description(memberCreationDTO.getDescription())
+                .build();
+        return member;
+    }
+
+    public static Member mapUpdateDTOToDomain(MemberUpdateDTO memberUpdateDTO) {
+        Member member = Member.builder()
+                .name(memberUpdateDTO.getName())
+                .facebookUrl(memberUpdateDTO.getFacebookUrl())
+                .instagramUrl(memberUpdateDTO.getInstagramUrl())
+                .linkedinUrl(memberUpdateDTO.getLinkedinUrl())
+                .image(memberUpdateDTO.getImage())
+                .description(memberUpdateDTO.getDescription())
                 .build();
         return member;
     }

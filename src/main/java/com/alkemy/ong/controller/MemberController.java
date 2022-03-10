@@ -4,6 +4,7 @@ import com.alkemy.ong.domain.Member;
 import com.alkemy.ong.dto.ErrorDTO;
 import com.alkemy.ong.dto.MemberCreationDTO;
 import com.alkemy.ong.dto.MemberDTO;
+import com.alkemy.ong.dto.MemberUpdateDTO;
 import com.alkemy.ong.exception.MemberNotFoundException;
 import com.alkemy.ong.mapper.MemberMapper;
 import com.alkemy.ong.service.MemberService;

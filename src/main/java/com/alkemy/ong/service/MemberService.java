@@ -25,6 +25,7 @@ public class MemberService {
         return memberModelList.stream().map(MemberMapper::mapModelToDomain)
                 .collect(Collectors.toList());
     }
+    
 
     @Transactional
     public Member createMember(Member member) {
