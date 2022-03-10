@@ -1,6 +1,8 @@
 package com.alkemy.ong.mapper;
 
 import com.alkemy.ong.domain.Member;
+import com.alkemy.ong.dto.MemberCreationDTO;
+import com.alkemy.ong.dto.MemberDTO;
 import com.alkemy.ong.repository.model.MemberModel;
 
 public class MemberMapper {
@@ -27,5 +29,30 @@ public class MemberMapper {
                 .image(memberDomain.getImage())
                 .description(memberDomain.getDescription()).build();
         return memberModel;
+    }
+
+    public static MemberDTO mapDomainToDTO(Member memberDomain) {
+        MemberDTO memberDTO = MemberDTO.builder()
+                .id(memberDomain.getId())
+                .name(memberDomain.getName())
+                .facebookUrl(memberDomain.getFacebookUrl())
+                .instagramUrl(memberDomain.getInstagramUrl())
+                .linkedinUrl(memberDomain.getLinkedinUrl())
+                .image(memberDomain.getImage())
+                .description(memberDomain.getDescription())
+                .build();
+        return memberDTO;
+    }
+
+    public static Member mapCreationDTOToDomain(MemberCreationDTO memberCreationDTO) {
+        Member member = Member.builder()
+                .name(memberCreationDTO.getName())
+                .facebookUrl(memberCreationDTO.getFacebookUrl())
+                .instagramUrl(memberCreationDTO.getInstagramUrl())
+                .linkedinUrl(memberCreationDTO.getLinkedinUrl())
+                .image(memberCreationDTO.getImage())
+                .description(memberCreationDTO.getDescription())
+                .build();
+        return member;
     }
 }

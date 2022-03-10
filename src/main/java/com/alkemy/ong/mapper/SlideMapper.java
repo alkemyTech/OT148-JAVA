@@ -1,6 +1,10 @@
 package com.alkemy.ong.mapper;
 
+import com.alkemy.ong.domain.Organization;
 import com.alkemy.ong.domain.Slide;
+import com.alkemy.ong.dto.SlideCreationDTO;
+import com.alkemy.ong.dto.SlideDTO;
+import com.alkemy.ong.dto.SlideUpdateDTO;
 import com.alkemy.ong.repository.model.SlideModel;
 
 public class SlideMapper {
@@ -8,8 +12,8 @@ public class SlideMapper {
         Slide slideDomain = Slide.builder()
                 .image(slideModel.getImage())
                 .text(slideModel.getText())
-                .order(slideModel.getOrder())
-                .organization(OrganizationMapper.mapModelToDomain(slideModel.getOrganizationModel())).build();
+                .organizationOrder(slideModel.getOrganizationOrder())
+                .build();
         return slideDomain;
     }
 
@@ -17,8 +21,36 @@ public class SlideMapper {
         SlideModel slideModel = SlideModel.builder()
                 .image(slideDomain.getImage())
                 .text(slideDomain.getText())
-                .order(slideDomain.getOrder())
-                .organizationModel(OrganizationMapper.mapDomainToModel(slideDomain.getOrganization())).build();
+                .organizationOrder(slideDomain.getOrganizationOrder())
+                .build();
         return slideModel;
+    }
+
+    public static SlideDTO mapDomainToDto(Slide slideDomain) {
+        SlideDTO slideDTO = SlideDTO.builder()
+                .image(slideDomain.getImage())
+                .text(slideDomain.getText())
+                .order(slideDomain.getOrganizationOrder())
+                .build();
+        return slideDTO;
+    }
+
+    public static Slide mapUpdateDTOToDomain(SlideUpdateDTO slideUpdateDTO) {
+        Slide slide = Slide.builder()
+                .image(slideUpdateDTO.getImage())
+                .text(slideUpdateDTO.getText())
+                .organizationOrder(slideUpdateDTO.getOrder())
+                .build();
+        return slide;
+    }
+
+    public static Slide mapCreationDTOToDomain(SlideCreationDTO slideCreationDTO) {
+        Slide slideDomain = Slide.builder()
+                .image(slideCreationDTO.getImage())
+                .text(slideCreationDTO.getText())
+                .organizationOrder(slideCreationDTO.getOrder())
+                .organization(Organization.builder().id(slideCreationDTO.getOrganizationId()).build())
+                .build();
+        return slideDomain;
     }
 }

@@ -2,7 +2,6 @@ package com.alkemy.ong.service;
 
 import com.sendgrid.Method;
 import com.sendgrid.Request;
-import com.sendgrid.Response;
 import com.sendgrid.SendGrid;
 import com.sendgrid.helpers.mail.Mail;
 import com.sendgrid.helpers.mail.objects.Content;
@@ -15,11 +14,13 @@ public class EmailService {
     private final String emailSender;
     private final SendGrid sendGrid;
     private final String emailTemplate;
+    private final String emailTemplateContact;
 
-    public EmailService(String apikey, String emailSender, String emailTemplate) {
+    public EmailService(String apikey, String emailSender, String emailTemplate, String emailTemplateContact) {
         this.emailSender = emailSender;
         this.sendGrid = new SendGrid(apikey);
         this.emailTemplate = emailTemplate;
+        this.emailTemplateContact = emailTemplateContact;
     }
 
     public void sendEmailTo(String to, String message, String subject) {
@@ -42,6 +43,12 @@ public class EmailService {
         String subject = "Welcome ONG-Somos Más";
         String message = this.emailTemplate;
 
+        this.sendEmailTo(email, message, subject);
+    }
+
+    public void greetingsContact(String email) {
+        String subject = "Thanks for your contact";
+        String message = this.emailTemplateContact;
         this.sendEmailTo(email, message, subject);
     }
 }

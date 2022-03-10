@@ -1,12 +1,14 @@
 package com.alkemy.ong.domain;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.Builder;
 import lombok.Data;
 
 @Data
 @Builder
 public class Organization {
+    private Long id;
     private String name;
     private String image;
     private String address;
@@ -14,5 +16,9 @@ public class Organization {
     private String email;
     private String welcomeText;
     private String aboutUsText;
+    private List<Slide> slides;
     private LocalDateTime creationDate;
+    private String facebookUrl;
+    private String instagramUrl;
+    private String linkedinUrl;
 }
