@@ -25,7 +25,22 @@ public class MemberService {
         return memberModelList.stream().map(MemberMapper::mapModelToDomain)
                 .collect(Collectors.toList());
     }
-    
+
+    @Transactional
+    public Member updateMember(Long id, Member member) throws MemberNotFoundException {
+        Optional<MemberModel> optionalMemberModel = memberRepository.findById(id);
+        if (optionalMemberModel.isEmpty()) {
+            throw new MemberNotFoundException(String.format("Member with ID: %s not found", id));
+        }
+        MemberModel memberModel = optionalMemberModel.get();
+        memberModel.setName(member.getName());
+        memberModel.setFacebookUrl(member.getFacebookUrl());
+        memberModel.setInstagramUrl(memberModel.getInstagramUrl());
+        memberModel.setLinkedinUrl(member.getLinkedinUrl());
+        memberModel.setImage(member.getImage());
+        memberModel.setDescription(member.getDescription());
+        return MemberMapper.mapModelToDomain(memberRepository.save(memberModel));
+    }
 
     @Transactional
     public Member createMember(Member member) {
