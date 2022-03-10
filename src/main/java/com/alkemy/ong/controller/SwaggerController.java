@@ -9,7 +9,7 @@ import springfox.documentation.annotations.ApiIgnore;
 public class SwaggerController {
 
     @RequestMapping("/api/docs")
-    public String greeting() {
+    public String getSwaggerDocumentation() {
         return "redirect:/swagger-ui/index.html";
     }
 }
