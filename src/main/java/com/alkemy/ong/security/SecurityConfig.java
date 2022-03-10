@@ -8,6 +8,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -35,6 +36,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
+    private static final String[] AUTH_WHITELIST = {
+            "/swagger-resources/**",
+            "/swagger-ui.html",
+            "/v2/api-docs",
+            "/webjars/**"
+    };
+
+    @Override
+    public void configure(WebSecurity web) {
+        web.ignoring().antMatchers(AUTH_WHITELIST);
+    }
+
     @Override
     protected AuthenticationManager authenticationManager() throws Exception {
         return super.authenticationManager();
@@ -58,13 +71,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf()
                 .disable()
                 .authorizeRequests()
-                .antMatchers("/auth/register", "/auth/login", "/h2/**").permitAll()
+                .antMatchers("/auth/register", "/auth/login", "/h2/**", "/swagger-ui/**").permitAll()
                 .and()
                 .addFilterBefore(jwtTokenFilter(), UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
                 .antMatchers(HttpMethod.GET, "/users").hasAnyAuthority("ADMIN")
                 .antMatchers(HttpMethod.DELETE, "/user/{userId}").hasAnyAuthority("ADMIN", "USER")
                 .antMatchers(HttpMethod.PATCH, "/user/{userId}").hasAnyAuthority("ADMIN", "USER")
+                .antMatchers(HttpMethod.POST, "/contacts").hasAnyAuthority("ADMIN")
+                .antMatchers(HttpMethod.POST, "/slides/**").hasAnyAuthority("ADMIN")
+                .antMatchers(HttpMethod.POST, "/testimonials/**").hasAnyAuthority("ADMIN")
                 .antMatchers(HttpMethod.PATCH, "/organization/{id}").hasAnyAuthority("ADMIN")
                 .antMatchers(HttpMethod.GET, "/categories/**").hasAnyAuthority("ADMIN")
                 .antMatchers(HttpMethod.POST, "/categories/**").hasAnyAuthority("ADMIN")
@@ -75,7 +91,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.PUT, "/news/**").hasAnyAuthority("ADMIN")
                 .antMatchers(HttpMethod.DELETE, "/news/**").hasAnyAuthority("ADMIN")
                 .antMatchers(HttpMethod.POST, "/activities").hasAnyAuthority("ADMIN")
-                .anyRequest().authenticated()
-                .antMatchers("/organization/**", "/auth/me").authenticated();
+                .antMatchers("/organization/**", "/auth/me").authenticated()
+                .anyRequest().authenticated();
     }
 }
