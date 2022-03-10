@@ -70,12 +70,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/categories/**").hasAnyAuthority("ADMIN")
                 .antMatchers(HttpMethod.PUT, "/categories/**").hasAnyAuthority("ADMIN")
                 .antMatchers(HttpMethod.DELETE, "/categories/**").hasAnyAuthority("ADMIN")
+                .antMatchers(HttpMethod.GET, "/members/**").hasAnyAuthority("ADMIN")
+                .antMatchers(HttpMethod.POST, "/members/**").hasAnyAuthority("ADMIN")
+                .antMatchers(HttpMethod.DELETE, "/members/**").hasAnyAuthority("ADMIN")
                 .antMatchers(HttpMethod.GET, "/news/**").hasAnyAuthority("ADMIN")
                 .antMatchers(HttpMethod.POST, "/news/**").hasAnyAuthority("ADMIN")
                 .antMatchers(HttpMethod.PUT, "/news/**").hasAnyAuthority("ADMIN")
                 .antMatchers(HttpMethod.DELETE, "/news/**").hasAnyAuthority("ADMIN")
                 .antMatchers(HttpMethod.POST, "/activities").hasAnyAuthority("ADMIN")
-                .anyRequest().authenticated()
-                .antMatchers("/organization/**", "/auth/me").authenticated();
+                .antMatchers("/organization/**", "/auth/me").authenticated()
+                .anyRequest().authenticated();
     }
 }
