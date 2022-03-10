@@ -35,4 +35,4 @@ De esta manera, ya se cuenta con un set de usuarios para probar la aplicación.
 
 ## Documentación
 
-Para acceder a la documentación de la api, solo debe levantar la aplicación e ingresar [aquí](localhost:8080/api/docs)
+Para acceder a la documentación de la api, solo debe levantar la aplicación e ingresar [aqui](http://localhost:8080/api/docs).
