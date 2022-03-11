@@ -10,5 +10,5 @@ public interface CommentController {
 
     @GetMapping("/comments")
     @ResponseStatus(HttpStatus.OK)
-    List<CommentBodyDTO> findAllCommentOnlyBody();
+    List<CommentBodyDTO> findAll();
 }
