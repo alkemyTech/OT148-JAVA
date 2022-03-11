@@ -1,6 +1,7 @@
 package com.alkemy.ong.mapper;
 
 import com.alkemy.ong.domain.Comment;
+import com.alkemy.ong.dto.CommentBodyDTO;
 import com.alkemy.ong.dto.CommentDTO;
 import com.alkemy.ong.repository.model.CommentModel;
 
@@ -47,5 +48,12 @@ public class CommentMapper {
                 .creationDate(commentDTO.getCreationDate())
                 .build();
         return comment;
+    }
+
+    public static CommentBodyDTO mapDomainToBodyDTO(Comment comment) {
+        CommentBodyDTO commentBodyDTO = CommentBodyDTO.builder()
+                .body(comment.getBody())
+                .build();
+        return commentBodyDTO;
     }
 }

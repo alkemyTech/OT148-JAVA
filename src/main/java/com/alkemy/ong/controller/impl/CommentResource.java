@@ -1,0 +1,27 @@
+package com.alkemy.ong.controller.impl;
+
+import com.alkemy.ong.controller.CommentController;
+import com.alkemy.ong.dto.CommentBodyDTO;
+import com.alkemy.ong.mapper.CommentMapper;
+import com.alkemy.ong.service.CommentService;
+import java.util.List;
+import java.util.stream.Collectors;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class CommentResource implements CommentController {
+
+    private final CommentService commentService;
+
+    public CommentResource(CommentService commentService) {
+        this.commentService = commentService;
+    }
+
+    @Override
+    public List<CommentBodyDTO> findAllCommentOnlyBody() {
+        return commentService.findCommentsByCreationDate()
+                .stream()
+                .map(CommentMapper::mapDomainToBodyDTO)
+                .collect(Collectors.toList());
+    }
+}
