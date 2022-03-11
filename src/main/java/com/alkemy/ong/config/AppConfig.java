@@ -25,11 +25,9 @@ import com.alkemy.ong.service.OrganizationService;
 import com.alkemy.ong.service.SlideService;
 import com.alkemy.ong.service.TestimonialService;
 import com.alkemy.ong.service.UserService;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -136,7 +134,11 @@ public class AppConfig {
     }
 
     @Bean
-    public CommentService commentService(CommentRepository commentRepository) {
-        return new CommentService(commentRepository);
+    public CommentService commentService(CommentRepository commentRepository,
+                                         UserRepository userRepository,
+                                         NewsRepository newsRepository) {
+        return new CommentService(commentRepository,
+                userRepository,
+                newsRepository);
     }
 }
