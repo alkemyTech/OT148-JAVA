@@ -6,13 +6,20 @@ import com.alkemy.ong.exception.TestimonialNotFoundException;
 import com.alkemy.ong.mapper.TestimonialMapper;
 import com.alkemy.ong.repository.TestimonialRepository;
 import com.alkemy.ong.repository.model.TestimonialModel;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import javax.transaction.Transactional;
+import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class TestimonialService {
 
     private final TestimonialRepository testimonialRepository;
+
+    private static final int PAGE_SIZE = 10;
 
     public TestimonialService(TestimonialRepository testimonialRepository) {
         this.testimonialRepository = testimonialRepository;
@@ -47,5 +54,15 @@ public class TestimonialService {
         testimonialModel.setContent(testimonial.getContent());
         testimonialRepository.save(testimonialModel);
         return TestimonialMapper.mapModelToDomain(testimonialModel);
+    }
+
+    public List<Testimonial> getPaginated(Integer page) {
+        if (Objects.isNull(page)) {
+            return this.testimonialRepository.findAll().stream().map(TestimonialMapper::mapModelToDomain)
+                    .collect(Collectors.toList());
+        }
+        Pageable pageable = PageRequest.of(page, PAGE_SIZE);
+        return this.testimonialRepository.findAll(pageable).getContent().stream().map(TestimonialMapper::mapModelToDomain)
+                .collect(Collectors.toList());
     }
 }

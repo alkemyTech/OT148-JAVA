@@ -13,12 +13,14 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.util.HashMap;
@@ -65,4 +67,21 @@ public class TestimonialController {
         testimonialService.deleteTestimonial(id);
         return new ResponseEntity(HttpStatus.OK);
     }
+
+    @GetMapping("/testimonials/page/{page}")
+    public ResponseEntity<?> getPaginated(@PathVariable Integer page) {
+        Map<String, Object> response = new HashMap<>();
+        String currentContextPath = ServletUriComponentsBuilder.fromCurrentContextPath().toUriString();
+        if (!this.testimonialService.getPaginated(page - 1).isEmpty()) {
+            response.put("url previus", currentContextPath.concat(String.format("/members/page/%d", page - 1)));
+        }
+
+        if (!this.testimonialService.getPaginated(page + 1).isEmpty()) {
+            response.put("url next", currentContextPath.concat(String.format("/members/page/%d", page + 1)));
+        }
+
+        response.put("ok", this.testimonialService.getPaginated(page));
+        return ResponseEntity.ok(response);
+    }
+
 }
