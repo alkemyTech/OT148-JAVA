@@ -19,9 +19,12 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -40,6 +43,22 @@ public class MemberController {
                 .stream().map(MemberMapper::mapDomainToDTO)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(memberDTOS);
+    }
+
+    @GetMapping("/page/{page}")
+    public ResponseEntity<?> getPaginated(@PathVariable Integer page) {
+        Map<String, Object> response = new HashMap<>();
+        String currentContextPath = ServletUriComponentsBuilder.fromCurrentContextPath().toUriString();
+        if (page > 0) {
+            response.put("url previus", currentContextPath.concat(String.format("/members/page/%d", page - 1)));
+        }
+
+        if (!this.memberService.getPaginated(page + 1).isEmpty()) {
+            response.put("url next", currentContextPath.concat(String.format("/members/page/%d", page + 1)));
+        }
+
+        response.put("ok", this.memberService.getPaginated(page));
+        return ResponseEntity.ok(response);
     }
 
     @PutMapping("/{id}")
