@@ -18,8 +18,8 @@ public class CommentResource implements CommentController {
     }
 
     @Override
-    public List<CommentBodyDTO> findAllCommentOnlyBody() {
-        return commentService.findCommentsByCreationDate()
+    public List<CommentBodyDTO> findAll() {
+        return commentService.findAll()
                 .stream()
                 .map(CommentMapper::mapDomainToBodyDTO)
                 .collect(Collectors.toList());
