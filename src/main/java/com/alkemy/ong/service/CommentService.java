@@ -23,7 +23,7 @@ public class CommentService {
     }
 
     @Transactional(readOnly = true)
-    public List<Comment> findCommentsByCreationDate() {
+    public List<Comment> findAll() {
         return commentRepository.findAllByOrderByCreationDateAsc()
                 .stream()
                 .map(CommentMapper::mapModelToDomain)
