@@ -46,10 +46,10 @@ public class MemberController {
     }
 
     @GetMapping("/page/{page}")
-    public ResponseEntity<?> getPaginated(@PathVariable Integer page) {
+    public ResponseEntity<Map<String, Object>> getPaginated(@PathVariable Integer page) {
         Map<String, Object> response = new HashMap<>();
         String currentContextPath = ServletUriComponentsBuilder.fromCurrentContextPath().toUriString();
-        if (page > 0) {
+        if (!this.memberService.getPaginated(page - 1).isEmpty()) {
             response.put("url previus", currentContextPath.concat(String.format("/members/page/%d", page - 1)));
         }
 
