@@ -61,7 +61,6 @@ public class CommentMapper {
     public static Comment mapCreationDTOToDomain(CommentCreationDTO commentCreationDTO) {
         Comment comment = Comment.builder()
                 .body(commentCreationDTO.getBody())
-                .userId(commentCreationDTO.getUserId())
                 .newsId(commentCreationDTO.getNewsId())
                 .build();
         return comment;

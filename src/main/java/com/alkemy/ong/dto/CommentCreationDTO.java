@@ -11,8 +11,6 @@ import lombok.Data;
 public class CommentCreationDTO implements Serializable {
 
     @NotNull
-    private Long userId;
-    @NotNull
     @NotBlank
     private String body;
     @NotNull
