@@ -1,10 +1,12 @@
 package com.alkemy.ong.service;
 
 import com.alkemy.ong.domain.Comment;
+import com.alkemy.ong.exception.BadRequestException;
 import com.alkemy.ong.exception.CommentNotFoundException;
 import com.alkemy.ong.exception.NewsNotFoundException;
 import com.alkemy.ong.exception.UserNotFoundException;
 import com.alkemy.ong.mapper.CommentMapper;
+import static com.alkemy.ong.mapper.CommentMapper.mapModelToDomain;
 import com.alkemy.ong.repository.CommentRepository;
 import com.alkemy.ong.repository.NewsRepository;
 import com.alkemy.ong.repository.UserRepository;
@@ -35,7 +37,7 @@ public class CommentService {
     @Transactional
     public Comment addComment(Comment comment) {
         CommentModel commentModel = CommentMapper.mapDomainToModel(comment);
-        return CommentMapper.mapModelToDomain(commentRepository.save(commentModel));
+        return mapModelToDomain(commentRepository.save(commentModel));
     }
 
     @Transactional(readOnly = true)
@@ -61,7 +63,7 @@ public class CommentService {
             throw new NewsNotFoundException(String.format("News with ID: %s not found", comment.getNewsId()));
         }
         comment.setUserId(mainUser.getId());
-        return CommentMapper.mapModelToDomain(commentRepository.save(CommentMapper.mapDomainCreationToModel(comment)));
+        return mapModelToDomain(commentRepository.save(CommentMapper.mapDomainCreationToModel(comment)));
     }
 
     @Transactional
@@ -73,5 +75,35 @@ public class CommentService {
         } else {
             throw new CommentNotFoundException(String.format("Comment with ID: %s not found", id));
         }
+    }
+
+    @Transactional
+    public Comment updateComment(Long commentId, Comment commentUpdate)
+            throws CommentNotFoundException, BadRequestException {
+        MainUser mainUser = (MainUser) SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getPrincipal();
+        Optional<CommentModel> commentModel = commentRepository.findById(commentId);
+        if (!commentModel.isPresent()) {
+            throw new CommentNotFoundException(String.format("Comment with ID: %s not found", commentId));
+        }
+        if (!isValidId(mainUser, commentModel)) {
+            if (!isAdmin(mainUser)) {
+                throw new BadRequestException("Invalidad user");
+            }
+        }
+        commentModel.get().setBody(commentUpdate.getBody());
+        return mapModelToDomain(commentRepository.save(commentModel.get()));
+    }
+
+    private boolean isValidId(MainUser mainUser, Optional<CommentModel> commentModel) {
+        return mainUser.getId() == commentModel.get().getUserId();
+    }
+
+    private boolean isAdmin(MainUser mainUser) {
+        return mainUser.getAuthorities()
+                .stream()
+                .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ADMIN"));
     }
 }

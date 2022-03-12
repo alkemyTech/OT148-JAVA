@@ -6,10 +6,11 @@ import com.alkemy.ong.dto.CommentBodyDTO;
 import com.alkemy.ong.dto.CommentCreationDTO;
 import com.alkemy.ong.dto.CommentDTO;
 import com.alkemy.ong.dto.ErrorDTO;
-import com.alkemy.ong.exception.NewsNotFoundException;
-import com.alkemy.ong.exception.UserNotFoundException;
+import com.alkemy.ong.exception.BadRequestException;
 import com.alkemy.ong.exception.CommentNotFoundException;
+import com.alkemy.ong.exception.NewsNotFoundException;
 import com.alkemy.ong.mapper.CommentMapper;
+import static com.alkemy.ong.mapper.CommentMapper.mapBodyDTOToDomain;
 import static com.alkemy.ong.mapper.CommentMapper.mapDomainToDto;
 import com.alkemy.ong.service.CommentService;
 import java.util.List;
@@ -53,8 +54,31 @@ public class CommentResource implements CommentController {
         return new ResponseEntity(newsNotFound, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(CommentNotFoundException.class)
+    private ResponseEntity<ErrorDTO> handleNewsNotFound(CommentNotFoundException ex) {
+        ErrorDTO commentNotFound =
+                ErrorDTO.builder()
+                        .code(HttpStatus.NOT_FOUND)
+                        .message(ex.getMessage()).build();
+        return new ResponseEntity(commentNotFound, HttpStatus.NOT_FOUND);
+    }
+
     @Override
     public void deleteComment(@PathVariable Long id) throws CommentNotFoundException {
         commentService.deleteComment(id);
+    }
+
+    @Override
+    public CommentDTO updateComment(Long id, CommentBodyDTO commentBodyDTO) {
+        return mapDomainToDto(commentService.updateComment(id, mapBodyDTOToDomain(commentBodyDTO)));
+    }
+
+    @ExceptionHandler(BadRequestException.class)
+    private ResponseEntity<ErrorDTO> handleBadRequest(BadRequestException ex) {
+        ErrorDTO badRequest =
+                ErrorDTO.builder()
+                        .code(HttpStatus.FORBIDDEN)
+                        .message(ex.getMessage()).build();
+        return new ResponseEntity(badRequest, HttpStatus.FORBIDDEN);
     }
 }
