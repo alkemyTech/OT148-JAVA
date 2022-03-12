@@ -44,15 +44,6 @@ public class CommentResource implements CommentController {
         return mapDomainToDto(comment);
     }
 
-    @ExceptionHandler(UserNotFoundException.class)
-    private ResponseEntity<ErrorDTO> handleUserNotFound(UserNotFoundException ex) {
-        ErrorDTO userNotFound =
-                ErrorDTO.builder()
-                        .code(HttpStatus.NOT_FOUND)
-                        .message(ex.getMessage()).build();
-        return new ResponseEntity(userNotFound, HttpStatus.NOT_FOUND);
-    }
-
     @ExceptionHandler(NewsNotFoundException.class)
     private ResponseEntity<ErrorDTO> handleNewsNotFound(NewsNotFoundException ex) {
         ErrorDTO newsNotFound =
