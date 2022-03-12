@@ -38,9 +38,9 @@ public class CategoryController {
         return ResponseEntity.ok(categoryDTO);
     }
 
-    @GetMapping("/categories")
-    public ResponseEntity<List<CategoryDTO>> getAll() {
-        List<CategoryDTO> categoryDTOS = categoryService.getAll()
+    @GetMapping(value = "/categories", params = "page")
+    public ResponseEntity<List<CategoryDTO>> getAll(@PathVariable("page") int pageNro) {
+        List<CategoryDTO> categoryDTOS = categoryService.getAll(pageNro)
                 .stream().map(CategoryMapper::mapDomainToDTO)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(categoryDTOS);
