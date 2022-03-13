@@ -8,7 +8,7 @@ import com.alkemy.ong.dto.CommentDTO;
 import com.alkemy.ong.dto.ErrorDTO;
 import com.alkemy.ong.exception.CommentNotFoundException;
 import com.alkemy.ong.exception.NewsNotFoundException;
-import com.alkemy.ong.exception.OperationNotPermitted;
+import com.alkemy.ong.exception.OperationNotPermittedException;
 import com.alkemy.ong.mapper.CommentMapper;
 import static com.alkemy.ong.mapper.CommentMapper.mapBodyDTOToDomain;
 import static com.alkemy.ong.mapper.CommentMapper.mapDomainToDto;
@@ -73,8 +73,8 @@ public class CommentResource implements CommentController {
         return mapDomainToDto(commentService.updateComment(id, mapBodyDTOToDomain(commentBodyDTO)));
     }
 
-    @ExceptionHandler(OperationNotPermitted.class)
-    private ResponseEntity<ErrorDTO> handleOpNotPermittedException(OperationNotPermitted ex) {
+    @ExceptionHandler(OperationNotPermittedException.class)
+    private ResponseEntity<ErrorDTO> handleOpNotPermittedException(OperationNotPermittedException ex) {
         ErrorDTO badRequest =
                 ErrorDTO.builder()
                         .code(HttpStatus.FORBIDDEN)

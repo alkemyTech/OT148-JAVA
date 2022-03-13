@@ -3,7 +3,7 @@ package com.alkemy.ong.service;
 import com.alkemy.ong.domain.Comment;
 import com.alkemy.ong.exception.CommentNotFoundException;
 import com.alkemy.ong.exception.NewsNotFoundException;
-import com.alkemy.ong.exception.OperationNotPermitted;
+import com.alkemy.ong.exception.OperationNotPermittedException;
 import com.alkemy.ong.exception.UserNotFoundException;
 import com.alkemy.ong.mapper.CommentMapper;
 import static com.alkemy.ong.mapper.CommentMapper.mapModelToDomain;
@@ -76,7 +76,7 @@ public class CommentService {
 
     @Transactional
     public Comment updateComment(Long commentId, Comment commentUpdate)
-            throws CommentNotFoundException, OperationNotPermitted {
+            throws CommentNotFoundException, OperationNotPermittedException {
         MainUser mainUser = getMainUser();
         Optional<CommentModel> commentModel = commentRepository.findById(commentId);
         if (!commentModel.isPresent()) {
@@ -84,7 +84,7 @@ public class CommentService {
         }
         CommentModel comment = commentModel.get();
         if (!hasValidId(mainUser, comment) && !isAdmin(mainUser)) {
-            throw new OperationNotPermitted("Invalid user");
+            throw new OperationNotPermittedException("Invalid user");
         }
         comment.setBody(commentUpdate.getBody());
         return mapModelToDomain(commentRepository.save(comment));
