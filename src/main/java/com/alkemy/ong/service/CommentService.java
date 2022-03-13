@@ -1,9 +1,9 @@
 package com.alkemy.ong.service;
 
 import com.alkemy.ong.domain.Comment;
-import com.alkemy.ong.exception.BadRequestException;
 import com.alkemy.ong.exception.CommentNotFoundException;
 import com.alkemy.ong.exception.NewsNotFoundException;
+import com.alkemy.ong.exception.OperationNotPermitted;
 import com.alkemy.ong.exception.UserNotFoundException;
 import com.alkemy.ong.mapper.CommentMapper;
 import static com.alkemy.ong.mapper.CommentMapper.mapModelToDomain;
@@ -14,10 +14,10 @@ import com.alkemy.ong.repository.model.CommentModel;
 import com.alkemy.ong.repository.model.NewsModel;
 import com.alkemy.ong.repository.model.UserModel;
 import com.alkemy.ong.security.MainUser;
+import static com.alkemy.ong.security.SecurityUtils.getMainUser;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 
 
@@ -50,10 +50,7 @@ public class CommentService {
 
     @Transactional
     public Comment createComment(Comment comment) {
-        MainUser mainUser = (MainUser) SecurityContextHolder
-                .getContext()
-                .getAuthentication()
-                .getPrincipal();
+        MainUser mainUser = getMainUser();
         Optional<UserModel> user = userRepository.findById(mainUser.getId());
         Optional<NewsModel> news = newsRepository.findById(comment.getNewsId());
         if (!user.isPresent()) {
@@ -79,26 +76,22 @@ public class CommentService {
 
     @Transactional
     public Comment updateComment(Long commentId, Comment commentUpdate)
-            throws CommentNotFoundException, BadRequestException {
-        MainUser mainUser = (MainUser) SecurityContextHolder
-                .getContext()
-                .getAuthentication()
-                .getPrincipal();
+            throws CommentNotFoundException, OperationNotPermitted {
+        MainUser mainUser = getMainUser();
         Optional<CommentModel> commentModel = commentRepository.findById(commentId);
         if (!commentModel.isPresent()) {
             throw new CommentNotFoundException(String.format("Comment with ID: %s not found", commentId));
         }
-        if (!isValidId(mainUser, commentModel)) {
-            if (!isAdmin(mainUser)) {
-                throw new BadRequestException("Invalidad user");
-            }
+        CommentModel comment = commentModel.get();
+        if (!hasValidId(mainUser, comment) && !isAdmin(mainUser)) {
+            throw new OperationNotPermitted("Invalidad user");
         }
-        commentModel.get().setBody(commentUpdate.getBody());
-        return mapModelToDomain(commentRepository.save(commentModel.get()));
+        comment.setBody(commentUpdate.getBody());
+        return mapModelToDomain(commentRepository.save(comment));
     }
 
-    private boolean isValidId(MainUser mainUser, Optional<CommentModel> commentModel) {
-        return mainUser.getId() == commentModel.get().getUserId();
+    private boolean hasValidId(MainUser mainUser, CommentModel commentModel) {
+        return mainUser.getId() == commentModel.getUserId();
     }
 
     private boolean isAdmin(MainUser mainUser) {
