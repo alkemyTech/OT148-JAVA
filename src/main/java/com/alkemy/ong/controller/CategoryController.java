@@ -39,7 +39,7 @@ public class CategoryController {
     }
 
     @GetMapping(value = "/categories", params = "page")
-    public ResponseEntity<PageDTO<CategoryDTO>> getAllCategories(@RequestParam int page)
+    public ResponseEntity<PageDTO<CategoryDTO>> getCategories(@RequestParam int page)
             throws CategoryNotFoundException {
         PageDTO<Category> category = categoryService.findAll(page);
         PageDTO<CategoryDTO> categoryDTOPageDTO = CategoryMapper.mapPageDomainToPageDTO(category);
