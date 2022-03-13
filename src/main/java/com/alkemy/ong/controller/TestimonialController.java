@@ -19,10 +19,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.util.HashMap;
@@ -70,8 +68,8 @@ public class TestimonialController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    @GetMapping("/testimonials/page/{page}")
-    public ResponseEntity<?> getPaginated(@RequestParam Integer page) {
+    @GetMapping("/testimonials/{page}")
+    public ResponseEntity<?> getPaginated(@PathVariable Integer page) {
         PagesDTO<TestimonialDTO> response = testimonialService.getPages(page);
         return ResponseEntity.ok().body(response);    }
     }
