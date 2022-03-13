@@ -58,6 +58,13 @@ public class CommentMapper {
         return commentBodyDTO;
     }
 
+    public static Comment mapBodyDTOToDomain(CommentBodyDTO commentBodyDTO) {
+        Comment comment = Comment.builder()
+                .body(commentBodyDTO.getBody())
+                .build();
+        return comment;
+    }
+
     public static Comment mapCreationDTOToDomain(CommentCreationDTO commentCreationDTO) {
         Comment comment = Comment.builder()
                 .body(commentCreationDTO.getBody())
