@@ -84,7 +84,7 @@ public class CommentService {
         }
         CommentModel comment = commentModel.get();
         if (!hasValidId(mainUser, comment) && !isAdmin(mainUser)) {
-            throw new OperationNotPermitted("Invalidad user");
+            throw new OperationNotPermitted("Invalid user");
         }
         comment.setBody(commentUpdate.getBody());
         return mapModelToDomain(commentRepository.save(comment));
