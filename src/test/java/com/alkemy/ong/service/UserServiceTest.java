@@ -1,25 +1,29 @@
 package com.alkemy.ong.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 import com.alkemy.ong.domain.User;
 import com.alkemy.ong.exception.UserNotFoundException;
 import com.alkemy.ong.repository.RoleRepository;
 import com.alkemy.ong.repository.UserRepository;
 import com.alkemy.ong.repository.model.RoleModel;
 import com.alkemy.ong.repository.model.UserModel;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import com.alkemy.ong.security.JwtProvider;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class UserServiceTest {
 
@@ -28,7 +32,16 @@ public class UserServiceTest {
     private final PasswordEncoder passwordEncoder = mock(PasswordEncoder.class);
     private final AmazonService amazonService = mock(AmazonService.class);
     private final EmailService emailService = mock(EmailService.class);
-    private final UserService userService = new UserService(userRepository, roleRepository, passwordEncoder, amazonService, emailService);
+    private final JwtProvider jwtProvider = mock(JwtProvider.class);
+    private final AuthenticationManager authenticationManager = mock(AuthenticationManager.class);
+    private final UserService userService = new UserService(
+            userRepository,
+            roleRepository,
+            passwordEncoder,
+            amazonService,
+            emailService,
+            jwtProvider,
+            authenticationManager);
 
     @Test
     @DisplayName("Should create user")

@@ -156,7 +156,7 @@ public class UserService {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtProvider.generateToken(authentication);
         MainUser userLog = (MainUser) authentication.getPrincipal();
-        return new JwtDTO(jwt, userLog.getEmail(), userLog.getAuthorities());
+        return new JwtDTO(jwt, userLog.getEmail());
     }
 
 }

@@ -16,7 +16,7 @@ import org.springframework.test.context.ActiveProfiles;
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ActiveProfiles("test")
-public class OrganizationServiceTest {
+public class OrganizationServiceIntegrationTest {
 
     @Autowired
     private OrganizationService organizationService;
