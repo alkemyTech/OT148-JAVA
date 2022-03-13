@@ -18,9 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.HashMap;
 import java.util.Map;
 
-@Tag(name="Testimonials", description = "Create, update show and delete Testimonials")
+@Tag(name = "Testimonials", description = "Create, update show and delete Testimonials")
 @RestController
-public class TestimonialResource  implements TestimonialController {
+public class TestimonialResource implements TestimonialController {
 
     private final TestimonialService testimonialService;
 
@@ -29,7 +29,7 @@ public class TestimonialResource  implements TestimonialController {
     }
 
     @Override
-    public ResponseEntity<TestimonialDTO> createTestimonial( TestimonialCreationDTO testimonialCreationDTO) {
+    public ResponseEntity<TestimonialDTO> createTestimonial(TestimonialCreationDTO testimonialCreationDTO) {
         Testimonial testimonial = TestimonialMapper.mapCreationDTOtoDomain(testimonialCreationDTO);
         testimonialService.createTestimonial(testimonial);
         TestimonialDTO testimonialDTO = TestimonialMapper.mapDomainToDTO(testimonial);
@@ -37,14 +37,14 @@ public class TestimonialResource  implements TestimonialController {
     }
 
     @Override
-    public ResponseEntity<TestimonialDTO> updateTestimonials( Long id, TestimonialUpdateDTO testimonialUpdateDTO) throws TestimonialNotFoundException {
+    public ResponseEntity<TestimonialDTO> updateTestimonials(Long id, TestimonialUpdateDTO testimonialUpdateDTO) throws TestimonialNotFoundException {
         Testimonial testimonial =
                 TestimonialMapper.mapUpdateDTOToDomain(testimonialUpdateDTO);
         TestimonialDTO testimonialDTO = TestimonialMapper.mapDomainToDTO(testimonialService.updateTestimonial(id, testimonial));
         return ResponseEntity.ok(testimonialDTO);
     }
 
-
+    @Override
     public Map<String, String> handleValidationExceptions(MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();
         ex.getBindingResult().getAllErrors().forEach((error) -> {
@@ -56,7 +56,7 @@ public class TestimonialResource  implements TestimonialController {
     }
 
     @Override
-    public ResponseEntity<?> deleteTestimonial( Long id) throws TestimonialNotFoundException {
+    public ResponseEntity<?> deleteTestimonial(Long id) throws TestimonialNotFoundException {
         testimonialService.deleteTestimonial(id);
         return new ResponseEntity(HttpStatus.OK);
     }

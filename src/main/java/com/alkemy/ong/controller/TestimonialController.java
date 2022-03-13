@@ -1,11 +1,14 @@
 package com.alkemy.ong.controller;
 
-import com.alkemy.ong.domain.Testimonial;
 import com.alkemy.ong.dto.TestimonialCreationDTO;
 import com.alkemy.ong.dto.TestimonialDTO;
 import com.alkemy.ong.dto.TestimonialUpdateDTO;
 import com.alkemy.ong.exception.TestimonialNotFoundException;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -24,20 +27,43 @@ public interface TestimonialController {
 
     @Operation(
             summary = "Add new Testimonials",
-            description = )
+            description = "To add a testimonial, you must access this endpoint")
     @PostMapping("/testimonials")
     ResponseEntity<TestimonialDTO>
     createTestimonial(@Valid @RequestBody TestimonialCreationDTO testimonialCreationDTO);
 
+    @Operation(summary = "Update a Testimonials by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Update Testimonials by id",
+                    content = {
+                            @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = TestimonialDTO.class))}),
+
+            @ApiResponse(responseCode = "400", description = "Invalid id supplied",
+                    content = @Content),
+            @ApiResponse(responseCode = "404", description = "Testimonials not found",
+                    content = @Content)})
     @PutMapping("/testimonials/{id}")
     ResponseEntity<TestimonialDTO> updateTestimonials
             (@PathVariable Long id, @RequestBody TestimonialUpdateDTO testimonialUpdateDTO)
             throws TestimonialNotFoundException;
 
+
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public Map<String, String> handleValidationExceptions(MethodArgumentNotValidException ex);
 
+    @Operation(summary = "Delete a Testimonial by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Delete Testimonial by id",
+                    content = {
+                            @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = TestimonialDTO.class))}),
+
+            @ApiResponse(responseCode = "400", description = "Invalid id supplied",
+                    content = @Content),
+            @ApiResponse(responseCode = "404", description = "Testimonials not found",
+                    content = @Content)})
     @DeleteMapping("{id}")
     ResponseEntity<?> deleteTestimonial(@PathVariable Long id)
             throws TestimonialNotFoundException;
