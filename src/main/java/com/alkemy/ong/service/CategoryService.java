@@ -1,14 +1,15 @@
 package com.alkemy.ong.service;
 
 import com.alkemy.ong.domain.Category;
+import com.alkemy.ong.dto.PageDTO;
 import com.alkemy.ong.exception.CategoryNotFoundException;
 import com.alkemy.ong.mapper.CategoryMapper;
 import com.alkemy.ong.repository.CategoryRepository;
 import com.alkemy.ong.repository.model.CategoryModel;
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.transaction.Transactional;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
@@ -27,12 +28,28 @@ public class CategoryService {
         CategoryModel save = categoryRepository.save(categoryModel);
         return CategoryMapper.mapModelToDomain(save);
     }
-    
+
     @Transactional
-    public List<Category> findAllPage(Pageable pageable) {
-        Pageable result = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
-        return categoryRepository.findAll(result).getContent().stream().map(CategoryMapper::mapModelToDomain)
-                .collect(Collectors.toList());
+    public PageDTO<Category> findAll(int page) throws CategoryNotFoundException {
+        if (page < 0) {
+            throw new CategoryNotFoundException(String.format("Category with page: %s not found", page));
+        }
+        Pageable pageable = PageRequest.of(page, PAGE_SIZE);
+        Page<CategoryModel> categoryModelPage = categoryRepository.findAll(pageable);
+        return createCategoryPageDto(categoryModelPage);
+    }
+
+    private PageDTO<Category> createCategoryPageDto(Page<CategoryModel> page) {
+        PageDTO<Category> dto = new PageDTO<>();
+        dto.setList(page.getContent().stream().map(CategoryMapper::mapModelToDomain).collect(Collectors.toList()));
+        if (page.hasNext()) {
+            dto.setNextPage("/categories?page=" + page.nextPageable().getPageNumber());
+        }
+        if (page.hasPrevious()) {
+            dto.setPreviousPage("/categories?page=" + page.previousPageable().getPageNumber());
+        }
+        dto.setTotalPages(page.getTotalPages());
+        return dto;
     }
 
     @Transactional
