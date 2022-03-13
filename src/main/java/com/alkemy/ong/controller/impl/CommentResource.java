@@ -74,7 +74,7 @@ public class CommentResource implements CommentController {
     }
 
     @ExceptionHandler(OperationNotPermitted.class)
-    private ResponseEntity<ErrorDTO> handleBadRequest(OperationNotPermitted ex) {
+    private ResponseEntity<ErrorDTO> handleOpNotPermittedException(OperationNotPermitted ex) {
         ErrorDTO badRequest =
                 ErrorDTO.builder()
                         .code(HttpStatus.FORBIDDEN)
