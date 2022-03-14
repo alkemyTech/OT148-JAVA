@@ -4,6 +4,12 @@ import com.alkemy.ong.dto.MemberCreationDTO;
 import com.alkemy.ong.dto.MemberDTO;
 import com.alkemy.ong.dto.MemberListDTO;
 import com.alkemy.ong.dto.MemberUpdateDTO;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,18 +22,38 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
 
+@Tag(name = "Members", description = "Create, update show and delete Members")
 @RequestMapping("/members")
 public interface MemberController {
 
+    @Operation(
+            summary = "Get members list",
+            description = "To get a list of the ONG members in a page, you must access this endpoint.")
     @GetMapping
     ResponseEntity<MemberListDTO> getAll(@RequestParam(defaultValue = "0") Integer page);
 
+    @Operation(summary = "Update a Member by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Update a member by id",
+                    content = {
+                            @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = MemberDTO.class))}),
+            @ApiResponse(responseCode = "400", description = "Invalid id supplied", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Member not found", content = @Content)})
     @PutMapping("/{id}")
     ResponseEntity<MemberDTO> updateMember(@PathVariable Long id, @RequestBody MemberUpdateDTO memberUpdateDTO);
 
+    @Operation(
+            summary = "Add new member",
+            description = "To create a member, you must access this endpoint.")
     @PostMapping
     ResponseEntity<MemberDTO> createMember(@Valid @RequestBody MemberCreationDTO memberCreationDTO);
 
+    @Operation(summary = "Delete a Member by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Delete a member by id"),
+            @ApiResponse(responseCode = "400", description = "Invalid id supplied", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Member not found", content = @Content)})
     @DeleteMapping("/{id}")
     ResponseEntity<?> deleteMember(@PathVariable Long id);
 }
