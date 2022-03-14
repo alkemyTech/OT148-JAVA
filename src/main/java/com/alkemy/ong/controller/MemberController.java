@@ -2,9 +2,9 @@ package com.alkemy.ong.controller;
 
 import com.alkemy.ong.domain.Member;
 import com.alkemy.ong.dto.ErrorDTO;
-import com.alkemy.ong.dto.MemberApiResponse;
 import com.alkemy.ong.dto.MemberCreationDTO;
 import com.alkemy.ong.dto.MemberDTO;
+import com.alkemy.ong.dto.MemberListDTO;
 import com.alkemy.ong.dto.MemberUpdateDTO;
 import com.alkemy.ong.exception.MemberNotFoundException;
 import com.alkemy.ong.mapper.MemberMapper;
@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/members")
@@ -35,19 +34,12 @@ public class MemberController {
     public MemberController(MemberService memberService) {
         this.memberService = memberService;
     }
-    
+
     @GetMapping()
-    public ResponseEntity<MemberApiResponse> getAll(@RequestParam(defaultValue = "0") Integer page) {
-        MemberApiResponse response = new MemberApiResponse();
+    public ResponseEntity<MemberListDTO> getAll(@RequestParam(defaultValue = "0") Integer page) {
         String currentContextPath = ServletUriComponentsBuilder.fromCurrentContextPath().toUriString();
         var members = memberService.getAll(page);
-        if (members.hasPrevious()) {
-            response.setPreviousPageUrl(currentContextPath.concat(String.format("/members?page=%d", page - 1)));
-        }
-        if (members.hasNext()) {
-            response.setNextPageUrl(currentContextPath.concat(String.format("/members?page=%d", page + 1)));
-        }
-        response.setMembers(members.getContent().stream().map(MemberMapper::mapDomainToDTO).collect(Collectors.toList()));
+        MemberListDTO response = new MemberListDTO(page, members, currentContextPath);
         return ResponseEntity.ok(response);
     }
 

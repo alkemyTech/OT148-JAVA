@@ -24,6 +24,7 @@ public class MemberService {
         this.memberRepository = memberRepository;
     }
 
+    @Transactional
     public Page<Member> getAll(Integer page) {
         Pageable pageable = PageRequest.of(page, PAGE_SIZE);
         var paginatedMembers = memberRepository.findAll(pageable);
