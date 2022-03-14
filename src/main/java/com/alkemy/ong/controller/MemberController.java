@@ -9,6 +9,7 @@ import com.alkemy.ong.dto.MemberUpdateDTO;
 import com.alkemy.ong.exception.MemberNotFoundException;
 import com.alkemy.ong.mapper.MemberMapper;
 import com.alkemy.ong.service.MemberService;
+import com.alkemy.ong.util.ContextUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 
@@ -37,9 +37,9 @@ public class MemberController {
 
     @GetMapping()
     public ResponseEntity<MemberListDTO> getAll(@RequestParam(defaultValue = "0") Integer page) {
-        String currentContextPath = ServletUriComponentsBuilder.fromCurrentContextPath().toUriString();
+
         var members = memberService.getAll(page);
-        MemberListDTO response = new MemberListDTO(page, members, currentContextPath);
+        MemberListDTO response = new MemberListDTO(page, members, ContextUtils.currentContextPath());
         return ResponseEntity.ok(response);
     }
 
