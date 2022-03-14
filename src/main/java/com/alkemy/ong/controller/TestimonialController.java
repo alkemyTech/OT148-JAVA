@@ -1,15 +1,17 @@
 package com.alkemy.ong.controller;
 
-import com.alkemy.ong.domain.Testimonial;
 import com.alkemy.ong.dto.TestimonialCreationDTO;
 import com.alkemy.ong.dto.TestimonialDTO;
 import com.alkemy.ong.dto.TestimonialUpdateDTO;
 import com.alkemy.ong.exception.TestimonialNotFoundException;
-import com.alkemy.ong.mapper.TestimonialMapper;
-import com.alkemy.ong.service.TestimonialService;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -18,51 +20,44 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.util.HashMap;
 import java.util.Map;
 
-@RestController
-public class TestimonialController {
-    private final TestimonialService testimonialService;
+@Tag(name = "Testimonials", description = "Create, update show and delete Testimonials")
+public interface TestimonialController {
 
-    public TestimonialController(TestimonialService testimonialService) {
-        this.testimonialService = testimonialService;
-    }
-
+    @Operation(
+            summary = "Add new Testimonial",
+            description = "To add a testimonial, you must access this endpoint")
     @PostMapping("/testimonials")
-    public ResponseEntity<TestimonialDTO> createTestimonial(@Valid @RequestBody TestimonialCreationDTO testimonialCreationDTO) {
-        Testimonial testimonial = TestimonialMapper.mapCreationDTOtoDomain(testimonialCreationDTO);
-        testimonialService.createTestimonial(testimonial);
-        TestimonialDTO testimonialDTO = TestimonialMapper.mapDomainToDTO(testimonial);
-        return ResponseEntity.status(HttpStatus.CREATED).body(testimonialDTO);
-    }
+    ResponseEntity<TestimonialDTO> createTestimonial(@Valid @RequestBody TestimonialCreationDTO testimonialCreationDTO);
 
+    @Operation(summary = "Update a Testimonial by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Update Testimonial by id",
+                    content = {
+                            @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = TestimonialDTO.class))}),
+
+            @ApiResponse(responseCode = "400", description = "Invalid id supplied",
+                    content = @Content),
+            @ApiResponse(responseCode = "404", description = "Testimonial not found",
+                    content = @Content)})
     @PutMapping("/testimonials/{id}")
-    public ResponseEntity<TestimonialDTO> updateTestimonials(@PathVariable Long id, @RequestBody TestimonialUpdateDTO testimonialUpdateDTO) throws TestimonialNotFoundException {
-        Testimonial testimonial =
-                TestimonialMapper.mapUpdateDTOToDomain(testimonialUpdateDTO);
-        TestimonialDTO testimonialDTO = TestimonialMapper.mapDomainToDTO(testimonialService.updateTestimonial(id, testimonial));
-        return ResponseEntity.ok(testimonialDTO);
-    }
+    ResponseEntity<TestimonialDTO> updateTestimonial
+            (@PathVariable Long id, @RequestBody TestimonialUpdateDTO testimonialUpdateDTO)
+            throws TestimonialNotFoundException;
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public Map<String, String> handleValidationExceptions(MethodArgumentNotValidException ex) {
-        Map<String, String> errors = new HashMap<>();
-        ex.getBindingResult().getAllErrors().forEach((error) -> {
-            String fieldName = ((FieldError) error).getField();
-            String errorMessage = error.getDefaultMessage();
-            errors.put(fieldName, errorMessage);
-        });
-        return errors;
-    }
-
+    @Operation(summary = "Delete a Testimonial by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Delete Testimonial by id",
+                    content = @Content),
+            @ApiResponse(responseCode = "400", description = "Invalid id supplied",
+                    content = @Content),
+            @ApiResponse(responseCode = "404", description = "Testimonial not found",
+                    content = @Content)})
     @DeleteMapping("{id}")
-    public ResponseEntity<?> deleteTestimonial(@PathVariable Long id) throws TestimonialNotFoundException {
-        testimonialService.deleteTestimonial(id);
-        return new ResponseEntity(HttpStatus.OK);
-    }
+    ResponseEntity<?> deleteTestimonial(@PathVariable Long id)
+            throws TestimonialNotFoundException;
 }
