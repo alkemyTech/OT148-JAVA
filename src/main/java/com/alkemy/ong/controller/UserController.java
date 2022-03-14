@@ -1,27 +1,22 @@
 package com.alkemy.ong.controller;
 
-import com.alkemy.ong.domain.User;
-import com.alkemy.ong.dto.ErrorDTO;
 import com.alkemy.ong.dto.JwtDTO;
 import com.alkemy.ong.dto.UserCreationDTO;
 import com.alkemy.ong.dto.UserDTO;
 import com.alkemy.ong.dto.UserLoginDTO;
 import com.alkemy.ong.dto.UserUpdateDTO;
-import com.alkemy.ong.exception.DuplicateEmailException;
 import com.alkemy.ong.exception.InvalidPasswordException;
 import com.alkemy.ong.exception.UserNotFoundException;
-import com.alkemy.ong.mapper.UserMapper;
-import com.alkemy.ong.service.UserService;
-import java.util.HashMap;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
-import java.util.Map;
 import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,103 +25,88 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import static com.alkemy.ong.mapper.UserMapper.mapDomainToDTO;
-import static com.alkemy.ong.mapper.UserMapper.mapUpdateDTOToDomain;
 
-@RestController
-public class UserController {
+@Tag(name = "Users", description = "Register, login and auth me Users")
+public interface UserController {
 
-    private final UserService userService;
-
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
-
+    @Operation(
+            summary = "Register a new User",
+            description = "To register, this endpoint must be accessed"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201",
+                    description = "Register user",
+                    content = {
+                            @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = JwtDTO.class))
+                    }),
+            @ApiResponse(responseCode = "400",
+                    description = "The fields must not be empty",
+                    content = @Content),
+            @ApiResponse(responseCode = "400",
+                    description = "This email is in use",
+                    content = @Content)
+    })
     @PostMapping("/auth/register")
-    public ResponseEntity<JwtDTO> userRegister(@Valid @RequestBody UserCreationDTO userCreationDto) {
-        User userDomain = UserMapper.mapDtoCreationToDomain(userCreationDto);
-        userService.registerUser(userDomain);
-        JwtDTO jwtDto = userService.generateAuthenticationToken(userDomain);
-        return ResponseEntity.ok(jwtDto);
-    }
-
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public Map<String, String> handleValidationExceptions(MethodArgumentNotValidException ex) {
-        Map<String, String> errors = new HashMap<>();
-        ex.getBindingResult().getAllErrors().forEach((error) -> {
-            String fieldName = ((FieldError) error).getField();
-            String errorMessage = error.getDefaultMessage();
-            errors.put(fieldName, errorMessage);
-        });
-        return errors;
-    }
-
-    @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<ErrorDTO> handleUserNotFoundExceptions(UserNotFoundException ex) {
-        ErrorDTO userNotFound =
-                ErrorDTO.builder()
-                        .code(HttpStatus.NOT_FOUND)
-                        .message(ex.getMessage()).build();
-        return new ResponseEntity(userNotFound, HttpStatus.NOT_FOUND);
-
-    }
-
-    @ExceptionHandler(DuplicateEmailException.class)
-    public ResponseEntity<ErrorDTO> handleDuplicateEmailExceptions(DuplicateEmailException ex) {
-        ErrorDTO emailDuplicate =
-                ErrorDTO.builder()
-                        .code(HttpStatus.BAD_REQUEST)
-                        .message(ex.getMessage()).build();
-        return new ResponseEntity(emailDuplicate, HttpStatus.BAD_REQUEST);
-
-    }
+    @ResponseStatus(HttpStatus.CREATED)
+    JwtDTO createUser(@Valid @RequestBody UserCreationDTO userCreationDto);
 
     @GetMapping("/users")
-    public ResponseEntity<List<UserDTO>> getAll() {
-        return ResponseEntity.ok(userService.getAll());
-    }
+    @ResponseStatus(HttpStatus.OK)
+    List<UserDTO> findAll();
 
     @PatchMapping("/users/{userId}")
-    public ResponseEntity<UserDTO> updateUser(
+    @ResponseStatus(HttpStatus.OK)
+    UserDTO updateUser(
             @PathVariable Integer userId,
             @RequestPart("photo") MultipartFile photo,
-            @RequestPart("user") UserUpdateDTO updateDTO) throws UserNotFoundException {
-        User user = mapUpdateDTOToDomain(updateDTO);
-        UserDTO userDTO = mapDomainToDTO(userService.updateUser(userId, user, photo));
-        return ResponseEntity.ok(userDTO);
-    }
+            @RequestPart("user") UserUpdateDTO updateDTO) throws UserNotFoundException;
 
+    @Operation(
+            summary = "User login",
+            description = "To log in, you must access this endpoint"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "User login",
+                    content = {
+                            @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = JwtDTO.class))
+                    }),
+            @ApiResponse(responseCode = "400",
+                    description = "The password is invalid",
+                    content = @Content),
+            @ApiResponse(responseCode = "404",
+                    description = "User not found",
+                    content = @Content)
+    })
     @PostMapping("/auth/login")
-    public ResponseEntity<JwtDTO> userLogin(@Valid @RequestBody UserLoginDTO userLoginDTO) throws UserNotFoundException, InvalidPasswordException {
-        User userDomain = UserMapper.mapLoginDTOToDomain(userLoginDTO);
-        UserMapper.mapDomainToDTO(userService.loginUser(userDomain));
-        JwtDTO jwtDto = userService.generateAuthenticationToken(userDomain);
-        return ResponseEntity.ok(jwtDto);
-    }
-
-    @ExceptionHandler(InvalidPasswordException.class)
-    public ResponseEntity<ErrorDTO> handleInvalidPasswordException(InvalidPasswordException ex) {
-        ErrorDTO notExistsPassword =
-                ErrorDTO.builder()
-                        .code(HttpStatus.BAD_REQUEST)
-                        .message(ex.getMessage()).build();
-        return new ResponseEntity(notExistsPassword, HttpStatus.BAD_REQUEST);
-    }
+    @ResponseStatus(HttpStatus.OK)
+    JwtDTO userLogin(@Valid @RequestBody UserLoginDTO userLoginDTO) throws UserNotFoundException, InvalidPasswordException;
 
     @DeleteMapping("/users/{userId}")
-    public ResponseEntity<?> deleteUser(@PathVariable Long userId) throws UserNotFoundException {
-        userService.deleteUser(userId);
-        return new ResponseEntity(HttpStatus.OK);
-    }
+    @ResponseStatus(HttpStatus.OK)
+    void deleteUser(@PathVariable Long userId) throws UserNotFoundException;
 
+    @Operation(
+            summary = "Auth me",
+            description = "Returns the user data belonging to the provided token"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Auth me",
+                    content = {
+                            @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = UserDTO.class))
+                    }),
+            @ApiResponse(responseCode = "403",
+                    description = "Bad form token",
+                    content = @Content)
+    })
     @GetMapping("/auth/me")
-    public ResponseEntity<UserDTO> getUserInfo(@RequestHeader(value = "Authorization") String authorizationHeader) throws UserNotFoundException {
-        String jwt = authorizationHeader.replace("Bearer ", "");
-        return ResponseEntity.ok(userService.getAuthenticatedUser(jwt));
-    }
-
+    @ResponseStatus(HttpStatus.OK)
+    UserDTO getUserInfo(@RequestHeader(value = "Authorization") String authorizationHeader)
+            throws UserNotFoundException;
 
 }
