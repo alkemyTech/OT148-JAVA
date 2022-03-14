@@ -97,6 +97,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.DELETE, "/news/**").hasAnyAuthority("ADMIN")
                 .antMatchers(HttpMethod.POST, "/activities").hasAnyAuthority("ADMIN")
                 .antMatchers(HttpMethod.GET, "/comments").hasAnyAuthority("ADMIN")
+                .antMatchers(HttpMethod.DELETE, "/comments/**").hasAnyAuthority("ADMIN", "USER")
+                .antMatchers(HttpMethod.POST, "/comments/**").hasAnyAuthority("ADMIN", "USER")
+                .antMatchers(HttpMethod.PUT, "/comments/**").hasAnyAuthority("ADMIN", "USER")
                 .antMatchers("/organization/**", "/auth/me").authenticated()
                 .anyRequest().authenticated();
     }
