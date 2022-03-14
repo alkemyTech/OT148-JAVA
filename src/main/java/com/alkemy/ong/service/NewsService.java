@@ -19,7 +19,7 @@ public class NewsService {
 
     private final NewsRepository newsRepository;
 
-    private static final Integer pageSize = 10;
+    private static final Integer PAGE_SIZE = 10;
 
     public NewsService(NewsRepository newsRepository) {
         this.newsRepository = newsRepository;
@@ -69,7 +69,7 @@ public class NewsService {
 
     @Transactional
     public Page<News> getAll(Integer page) {
-        Pageable pageable = PageRequest.of(page, pageSize);
+        Pageable pageable = PageRequest.of(page, PAGE_SIZE);
         Page<NewsModel> paginatedNews = newsRepository.findAll(pageable);
         List<News> news = paginatedNews.getContent().stream().map(NewsMapper::mapModelToDomain).collect(Collectors.toList());
         return new PageImpl<>(news, pageable, paginatedNews.getTotalElements());
