@@ -32,4 +32,8 @@ public interface CommentController {
     @ResponseStatus(HttpStatus.OK)
     CommentDTO updateComment(@PathVariable Long id,
                              @RequestBody CommentBodyDTO commentBodyDTO);
+
+    @GetMapping("/post/{id}/comments")
+    @ResponseStatus(HttpStatus.OK)
+    List<CommentDTO> findAllComment(@PathVariable Long id);
 }
