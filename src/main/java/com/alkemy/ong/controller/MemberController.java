@@ -2,6 +2,7 @@ package com.alkemy.ong.controller;
 
 import com.alkemy.ong.domain.Member;
 import com.alkemy.ong.dto.ErrorDTO;
+import com.alkemy.ong.dto.MemberApiResponse;
 import com.alkemy.ong.dto.MemberCreationDTO;
 import com.alkemy.ong.dto.MemberDTO;
 import com.alkemy.ong.dto.MemberUpdateDTO;
@@ -18,13 +19,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -37,27 +36,18 @@ public class MemberController {
         this.memberService = memberService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<MemberDTO>> getAll() {
-        List<MemberDTO> memberDTOS = memberService.getAll()
-                .stream().map(MemberMapper::mapDomainToDTO)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(memberDTOS);
-    }
-
-    @GetMapping("/page/{page}")
-    public ResponseEntity<?> getPaginated(@PathVariable Integer page) {
-        Map<String, Object> response = new HashMap<>();
+    @GetMapping()
+    public ResponseEntity<MemberApiResponse> getAll(@RequestParam(defaultValue = "0") Integer page) {
+        MemberApiResponse response = new MemberApiResponse();
         String currentContextPath = ServletUriComponentsBuilder.fromCurrentContextPath().toUriString();
-        if (page > 0) {
-            response.put("url previus", currentContextPath.concat(String.format("/members/page/%d", page - 1)));
+        var members = memberService.getAll(page);
+        if (members.hasPrevious()) {
+            response.setPreviousPageUrl(currentContextPath.concat(String.format("/members?page=%d", page - 1)));
         }
-
-        if (!this.memberService.getPaginated(page + 1).isEmpty()) {
-            response.put("url next", currentContextPath.concat(String.format("/members/page/%d", page + 1)));
+        if (members.hasNext()) {
+            response.setNextPageUrl(currentContextPath.concat(String.format("/members?page=%d", page + 1)));
         }
-
-        response.put("ok", this.memberService.getPaginated(page));
+        response.setMembers(members.getContent().stream().map(MemberMapper::mapDomainToDTO).collect(Collectors.toList()));
         return ResponseEntity.ok(response);
     }
 
