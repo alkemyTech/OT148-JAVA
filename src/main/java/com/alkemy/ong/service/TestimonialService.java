@@ -87,7 +87,7 @@ public class TestimonialService {
         return new PagesDTO<>(response, "localhost:8080/testimonials?page=");
     }
 
-    public  List <TestimonialDTO> ModelListToDTO (List<TestimonialModel> entities) {
+    public List<TestimonialDTO> ModelListToDTO(List<TestimonialModel> entities) {
         return entities.stream().map(testimonialModel ->
                         mapper.map(testimonialModel, TestimonialDTO.class))
                 .collect(Collectors.toList());
