@@ -35,7 +35,7 @@ public interface TestimonialController {
 
     @Operation(summary = "Update a Testimonial by id")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Update Testimonials by id",
+            @ApiResponse(responseCode = "200", description = "Update Testimonial by id",
                     content = {
                             @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = TestimonialDTO.class))}),
