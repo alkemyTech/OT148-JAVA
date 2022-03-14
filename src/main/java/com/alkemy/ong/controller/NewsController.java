@@ -8,6 +8,7 @@ import com.alkemy.ong.dto.NewsUpdateDTO;
 import com.alkemy.ong.exception.NewsNotFoundException;
 import com.alkemy.ong.mapper.NewsMapper;
 import com.alkemy.ong.service.NewsService;
+import com.alkemy.ong.util.ContextUtils;
 import javax.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
