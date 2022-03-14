@@ -35,9 +35,8 @@ public class MemberController {
         this.memberService = memberService;
     }
 
-    @GetMapping()
+    @GetMapping
     public ResponseEntity<MemberListDTO> getAll(@RequestParam(defaultValue = "0") Integer page) {
-
         var members = memberService.getAll(page);
         MemberListDTO response = new MemberListDTO(page, members, ContextUtils.currentContextPath());
         return ResponseEntity.ok(response);
@@ -69,5 +68,4 @@ public class MemberController {
                 .message(ex.getMessage()).build();
         return new ResponseEntity(memberNotFound, HttpStatus.NOT_FOUND);
     }
-
 }
