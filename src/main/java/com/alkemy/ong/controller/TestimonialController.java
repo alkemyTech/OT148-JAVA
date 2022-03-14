@@ -49,11 +49,6 @@ public interface TestimonialController {
             (@PathVariable Long id, @RequestBody TestimonialUpdateDTO testimonialUpdateDTO)
             throws TestimonialNotFoundException;
 
-
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public Map<String, String> handleValidationExceptions(MethodArgumentNotValidException ex);
-
     @Operation(summary = "Delete a Testimonial by id")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Delete Testimonial by id",
