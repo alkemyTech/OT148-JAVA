@@ -42,9 +42,6 @@ public class CategoryController {
 
     @GetMapping("/categories")
     public ResponseEntity<PageDTO<CategoryDTO>> findAll(@RequestParam(defaultValue = "0") Integer page) {
-        if (page < 0) {
-            page = 0;
-        }
         Page<Category> category = categoryService.findAll(page);
         PageDTO<CategoryDTO> categoryDTOPageDTO = createCategoryPageDto(category);
         return ResponseEntity.ok(categoryDTOPageDTO);
