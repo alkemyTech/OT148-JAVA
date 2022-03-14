@@ -4,9 +4,7 @@ import com.alkemy.ong.domain.Category;
 import com.alkemy.ong.dto.CategoryCreationDTO;
 import com.alkemy.ong.dto.CategoryDTO;
 import com.alkemy.ong.dto.CategoryUpdateDTO;
-import com.alkemy.ong.dto.PageDTO;
 import com.alkemy.ong.repository.model.CategoryModel;
-import java.util.stream.Collectors;
 
 public class CategoryMapper {
 
@@ -67,15 +65,5 @@ public class CategoryMapper {
                 .description(categoryUpdateDTO.getDescription())
                 .image(categoryUpdateDTO.getImage()).build();
         return category;
-    }
-
-    public static PageDTO<CategoryDTO> mapPageDomainToPageDTO(PageDTO<Category> category) {
-        PageDTO<CategoryDTO> categoryDTO = new PageDTO<>();
-        categoryDTO.setTotalPages(category.getTotalPages());
-        categoryDTO.setNextPage(category.getNextPage());
-        categoryDTO.setPreviousPage(category.getPreviousPage());
-        categoryDTO.setList(category.getList().stream().map(CategoryMapper::mapDomainToDTO).collect(Collectors.toList()));
-        return categoryDTO;
-
     }
 }
