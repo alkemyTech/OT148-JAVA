@@ -8,7 +8,6 @@ import com.alkemy.ong.dto.NewsUpdateDTO;
 import com.alkemy.ong.exception.NewsNotFoundException;
 import com.alkemy.ong.mapper.NewsMapper;
 import com.alkemy.ong.service.NewsService;
-import java.util.stream.Collectors;
 import javax.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -23,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RestController
 @RequestMapping("/news")
@@ -73,16 +71,8 @@ public class NewsController {
 
     @GetMapping
     public ResponseEntity<NewsListDTO> getAll(@RequestParam(defaultValue = "0") Integer page) {
-        NewsListDTO response = new NewsListDTO();
-        String currentContextPath = ServletUriComponentsBuilder.fromCurrentContextPath().toUriString();
         Page<News> news = newsService.getAll(page);
-        if (news.hasNext()) {
-            response.setNextPage(currentContextPath.concat(String.format("/news?page=%d", page + 1)));
-        }
-        if (news.hasPrevious()) {
-            response.setPreviousPage(currentContextPath.concat(String.format("/news?page=%d", page - 1)));
-        }
-        response.setNews(news.getContent().stream().map(NewsMapper::mapDomainToDTO).collect(Collectors.toList()));
+        NewsListDTO response = new NewsListDTO(page, news, ContextUtils.currentContextPath());
         return ResponseEntity.ok(response);
     }
 }
