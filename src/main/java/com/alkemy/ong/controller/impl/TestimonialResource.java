@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.HashMap;
 import java.util.Map;
 
-@Tag(name = "Testimonials", description = "Create, update show and delete Testimonials")
 @RestController
 public class TestimonialResource implements TestimonialController {
 
@@ -37,7 +36,7 @@ public class TestimonialResource implements TestimonialController {
     }
 
     @Override
-    public ResponseEntity<TestimonialDTO> updateTestimonials(Long id, TestimonialUpdateDTO testimonialUpdateDTO) throws TestimonialNotFoundException {
+    public ResponseEntity<TestimonialDTO> updateTestimonial(Long id, TestimonialUpdateDTO testimonialUpdateDTO) throws TestimonialNotFoundException {
         Testimonial testimonial =
                 TestimonialMapper.mapUpdateDTOToDomain(testimonialUpdateDTO);
         TestimonialDTO testimonialDTO = TestimonialMapper.mapDomainToDTO(testimonialService.updateTestimonial(id, testimonial));

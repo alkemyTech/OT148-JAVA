@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -23,16 +24,16 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import javax.validation.Valid;
 import java.util.Map;
 
+@Tag(name = "Testimonials", description = "Create, update show and delete Testimonials")
 public interface TestimonialController {
 
     @Operation(
-            summary = "Add new Testimonials",
+            summary = "Add new Testimonial",
             description = "To add a testimonial, you must access this endpoint")
     @PostMapping("/testimonials")
-    ResponseEntity<TestimonialDTO>
-    createTestimonial(@Valid @RequestBody TestimonialCreationDTO testimonialCreationDTO);
+    ResponseEntity<TestimonialDTO> createTestimonial(@Valid @RequestBody TestimonialCreationDTO testimonialCreationDTO);
 
-    @Operation(summary = "Update a Testimonials by id")
+    @Operation(summary = "Update a Testimonial by id")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Update Testimonials by id",
                     content = {
@@ -41,10 +42,10 @@ public interface TestimonialController {
 
             @ApiResponse(responseCode = "400", description = "Invalid id supplied",
                     content = @Content),
-            @ApiResponse(responseCode = "404", description = "Testimonials not found",
+            @ApiResponse(responseCode = "404", description = "Testimonial not found",
                     content = @Content)})
     @PutMapping("/testimonials/{id}")
-    ResponseEntity<TestimonialDTO> updateTestimonials
+    ResponseEntity<TestimonialDTO> updateTestimonial
             (@PathVariable Long id, @RequestBody TestimonialUpdateDTO testimonialUpdateDTO)
             throws TestimonialNotFoundException;
 
@@ -56,13 +57,10 @@ public interface TestimonialController {
     @Operation(summary = "Delete a Testimonial by id")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Delete Testimonial by id",
-                    content = {
-                            @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = TestimonialDTO.class))}),
-
+                    content = @Content),
             @ApiResponse(responseCode = "400", description = "Invalid id supplied",
                     content = @Content),
-            @ApiResponse(responseCode = "404", description = "Testimonials not found",
+            @ApiResponse(responseCode = "404", description = "Testimonial not found",
                     content = @Content)})
     @DeleteMapping("{id}")
     ResponseEntity<?> deleteTestimonial(@PathVariable Long id)
