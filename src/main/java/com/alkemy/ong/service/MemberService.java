@@ -5,13 +5,18 @@ import com.alkemy.ong.exception.MemberNotFoundException;
 import com.alkemy.ong.mapper.MemberMapper;
 import com.alkemy.ong.repository.MemberRepository;
 import com.alkemy.ong.repository.model.MemberModel;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import javax.transaction.Transactional;
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class MemberService {
+
+    private static final int PAGE_SIZE = 10;
 
     private final MemberRepository memberRepository;
 
@@ -20,10 +25,11 @@ public class MemberService {
     }
 
     @Transactional
-    public List<Member> getAll() {
-        List<MemberModel> memberModelList = memberRepository.findAll();
-        return memberModelList.stream().map(MemberMapper::mapModelToDomain)
-                .collect(Collectors.toList());
+    public Page<Member> getAll(Integer page) {
+        Pageable pageable = PageRequest.of(page, PAGE_SIZE);
+        var paginatedMembers = memberRepository.findAll(pageable);
+        var members = paginatedMembers.getContent().stream().map(MemberMapper::mapModelToDomain).collect(Collectors.toList());
+        return new PageImpl<>(members, pageable, paginatedMembers.getTotalElements());
     }
 
     @Transactional
