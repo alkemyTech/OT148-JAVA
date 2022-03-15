@@ -5,22 +5,30 @@ import com.alkemy.ong.dto.CategoryDTO;
 import com.alkemy.ong.dto.CategoryUpdateDTO;
 import com.alkemy.ong.dto.PageDTO;
 import com.alkemy.ong.exception.CategoryNotFoundException;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
 
-@RestController
 @Tag(name = "Categories", description = "Create, update show and delete Categories")
 public interface CategoryController {
 
+    @Operation(
+            summary = "Add new category",
+            description = "To create a category, you must access this endpoint.")
+    @PostMapping("/categories")
     @ResponseStatus(HttpStatus.CREATED)
     CategoryDTO createCategory(@Valid @RequestBody CategoryCreationDTO categoryCreationDTO);
 
@@ -33,10 +41,23 @@ public interface CategoryController {
     @ResponseStatus(HttpStatus.OK)
     CategoryDTO getById(@PathVariable Long id) throws CategoryNotFoundException;
 
+    @Operation(summary = "Update a Category by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Update a category by id",
+                    content = {
+                            @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = CategoryDTO.class))}),
+            @ApiResponse(responseCode = "400", description = "Invalid id supplied", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Category not found", content = @Content)})
     @PutMapping("/categories/{id}")
     @ResponseStatus(HttpStatus.OK)
     CategoryDTO updateCategory(@PathVariable Long id, @RequestBody CategoryUpdateDTO categoryUpdateDTO) throws CategoryNotFoundException;
 
+    @Operation(summary = "Delete a Member by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Delete a category by id"),
+            @ApiResponse(responseCode = "400", description = "Invalid id supplied", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Category not found", content = @Content)})
     @DeleteMapping("/categories/{id}")
     @ResponseStatus(HttpStatus.OK)
     void deleteCategory(@PathVariable Long id) throws CategoryNotFoundException;

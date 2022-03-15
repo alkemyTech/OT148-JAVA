@@ -10,12 +10,16 @@ import com.alkemy.ong.dto.PageDTO;
 import com.alkemy.ong.exception.CategoryNotFoundException;
 import com.alkemy.ong.mapper.CategoryMapper;
 import com.alkemy.ong.service.CategoryService;
+import io.swagger.annotations.Api;
 import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestController;
 
+@Api(value = "CategoryResource", tags = {"Categories"})
+@RestController
 public class CategoryResource implements CategoryController {
 
     private final CategoryService categoryService;
