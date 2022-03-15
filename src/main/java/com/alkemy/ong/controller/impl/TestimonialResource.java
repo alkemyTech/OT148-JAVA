@@ -8,6 +8,7 @@ import com.alkemy.ong.dto.TestimonialUpdateDTO;
 import com.alkemy.ong.exception.TestimonialNotFoundException;
 import com.alkemy.ong.mapper.TestimonialMapper;
 import com.alkemy.ong.service.TestimonialService;
+import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.HashMap;
 import java.util.Map;
 
+@Api (value= "testimonialResource", tags = {"testimonials"})
 @RestController
 public class TestimonialResource implements TestimonialController {
 
