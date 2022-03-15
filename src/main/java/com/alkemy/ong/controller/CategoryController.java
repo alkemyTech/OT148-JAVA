@@ -1,88 +1,40 @@
 package com.alkemy.ong.controller;
 
-import com.alkemy.ong.domain.Category;
 import com.alkemy.ong.dto.CategoryCreationDTO;
 import com.alkemy.ong.dto.CategoryDTO;
 import com.alkemy.ong.dto.CategoryUpdateDTO;
-import com.alkemy.ong.dto.ErrorDTO;
 import com.alkemy.ong.dto.PageDTO;
 import com.alkemy.ong.exception.CategoryNotFoundException;
-import com.alkemy.ong.mapper.CategoryMapper;
-import com.alkemy.ong.service.CategoryService;
-import java.util.stream.Collectors;
 import javax.validation.Valid;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
-@RestController
-public class CategoryController {
-
-    private final CategoryService categoryService;
-
-    public CategoryController(CategoryService categoryService) {
-        this.categoryService = categoryService;
-    }
+public interface CategoryController {
 
     @PostMapping("/categories")
-    public ResponseEntity<CategoryDTO> createCategory(@Valid @RequestBody CategoryCreationDTO categoryCreationDTO) {
-        Category categoryDomain = CategoryMapper.mapCreationDTOToDomain(categoryCreationDTO);
-        CategoryDTO categoryDTO = CategoryMapper.mapDomainToDTO(categoryService.createCategory(categoryDomain));
-        return ResponseEntity.ok(categoryDTO);
-    }
+    @ResponseStatus(HttpStatus.CREATED)
+    CategoryDTO createCategory(@Valid @RequestBody CategoryCreationDTO categoryCreationDTO);
 
     @GetMapping("/categories")
-    public ResponseEntity<PageDTO<CategoryDTO>> findAll(@RequestParam(defaultValue = "0") Integer page) {
-        Page<Category> category = categoryService.findAll(page);
-        PageDTO<CategoryDTO> categoryDTOPageDTO = createCategoryPageDto(category);
-        return ResponseEntity.ok(categoryDTOPageDTO);
-    }
-
-    private PageDTO<CategoryDTO> createCategoryPageDto(Page<Category> page) {
-        PageDTO<CategoryDTO> dto = new PageDTO<>();
-        dto.setList(page.getContent().stream().map(CategoryMapper::mapDomainToDTO).collect(Collectors.toList()));
-        if (page.hasNext()) {
-            dto.setNextPage("/categories?page=" + page.nextPageable().getPageNumber());
-        }
-        if (page.hasPrevious()) {
-            dto.setPreviousPage("/categories?page=" + page.previousPageable().getPageNumber());
-        }
-        dto.setTotalPages(page.getTotalPages());
-        return dto;
-    }
+    @ResponseStatus(HttpStatus.OK)
+    PageDTO<CategoryDTO> findAll(@RequestParam(defaultValue = "0") Integer page);
 
     @GetMapping("/categories/{id}")
-    public ResponseEntity<CategoryDTO> getById(@PathVariable Long id) throws CategoryNotFoundException {
-        return ResponseEntity.ok(CategoryMapper.mapDomainToDTO(categoryService.getById(id)));
-    }
+    @ResponseStatus(HttpStatus.OK)
+    CategoryDTO getById(@PathVariable Long id) throws CategoryNotFoundException;
 
     @PutMapping("/categories/{id}")
-    public ResponseEntity<CategoryDTO> updateCategory(@PathVariable Long id, @RequestBody CategoryUpdateDTO categoryUpdateDTO) throws CategoryNotFoundException {
-        Category category = CategoryMapper.mapUpdateDTOToDomain(categoryUpdateDTO);
-        CategoryDTO categoryDTO = CategoryMapper.mapDomainToDTO(categoryService.updateCategory(id, category));
-        return ResponseEntity.ok(categoryDTO);
-    }
-
-    @ExceptionHandler(CategoryNotFoundException.class)
-    public ResponseEntity<ErrorDTO> handleCategoryNotFoundExceptions(CategoryNotFoundException ex) {
-        ErrorDTO categoryNotFound = ErrorDTO.builder()
-                .code(HttpStatus.NOT_FOUND)
-                .message(ex.getMessage()).build();
-        return new ResponseEntity(categoryNotFound, HttpStatus.NOT_FOUND);
-    }
+    @ResponseStatus(HttpStatus.OK)
+    CategoryDTO updateCategory(@PathVariable Long id, @RequestBody CategoryUpdateDTO categoryUpdateDTO) throws CategoryNotFoundException;
 
     @DeleteMapping("/categories/{id}")
-    public ResponseEntity<?> deleteCategory(@PathVariable Long id) throws CategoryNotFoundException {
-        categoryService.deleteCategory(id);
-        return new ResponseEntity(HttpStatus.OK);
-    }
+    @ResponseStatus(HttpStatus.OK)
+    void deleteCategory(@PathVariable Long id) throws CategoryNotFoundException;
 }
