@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
+import static com.alkemy.ong.mapper.NewsMapper.mapDomainToDTO;
 
 @Api(value = "NewsResource", tags = {"News"})
 @RestController
@@ -28,35 +29,34 @@ public class NewsResource implements NewsController {
     }
 
     @Override
-    public ResponseEntity<NewsListDTO> getAll(Integer page) {
+    public NewsListDTO getAll(Integer page) {
         Page<News> news = newsService.getAll(page);
         NewsListDTO response = new NewsListDTO(page, news, ContextUtils.currentContextPath());
-        return ResponseEntity.ok(response);
+        return response;
     }
 
     @Override
-    public ResponseEntity<NewsDTO> getById(Long id) throws NewsNotFoundException {
-        return ResponseEntity.ok(NewsMapper.mapDomainToDTO(newsService.getById(id)));
+    public NewsDTO getById(Long id) throws NewsNotFoundException {
+        return mapDomainToDTO(newsService.getById(id));
     }
 
     @Override
-    public ResponseEntity<NewsDTO> createNews(NewsDTO newsDTO) {
+    public NewsDTO createNews(NewsDTO newsDTO) {
         News news = newsService.createNews((NewsMapper.mapDTOToDomain(newsDTO)));
-        NewsDTO result = NewsMapper.mapDomainToDTO(news);
-        return ResponseEntity.status(HttpStatus.CREATED).body(result);
+        NewsDTO result = mapDomainToDTO(news);
+        return result;
     }
 
     @Override
-    public ResponseEntity<NewsDTO> updateNews(Long id, NewsUpdateDTO newsUpdateDTO) throws NewsNotFoundException {
+    public NewsDTO updateNews(Long id, NewsUpdateDTO newsUpdateDTO) throws NewsNotFoundException {
         News news = NewsMapper.mapUpdateDTOToDomain(newsUpdateDTO);
-        NewsDTO newsUpdated = NewsMapper.mapDomainToDTO(newsService.updateNews(id, news));
-        return ResponseEntity.ok().body(newsUpdated);
+        NewsDTO newsUpdated = mapDomainToDTO(newsService.updateNews(id, news));
+        return newsUpdated;
     }
 
     @Override
-    public ResponseEntity<?> deleteNews(Long id) throws NewsNotFoundException {
+    public void deleteNews(Long id) throws NewsNotFoundException {
         newsService.deleteNews(id);
-        return new ResponseEntity(HttpStatus.OK);
     }
 
     @ExceptionHandler(NewsNotFoundException.class)
