@@ -14,12 +14,7 @@ import com.alkemy.ong.util.ContextUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.validation.Valid;
 
 @RestController
 public class MemberResource implements MemberController {
@@ -31,27 +26,27 @@ public class MemberResource implements MemberController {
     }
 
     @Override
-    public ResponseEntity<MemberListDTO> getAll(@RequestParam(defaultValue = "0") Integer page) {
+    public ResponseEntity<MemberListDTO> getAll(Integer page) {
         var members = memberService.getAll(page);
         MemberListDTO response = new MemberListDTO(page, members, ContextUtils.currentContextPath());
         return ResponseEntity.ok(response);
     }
 
     @Override
-    public ResponseEntity<MemberDTO> updateMember(@PathVariable Long id, @RequestBody MemberUpdateDTO memberUpdateDTO) throws MemberNotFoundException {
+    public ResponseEntity<MemberDTO> updateMember(Long id, MemberUpdateDTO memberUpdateDTO) throws MemberNotFoundException {
         Member member = MemberMapper.mapUpdateDTOToDomain(memberUpdateDTO);
         return ResponseEntity.ok(MemberMapper.mapDomainToDTO(memberService.updateMember(id, member)));
     }
 
     @Override
-    public ResponseEntity<MemberDTO> createMember(@Valid @RequestBody MemberCreationDTO memberCreationDTO) {
+    public ResponseEntity<MemberDTO> createMember(MemberCreationDTO memberCreationDTO) {
         Member member = MemberMapper.mapCreationDTOToDomain(memberCreationDTO);
         MemberDTO memberDTO = MemberMapper.mapDomainToDTO(memberService.createMember(member));
         return ResponseEntity.status(HttpStatus.CREATED).body(memberDTO);
     }
 
     @Override
-    public ResponseEntity<?> deleteMember(@PathVariable Long id) throws MemberNotFoundException {
+    public ResponseEntity<?> deleteMember(Long id) throws MemberNotFoundException {
         memberService.deleteMember(id);
         return new ResponseEntity(HttpStatus.OK);
     }

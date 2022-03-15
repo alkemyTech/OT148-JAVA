@@ -4,6 +4,7 @@ import com.alkemy.ong.dto.MemberCreationDTO;
 import com.alkemy.ong.dto.MemberDTO;
 import com.alkemy.ong.dto.MemberListDTO;
 import com.alkemy.ong.dto.MemberUpdateDTO;
+import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -24,11 +25,12 @@ import javax.validation.Valid;
 
 @Tag(name = "Members", description = "Create, update show and delete Members")
 @RequestMapping("/members")
+@Api
 public interface MemberController {
 
     @Operation(
             summary = "Get members list",
-            description = "To get a list of the ONG members in a page, you must access this endpoint.")
+            description = "To get a paginated list of the ONG members, you must access this endpoint.")
     @GetMapping
     ResponseEntity<MemberListDTO> getAll(@RequestParam(defaultValue = "0") Integer page);
 
