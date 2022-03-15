@@ -2,7 +2,6 @@ package com.alkemy.ong.controller.impl;
 
 import com.alkemy.ong.controller.TestimonialController;
 import com.alkemy.ong.domain.Testimonial;
-import com.alkemy.ong.dto.MemberListDTO;
 import com.alkemy.ong.dto.TestimonialCreationDTO;
 import com.alkemy.ong.dto.TestimonialDTO;
 import com.alkemy.ong.dto.TestimonialListDTO;
@@ -67,8 +66,9 @@ public class TestimonialResource implements TestimonialController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
+    @Override
     @GetMapping
-    public ResponseEntity<TestimonialListDTO> getAll(@RequestParam(defaultValue = "0") Integer page) {
+    public ResponseEntity<TestimonialListDTO> getAll(Integer page) {
         var testimonials = testimonialService.getAll(page);
         TestimonialListDTO response = new TestimonialListDTO(page, testimonials, ContextUtils.currentContextPath());
         return ResponseEntity.ok(response);
