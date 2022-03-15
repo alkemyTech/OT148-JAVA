@@ -91,15 +91,14 @@ public class CommentService {
     }
 
     @Transactional
-    public List<Comment> getAllComment(Long id) throws CommentNotFoundException {
+    public List<Comment> getAllComment(Long id) throws NewsNotFoundException {
         Optional<NewsModel> newsModel = newsRepository.findById(id);
         if (newsModel.isPresent()) {
             List<CommentModel> commentModelList = commentRepository.findByNewsId(newsModel.get().getId());
             return commentModelList.stream().map(CommentMapper::mapModelToDomain).collect(Collectors.toList());
         } else {
-            throw new CommentNotFoundException(String.format("Comment with ID: %s not found", id));
+            throw new NewsNotFoundException(String.format("News with ID: %s not found", id));
         }
-
     }
 
     private boolean hasValidId(MainUser mainUser, CommentModel commentModel) {
