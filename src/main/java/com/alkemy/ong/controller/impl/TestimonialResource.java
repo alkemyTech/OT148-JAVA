@@ -8,17 +8,23 @@ import com.alkemy.ong.dto.TestimonialUpdateDTO;
 import com.alkemy.ong.exception.TestimonialNotFoundException;
 import com.alkemy.ong.mapper.TestimonialMapper;
 import com.alkemy.ong.service.TestimonialService;
-import java.util.HashMap;
-import java.util.Map;
+import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
+import java.util.Map;
+
+@Api (value= "testimonialResource", tags = {"Testimonials"})
 @RestController
 public class TestimonialResource implements TestimonialController {
+
     private final TestimonialService testimonialService;
 
     public TestimonialResource(TestimonialService testimonialService) {
@@ -26,24 +32,19 @@ public class TestimonialResource implements TestimonialController {
     }
 
     @Override
-    public TestimonialDTO createTestimonial(TestimonialCreationDTO testimonialCreationDTO) {
+    public ResponseEntity<TestimonialDTO> createTestimonial(TestimonialCreationDTO testimonialCreationDTO) {
         Testimonial testimonial = TestimonialMapper.mapCreationDTOtoDomain(testimonialCreationDTO);
         testimonialService.createTestimonial(testimonial);
         TestimonialDTO testimonialDTO = TestimonialMapper.mapDomainToDTO(testimonial);
-        return testimonialDTO;
+        return ResponseEntity.status(HttpStatus.CREATED).body(testimonialDTO);
     }
 
     @Override
-    public TestimonialDTO updateTestimonials(Long id, TestimonialUpdateDTO testimonialUpdateDTO) throws TestimonialNotFoundException {
+    public ResponseEntity<TestimonialDTO> updateTestimonial(Long id, TestimonialUpdateDTO testimonialUpdateDTO) throws TestimonialNotFoundException {
         Testimonial testimonial =
                 TestimonialMapper.mapUpdateDTOToDomain(testimonialUpdateDTO);
         TestimonialDTO testimonialDTO = TestimonialMapper.mapDomainToDTO(testimonialService.updateTestimonial(id, testimonial));
-        return testimonialDTO;
-    }
-
-    @Override
-    public void deleteTestimonial(Long id) throws TestimonialNotFoundException {
-        testimonialService.deleteTestimonial(id);
+        return ResponseEntity.ok(testimonialDTO);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -56,5 +57,11 @@ public class TestimonialResource implements TestimonialController {
             errors.put(fieldName, errorMessage);
         });
         return errors;
+    }
+
+    @Override
+    public ResponseEntity<?> deleteTestimonial(Long id) throws TestimonialNotFoundException {
+        testimonialService.deleteTestimonial(id);
+        return new ResponseEntity(HttpStatus.OK);
     }
 }
