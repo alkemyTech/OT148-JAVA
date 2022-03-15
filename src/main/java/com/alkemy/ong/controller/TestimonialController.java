@@ -1,9 +1,8 @@
 package com.alkemy.ong.controller;
 
-import com.alkemy.ong.domain.Testimonial;
-import com.alkemy.ong.dto.PagesDTO;
 import com.alkemy.ong.dto.TestimonialCreationDTO;
 import com.alkemy.ong.dto.TestimonialDTO;
+import com.alkemy.ong.dto.TestimonialListDTO;
 import com.alkemy.ong.dto.TestimonialUpdateDTO;
 import com.alkemy.ong.exception.TestimonialNotFoundException;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -12,20 +11,16 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
-import java.util.Map;
 
 @Tag(name = "Testimonials", description = "Create, update show and delete Testimonials")
 public interface TestimonialController {
@@ -63,14 +58,10 @@ public interface TestimonialController {
     @DeleteMapping("{id}")
     ResponseEntity<?> deleteTestimonial(@PathVariable Long id)
             throws TestimonialNotFoundException;
-}
-    public ResponseEntity<?> deleteTestimonial(@PathVariable Long id) throws TestimonialNotFoundException {
-        testimonialService.deleteTestimonial(id);
-        return new ResponseEntity(HttpStatus.OK);
-    }
 
-    @GetMapping("/testimonials/{page}")
-    public ResponseEntity<?> getPaginated(@PathVariable Integer page) {
-        PagesDTO<TestimonialDTO> response = testimonialService.getPages(page);
-        return ResponseEntity.ok().body(response);    }
-    }
+    @Operation(
+            summary = "Get testimonials list",
+            description = "To get a paginated list of the ONG testimonials, you must access this endpoint.")
+    @GetMapping
+    ResponseEntity<TestimonialListDTO> getAll(@RequestParam(defaultValue = "0") Integer page);
+}

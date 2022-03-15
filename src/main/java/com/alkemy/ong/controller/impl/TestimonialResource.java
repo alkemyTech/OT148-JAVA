@@ -2,18 +2,22 @@ package com.alkemy.ong.controller.impl;
 
 import com.alkemy.ong.controller.TestimonialController;
 import com.alkemy.ong.domain.Testimonial;
+import com.alkemy.ong.dto.MemberListDTO;
 import com.alkemy.ong.dto.TestimonialCreationDTO;
 import com.alkemy.ong.dto.TestimonialDTO;
+import com.alkemy.ong.dto.TestimonialListDTO;
 import com.alkemy.ong.dto.TestimonialUpdateDTO;
 import com.alkemy.ong.exception.TestimonialNotFoundException;
 import com.alkemy.ong.mapper.TestimonialMapper;
 import com.alkemy.ong.service.TestimonialService;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import com.alkemy.ong.util.ContextUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -61,5 +65,12 @@ public class TestimonialResource implements TestimonialController {
     public ResponseEntity<?> deleteTestimonial(Long id) throws TestimonialNotFoundException {
         testimonialService.deleteTestimonial(id);
         return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @GetMapping
+    public ResponseEntity<TestimonialListDTO> getAll(@RequestParam(defaultValue = "0") Integer page) {
+        var testimonials = testimonialService.getAll(page);
+        TestimonialListDTO response = new TestimonialListDTO(page, testimonials, ContextUtils.currentContextPath());
+        return ResponseEntity.ok(response);
     }
 }

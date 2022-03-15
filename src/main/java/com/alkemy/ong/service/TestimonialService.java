@@ -1,22 +1,18 @@
 package com.alkemy.ong.service;
 
 import com.alkemy.ong.domain.Testimonial;
-import com.alkemy.ong.dto.PagesDTO;
-import com.alkemy.ong.dto.TestimonialDTO;
 import com.alkemy.ong.exception.ActivityNotFoundException;
-import com.alkemy.ong.exception.ParamNotFoundException;
 import com.alkemy.ong.exception.TestimonialNotFoundException;
 import com.alkemy.ong.mapper.TestimonialMapper;
 import com.alkemy.ong.repository.TestimonialRepository;
 import com.alkemy.ong.repository.model.TestimonialModel;
-import org.modelmapper.ModelMapper;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import javax.transaction.Transactional;
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -25,8 +21,6 @@ public class TestimonialService {
     private final TestimonialRepository testimonialRepository;
 
     private static final int PAGE_SIZE = 10;
-
-    private ModelMapper mapper = new ModelMapper();
 
     public TestimonialService(TestimonialRepository testimonialRepository) {
         this.testimonialRepository = testimonialRepository;
@@ -64,33 +58,10 @@ public class TestimonialService {
     }
 
     @Transactional
-    public PagesDTO<TestimonialDTO> getPages(Integer page) {
-
-        if (page < 0)
-            throw new ParamNotFoundException("Page number can't be less than 0");
-
-        Pageable pageRequest = PageRequest.of(page, 10);
-        Page<TestimonialModel> testimonials = testimonialRepository.findAll(pageRequest);
-        return responsePage(testimonials);
+    public Page<Testimonial> getAll(Integer page) {
+        Pageable pageable = PageRequest.of(page, PAGE_SIZE);
+        var paginatedTestimonials = testimonialRepository.findAll(pageable);
+        var testimonials = paginatedTestimonials.getContent().stream().map(TestimonialMapper::mapModelToDomain).collect(Collectors.toList());
+        return new PageImpl<>(testimonials, pageable, paginatedTestimonials.getTotalElements());
     }
-
-    private PagesDTO<TestimonialDTO> responsePage(Page<TestimonialModel> page) {
-
-        if (page.isEmpty())
-            throw new ParamNotFoundException("The requested page doesn't exist");
-
-        Page<TestimonialDTO> response = new PageImpl<>(
-                ModelListToDTO(page.getContent()),
-                PageRequest.of(page.getNumber(), page.getSize()),
-                page.getTotalElements()
-        );
-        return new PagesDTO<>(response, "localhost:8080/testimonials?page=");
-    }
-
-    public List<TestimonialDTO> ModelListToDTO(List<TestimonialModel> entities) {
-        return entities.stream().map(testimonialModel ->
-                        mapper.map(testimonialModel, TestimonialDTO.class))
-                .collect(Collectors.toList());
-    }
-
 }

@@ -5,13 +5,6 @@ import com.alkemy.ong.dto.TestimonialCreationDTO;
 import com.alkemy.ong.dto.TestimonialDTO;
 import com.alkemy.ong.dto.TestimonialUpdateDTO;
 import com.alkemy.ong.repository.model.TestimonialModel;
-import org.modelmapper.ModelMapper;
-import org.springframework.stereotype.Component;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
 public class TestimonialMapper {
     public static Testimonial mapModelToDomain(TestimonialModel testimonialModel) {
