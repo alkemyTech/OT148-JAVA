@@ -4,24 +4,26 @@ import com.alkemy.ong.controller.TestimonialController;
 import com.alkemy.ong.domain.Testimonial;
 import com.alkemy.ong.dto.TestimonialCreationDTO;
 import com.alkemy.ong.dto.TestimonialDTO;
+import com.alkemy.ong.dto.TestimonialListDTO;
 import com.alkemy.ong.dto.TestimonialUpdateDTO;
 import com.alkemy.ong.exception.TestimonialNotFoundException;
 import com.alkemy.ong.mapper.TestimonialMapper;
 import com.alkemy.ong.service.TestimonialService;
+import com.alkemy.ong.util.ContextUtils;
 import io.swagger.annotations.Api;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
 import java.util.Map;
 
-@Api (value= "testimonialResource", tags = {"Testimonials"})
+@Api(value= "testimonialResource", tags = {"Testimonials"})
 @RestController
 public class TestimonialResource implements TestimonialController {
 
@@ -63,5 +65,13 @@ public class TestimonialResource implements TestimonialController {
     public ResponseEntity<?> deleteTestimonial(Long id) throws TestimonialNotFoundException {
         testimonialService.deleteTestimonial(id);
         return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @Override
+    @GetMapping
+    public ResponseEntity<TestimonialListDTO> getAll(Integer page) {
+        var testimonials = testimonialService.getAll(page);
+        TestimonialListDTO response = new TestimonialListDTO(page, testimonials, ContextUtils.currentContextPath());
+        return ResponseEntity.ok(response);
     }
 }
