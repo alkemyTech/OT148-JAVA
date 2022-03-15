@@ -1,6 +1,5 @@
 package com.alkemy.ong.controller.impl;
 
-
 import com.alkemy.ong.controller.MemberController;
 import com.alkemy.ong.domain.Member;
 import com.alkemy.ong.dto.ErrorDTO;
@@ -10,18 +9,16 @@ import com.alkemy.ong.dto.MemberListDTO;
 import com.alkemy.ong.dto.MemberUpdateDTO;
 import com.alkemy.ong.exception.MemberNotFoundException;
 import com.alkemy.ong.mapper.MemberMapper;
-import static com.alkemy.ong.mapper.MemberMapper.mapDomainToDTO;
 import com.alkemy.ong.service.MemberService;
 import com.alkemy.ong.util.ContextUtils;
+import io.swagger.annotations.Api;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Api(value = "MemberResource", tags = {"Members"})
 @RestController
-@RequestMapping("/members")
 public class MemberResource implements MemberController {
 
     private final MemberService memberService;
@@ -31,29 +28,29 @@ public class MemberResource implements MemberController {
     }
 
     @Override
-    @GetMapping
-    public MemberListDTO findAll(Integer page) {
+    public ResponseEntity<MemberListDTO> getAll(Integer page) {
         var members = memberService.getAll(page);
         MemberListDTO response = new MemberListDTO(page, members, ContextUtils.currentContextPath());
-        return response;
+        return ResponseEntity.ok(response);
     }
 
     @Override
-    public MemberDTO updateMember(Long id, MemberUpdateDTO memberUpdateDTO) throws MemberNotFoundException {
+    public ResponseEntity<MemberDTO> updateMember(Long id, MemberUpdateDTO memberUpdateDTO) throws MemberNotFoundException {
         Member member = MemberMapper.mapUpdateDTOToDomain(memberUpdateDTO);
-        return mapDomainToDTO(memberService.updateMember(id, member));
+        return ResponseEntity.ok(MemberMapper.mapDomainToDTO(memberService.updateMember(id, member)));
     }
 
     @Override
-    public MemberDTO createMember(MemberCreationDTO memberCreationDTO) {
+    public ResponseEntity<MemberDTO> createMember(MemberCreationDTO memberCreationDTO) {
         Member member = MemberMapper.mapCreationDTOToDomain(memberCreationDTO);
-        MemberDTO memberDTO = mapDomainToDTO(memberService.createMember(member));
-        return memberDTO;
+        MemberDTO memberDTO = MemberMapper.mapDomainToDTO(memberService.createMember(member));
+        return ResponseEntity.status(HttpStatus.CREATED).body(memberDTO);
     }
 
     @Override
-    public void deleteMember(Long id) throws MemberNotFoundException {
+    public ResponseEntity<?> deleteMember(Long id) throws MemberNotFoundException {
         memberService.deleteMember(id);
+        return new ResponseEntity(HttpStatus.OK);
     }
 
     @ExceptionHandler(MemberNotFoundException.class)
@@ -63,5 +60,4 @@ public class MemberResource implements MemberController {
                 .message(ex.getMessage()).build();
         return new ResponseEntity(memberNotFound, HttpStatus.NOT_FOUND);
     }
-
 }
