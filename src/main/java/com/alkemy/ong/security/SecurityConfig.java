@@ -76,6 +76,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .addFilterBefore(jwtTokenFilter(), UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
+                .antMatchers(HttpMethod.GET, "/users").hasAnyAuthority("ADMIN")
                 .antMatchers(HttpMethod.GET, "/**").hasAnyAuthority("ADMIN", "USER")
                 .antMatchers(HttpMethod.DELETE, "/**").hasAnyAuthority("ADMIN")
                 .antMatchers(HttpMethod.POST, "/comments/**").hasAnyAuthority("ADMIN", "USER")
