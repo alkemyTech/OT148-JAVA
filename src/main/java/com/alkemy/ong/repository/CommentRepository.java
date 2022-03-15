@@ -9,5 +9,5 @@ import org.springframework.stereotype.Repository;
 public interface CommentRepository extends CrudRepository<CommentModel, Long> {
     List<CommentModel> findAllByOrderByCreationDateAsc();
 
-    List<CommentModel> findAll();
+    List<CommentModel> findByNewsId(Long id);
 }
