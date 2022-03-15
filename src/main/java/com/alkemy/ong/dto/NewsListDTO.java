@@ -2,12 +2,10 @@ package com.alkemy.ong.dto;
 
 import com.alkemy.ong.domain.News;
 import com.alkemy.ong.mapper.NewsMapper;
-import com.alkemy.ong.service.NewsService;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.Data;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 
 @Data
@@ -16,9 +14,6 @@ public class NewsListDTO {
     private List<NewsDTO> news;
     private String nextPage;
     private String previousPage;
-
-    @Autowired
-    public NewsService newsService;
 
     public NewsListDTO(Integer page, Page<News> news, String currentContextPath) {
         if (news.hasNext()) {
