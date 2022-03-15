@@ -1,19 +1,17 @@
 package com.alkemy.ong.controller;
 
-import com.alkemy.ong.domain.Member;
-import com.alkemy.ong.dto.ErrorDTO;
 import com.alkemy.ong.dto.MemberCreationDTO;
 import com.alkemy.ong.dto.MemberDTO;
 import com.alkemy.ong.dto.MemberListDTO;
 import com.alkemy.ong.dto.MemberUpdateDTO;
-import com.alkemy.ong.exception.MemberNotFoundException;
-import com.alkemy.ong.mapper.MemberMapper;
-import com.alkemy.ong.service.MemberService;
-import com.alkemy.ong.util.ContextUtils;
-import org.springframework.http.HttpStatus;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,51 +19,41 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
-@RestController
+@Tag(name = "Members", description = "Create, update show and delete Members")
 @RequestMapping("/members")
-public class MemberController {
+public interface MemberController {
 
-    private final MemberService memberService;
-
-    public MemberController(MemberService memberService) {
-        this.memberService = memberService;
-    }
-
+    @Operation(
+            summary = "Get members list",
+            description = "To get a paginated list of the ONG members, you must access this endpoint.")
     @GetMapping
-    public ResponseEntity<MemberListDTO> getAll(@RequestParam(defaultValue = "0") Integer page) {
-        var members = memberService.getAll(page);
-        MemberListDTO response = new MemberListDTO(page, members, ContextUtils.currentContextPath());
-        return ResponseEntity.ok(response);
-    }
+    ResponseEntity<MemberListDTO> getAll(@RequestParam(defaultValue = "0") Integer page);
 
+    @Operation(summary = "Update a Member by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Update a member by id",
+                    content = {
+                            @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = MemberDTO.class))}),
+            @ApiResponse(responseCode = "400", description = "Invalid id supplied", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Member not found", content = @Content)})
     @PutMapping("/{id}")
-    public ResponseEntity<MemberDTO> updateMember(@PathVariable Long id, @RequestBody MemberUpdateDTO memberUpdateDTO) throws MemberNotFoundException {
-        Member member = MemberMapper.mapUpdateDTOToDomain(memberUpdateDTO);
-        return ResponseEntity.ok(MemberMapper.mapDomainToDTO(memberService.updateMember(id, member)));
-    }
+    ResponseEntity<MemberDTO> updateMember(@PathVariable Long id, @RequestBody MemberUpdateDTO memberUpdateDTO);
 
+    @Operation(
+            summary = "Add new member",
+            description = "To create a member, you must access this endpoint.")
     @PostMapping
-    public ResponseEntity<MemberDTO> createMember(@Valid @RequestBody MemberCreationDTO memberCreationDTO) {
-        Member member = MemberMapper.mapCreationDTOToDomain(memberCreationDTO);
-        MemberDTO memberDTO = MemberMapper.mapDomainToDTO(memberService.createMember(member));
-        return ResponseEntity.status(HttpStatus.CREATED).body(memberDTO);
-    }
+    ResponseEntity<MemberDTO> createMember(@Valid @RequestBody MemberCreationDTO memberCreationDTO);
 
+    @Operation(summary = "Delete a Member by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Delete a member by id"),
+            @ApiResponse(responseCode = "400", description = "Invalid id supplied", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Member not found", content = @Content)})
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteMember(@PathVariable Long id) throws MemberNotFoundException {
-        memberService.deleteMember(id);
-        return new ResponseEntity(HttpStatus.OK);
-    }
-
-    @ExceptionHandler(MemberNotFoundException.class)
-    public ResponseEntity<ErrorDTO> handleMemberNotFoundExceptions(MemberNotFoundException ex) {
-        ErrorDTO memberNotFound = ErrorDTO.builder()
-                .code(HttpStatus.NOT_FOUND)
-                .message(ex.getMessage()).build();
-        return new ResponseEntity(memberNotFound, HttpStatus.NOT_FOUND);
-    }
+    ResponseEntity<?> deleteMember(@PathVariable Long id);
 }
