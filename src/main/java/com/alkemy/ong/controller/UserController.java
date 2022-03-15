@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
 
-@Tag(name = "Users", description = "Register, login and auth me Users")
+@Tag(name = "Users", description = "Operations related to Users")
 public interface UserController {
 
     @Operation(
@@ -52,10 +52,28 @@ public interface UserController {
     @ResponseStatus(HttpStatus.CREATED)
     JwtDTO createUser(@Valid @RequestBody UserCreationDTO userCreationDto);
 
+    @Operation(
+            summary = "Find all users",
+            description = "To fetch all users, you must access this endpoint"
+    )
+    @ApiResponse(responseCode = "200",
+            description = "Find all users",
+            content = {
+                    @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = List.class))
+            })
     @GetMapping("/users")
     @ResponseStatus(HttpStatus.OK)
     List<UserDTO> findAll();
 
+    @Operation(summary = "Update User by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Update User by id",
+                    content = {
+                            @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = UserDTO.class))}),
+            @ApiResponse(responseCode = "404", description = "User not found",
+                    content = @Content)})
     @PatchMapping("/users/{userId}")
     @ResponseStatus(HttpStatus.OK)
     UserDTO updateUser(
@@ -85,6 +103,13 @@ public interface UserController {
     @ResponseStatus(HttpStatus.OK)
     JwtDTO userLogin(@Valid @RequestBody UserLoginDTO userLoginDTO) throws UserNotFoundException, InvalidPasswordException;
 
+
+    @Operation(summary = "Delete a User by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Delete User by id",
+                    content = @Content),
+            @ApiResponse(responseCode = "404", description = "User not found",
+                    content = @Content)})
     @DeleteMapping("/users/{userId}")
     @ResponseStatus(HttpStatus.OK)
     void deleteUser(@PathVariable Long userId) throws UserNotFoundException;
