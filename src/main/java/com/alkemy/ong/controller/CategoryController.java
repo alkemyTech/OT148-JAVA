@@ -33,10 +33,34 @@ public interface CategoryController {
     CategoryDTO createCategory(@Valid @RequestBody CategoryCreationDTO categoryCreationDTO);
 
 
+    @Operation(
+            summary = "Get all categories",
+            description = "To get a paginated list of categories you must access this endpoint"
+
+    )
+    @ApiResponse(responseCode = "200",
+            description = "Get all categories",
+            content = {
+                    @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = PageDTO.class))
+            })
     @GetMapping("/categories")
     @ResponseStatus(HttpStatus.OK)
     PageDTO<CategoryDTO> findAll(@RequestParam(defaultValue = "0") Integer page);
 
+    @Operation(
+            summary = "Get a category by Id",
+            description = "To get a category by its Id you must access this endpoint"
+
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Get a category by Id",
+                    content = {
+                            @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = CategoryDTO.class))}),
+            @ApiResponse(responseCode = "400", description = "Invalid Id supplied", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Category not found", content = @Content)
+    })
     @GetMapping("/categories/{id}")
     @ResponseStatus(HttpStatus.OK)
     CategoryDTO getById(@PathVariable Long id) throws CategoryNotFoundException;
@@ -53,7 +77,7 @@ public interface CategoryController {
     @ResponseStatus(HttpStatus.OK)
     CategoryDTO updateCategory(@PathVariable Long id, @RequestBody CategoryUpdateDTO categoryUpdateDTO) throws CategoryNotFoundException;
 
-    @Operation(summary = "Delete a Member by id")
+    @Operation(summary = "Delete a Category by id")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Delete a category by id"),
             @ApiResponse(responseCode = "400", description = "Invalid id supplied", content = @Content),
