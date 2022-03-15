@@ -5,12 +5,13 @@ import com.alkemy.ong.dto.CategoryCreationDTO;
 import com.alkemy.ong.dto.CategoryDTO;
 import com.alkemy.ong.dto.CategoryUpdateDTO;
 import com.alkemy.ong.dto.ErrorDTO;
+import com.alkemy.ong.dto.PageDTO;
 import com.alkemy.ong.exception.CategoryNotFoundException;
 import com.alkemy.ong.mapper.CategoryMapper;
 import com.alkemy.ong.service.CategoryService;
-import java.util.List;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -39,11 +41,23 @@ public class CategoryController {
     }
 
     @GetMapping("/categories")
-    public ResponseEntity<List<CategoryDTO>> getAll() {
-        List<CategoryDTO> categoryDTOS = categoryService.getAll()
-                .stream().map(CategoryMapper::mapDomainToDTO)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(categoryDTOS);
+    public ResponseEntity<PageDTO<CategoryDTO>> findAll(@RequestParam(defaultValue = "0") Integer page) {
+        Page<Category> category = categoryService.findAll(page);
+        PageDTO<CategoryDTO> categoryDTOPageDTO = createCategoryPageDto(category);
+        return ResponseEntity.ok(categoryDTOPageDTO);
+    }
+
+    private PageDTO<CategoryDTO> createCategoryPageDto(Page<Category> page) {
+        PageDTO<CategoryDTO> dto = new PageDTO<>();
+        dto.setList(page.getContent().stream().map(CategoryMapper::mapDomainToDTO).collect(Collectors.toList()));
+        if (page.hasNext()) {
+            dto.setNextPage("/categories?page=" + page.nextPageable().getPageNumber());
+        }
+        if (page.hasPrevious()) {
+            dto.setPreviousPage("/categories?page=" + page.previousPageable().getPageNumber());
+        }
+        dto.setTotalPages(page.getTotalPages());
+        return dto;
     }
 
     @GetMapping("/categories/{id}")

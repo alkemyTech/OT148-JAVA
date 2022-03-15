@@ -5,14 +5,16 @@ import com.alkemy.ong.exception.CategoryNotFoundException;
 import com.alkemy.ong.mapper.CategoryMapper;
 import com.alkemy.ong.repository.CategoryRepository;
 import com.alkemy.ong.repository.model.CategoryModel;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import javax.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
+    private final Integer PAGE_SIZE = 10;
 
     public CategoryService(CategoryRepository categoryRepository) {
         this.categoryRepository = categoryRepository;
@@ -26,10 +28,11 @@ public class CategoryService {
     }
 
     @Transactional
-    public List<Category> getAll() {
-        List<CategoryModel> categoryModelList = categoryRepository.findAll();
-        return categoryModelList.stream().map(CategoryMapper::mapModelToDomain)
-                .collect(Collectors.toList());
+    public Page<Category> findAll(int page) {
+        Pageable pageable = PageRequest.of(page, PAGE_SIZE);
+        Page<CategoryModel> categoryModelPage = categoryRepository.findAll(pageable);
+        Page<Category> categoryPage = categoryModelPage.map(CategoryMapper::mapModelToDomain);
+        return categoryPage;
     }
 
     @Transactional
