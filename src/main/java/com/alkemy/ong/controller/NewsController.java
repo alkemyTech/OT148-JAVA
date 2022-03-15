@@ -1,6 +1,5 @@
 package com.alkemy.ong.controller;
 
-import com.alkemy.ong.dto.ErrorDTO;
 import com.alkemy.ong.dto.NewsDTO;
 import com.alkemy.ong.dto.NewsListDTO;
 import com.alkemy.ong.dto.NewsUpdateDTO;
@@ -14,7 +13,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,12 +38,12 @@ public interface NewsController {
     ResponseEntity<NewsListDTO> getAll(@RequestParam(defaultValue = "0") Integer page);
 
     @Operation(
-            summary = "Get a new by Id",
-            description = "To get a new by its Id you must access this endpoint"
+            summary = "Get news by Id",
+            description = "To get news by Id you must access this endpoint"
 
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Get a new by Id",
+            @ApiResponse(responseCode = "200", description = "Get news by Id",
                     content = {
                             @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = NewsDTO.class))}),
@@ -56,12 +54,12 @@ public interface NewsController {
     ResponseEntity<NewsDTO> getById(@PathVariable Long id) throws NewsNotFoundException;
 
     @Operation(
-            summary = "Create a new",
-            description = "To create a new you must access this endpoint"
+            summary = "Create news",
+            description = "To create news you must access this endpoint"
 
     )
     @ApiResponse(responseCode = "201",
-            description = "Create a new",
+            description = "Create news",
             content = {
                     @Content(mediaType = "application/json",
                             schema = @Schema(implementation = NewsDTO.class))
@@ -70,12 +68,12 @@ public interface NewsController {
     ResponseEntity<NewsDTO> createNews(@Valid @RequestBody NewsDTO newsDTO);
 
     @Operation(
-            summary = "Update a new by Id",
-            description = "To update a new by its Id you must access this endpoint"
+            summary = "Update news by Id",
+            description = "To update news by Id you must access this endpoint"
 
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Update a new by Id",
+            @ApiResponse(responseCode = "200", description = "Update news by Id",
                     content = {
                             @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = NewsDTO.class))}),
@@ -87,18 +85,15 @@ public interface NewsController {
                                        @RequestBody NewsUpdateDTO newsUpdateDTO) throws NewsNotFoundException;
 
     @Operation(
-            summary = "Delete a new by Id",
-            description = "To delete a new by its Id you must access this endpoint"
+            summary = "Delete news by Id",
+            description = "To delete news by Id you must access this endpoint"
 
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Delete a new by Id"),
+            @ApiResponse(responseCode = "200", description = "Delete news by Id"),
             @ApiResponse(responseCode = "400", description = "Invalid Id supplied", content = @Content),
             @ApiResponse(responseCode = "404", description = "New not found", content = @Content)
     })
     @DeleteMapping("news/{id}")
     ResponseEntity<?> deleteNews(@PathVariable Long id) throws NewsNotFoundException;
-
-    @ExceptionHandler(NewsNotFoundException.class)
-    ResponseEntity<ErrorDTO> handleNewsNotFoundExceptions(NewsNotFoundException ex);
 }
