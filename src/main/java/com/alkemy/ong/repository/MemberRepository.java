@@ -1,14 +1,12 @@
 package com.alkemy.ong.repository;
 
 import com.alkemy.ong.repository.model.MemberModel;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 
 @Repository
-public interface MemberRepository extends CrudRepository<MemberModel, Long> {
+public interface MemberRepository extends JpaRepository<MemberModel, Long> {
 
-    List<MemberModel> findAll();
 }
 

@@ -1,6 +1,7 @@
 package com.alkemy.ong.controller;
 
 import com.alkemy.ong.dto.NewsDTO;
+import com.alkemy.ong.dto.NewsListDTO;
 import com.alkemy.ong.dto.NewsUpdateDTO;
 import com.alkemy.ong.exception.NewsNotFoundException;
 import javax.validation.Valid;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 public interface NewsController {
@@ -32,4 +34,7 @@ public interface NewsController {
     @ResponseStatus(HttpStatus.OK)
     void deleteNews(@PathVariable Long id) throws NewsNotFoundException;
 
+    @GetMapping
+    NewsListDTO findAll(@RequestParam(defaultValue = "0") Integer page);
+    
 }

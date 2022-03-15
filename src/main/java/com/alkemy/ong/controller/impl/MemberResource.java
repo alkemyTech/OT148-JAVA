@@ -6,16 +6,17 @@ import com.alkemy.ong.domain.Member;
 import com.alkemy.ong.dto.ErrorDTO;
 import com.alkemy.ong.dto.MemberCreationDTO;
 import com.alkemy.ong.dto.MemberDTO;
+import com.alkemy.ong.dto.MemberListDTO;
 import com.alkemy.ong.dto.MemberUpdateDTO;
 import com.alkemy.ong.exception.MemberNotFoundException;
 import com.alkemy.ong.mapper.MemberMapper;
 import static com.alkemy.ong.mapper.MemberMapper.mapDomainToDTO;
 import com.alkemy.ong.service.MemberService;
-import java.util.List;
-import java.util.stream.Collectors;
+import com.alkemy.ong.util.ContextUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -30,11 +31,11 @@ public class MemberResource implements MemberController {
     }
 
     @Override
-    public List<MemberDTO> findAll() {
-        List<MemberDTO> memberDTOS = memberService.getAll()
-                .stream().map(MemberMapper::mapDomainToDTO)
-                .collect(Collectors.toList());
-        return memberDTOS;
+    @GetMapping
+    public MemberListDTO findAll(Integer page) {
+        var members = memberService.getAll(page);
+        MemberListDTO response = new MemberListDTO(page, members, ContextUtils.currentContextPath());
+        return response;
     }
 
     @Override

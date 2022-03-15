@@ -2,9 +2,9 @@ package com.alkemy.ong.controller;
 
 import com.alkemy.ong.dto.MemberCreationDTO;
 import com.alkemy.ong.dto.MemberDTO;
+import com.alkemy.ong.dto.MemberListDTO;
 import com.alkemy.ong.dto.MemberUpdateDTO;
 import com.alkemy.ong.exception.MemberNotFoundException;
-import java.util.List;
 import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,13 +13,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 public interface MemberController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    List<MemberDTO> findAll();
+    MemberListDTO findAll(@RequestParam(defaultValue = "0") Integer page);
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
@@ -32,5 +33,5 @@ public interface MemberController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     void deleteMember(@PathVariable Long id) throws MemberNotFoundException;
-    
+
 }

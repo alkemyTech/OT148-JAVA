@@ -7,11 +7,12 @@ import com.alkemy.ong.dto.CategoryCreationDTO;
 import com.alkemy.ong.dto.CategoryDTO;
 import com.alkemy.ong.dto.CategoryUpdateDTO;
 import com.alkemy.ong.dto.ErrorDTO;
+import com.alkemy.ong.dto.PageDTO;
 import com.alkemy.ong.exception.CategoryNotFoundException;
 import com.alkemy.ong.mapper.CategoryMapper;
 import com.alkemy.ong.service.CategoryService;
-import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -34,11 +35,23 @@ public class CategoryResource implements CategoryController {
     }
 
     @Override
-    public List<CategoryDTO> findAll() {
-        List<CategoryDTO> categoryDTOS = categoryService.getAll()
-                .stream().map(CategoryMapper::mapDomainToDTO)
-                .collect(Collectors.toList());
-        return categoryDTOS;
+    public PageDTO<CategoryDTO> findAll(Integer page) {
+        Page<Category> category = categoryService.findAll(page);
+        PageDTO<CategoryDTO> categoryDTOPageDTO = createCategoryPageDto(category);
+        return categoryDTOPageDTO;
+    }
+
+    private PageDTO<CategoryDTO> createCategoryPageDto(Page<Category> page) {
+        PageDTO<CategoryDTO> dto = new PageDTO<>();
+        dto.setList(page.getContent().stream().map(CategoryMapper::mapDomainToDTO).collect(Collectors.toList()));
+        if (page.hasNext()) {
+            dto.setNextPage("/categories?page=" + page.nextPageable().getPageNumber());
+        }
+        if (page.hasPrevious()) {
+            dto.setPreviousPage("/categories?page=" + page.previousPageable().getPageNumber());
+        }
+        dto.setTotalPages(page.getTotalPages());
+        return dto;
     }
 
     @Override
