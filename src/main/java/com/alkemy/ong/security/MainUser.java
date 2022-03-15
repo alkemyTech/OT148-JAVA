@@ -15,6 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 public class MainUser implements UserDetails {
 
+    private Long id;
     private String firstName;
     private String lastName;
     private String email;
@@ -26,7 +27,7 @@ public class MainUser implements UserDetails {
     public static MainUser build(UserModel userModel) {
         List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority((userModel.getRole()
                 .getName())));
-        return new MainUser(userModel.getFirstName(), userModel.getLastName()
+        return new MainUser(userModel.getId(), userModel.getFirstName(), userModel.getLastName()
                 , userModel.getEmail(), userModel.getPassword(),
                 userModel.getPhoto(), authorities, userModel.getCreationDate());
     }
