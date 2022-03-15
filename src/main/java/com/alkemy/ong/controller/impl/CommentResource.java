@@ -74,10 +74,9 @@ public class CommentResource implements CommentController {
     }
 
     @Override
-    public List<CommentDTO> findAllComment(Long id) {
-        List<Comment> commentDTOList = commentService.getAllComment(id);
-        List<CommentDTO> commentDTOS = commentDTOList.stream().map(CommentMapper::mapDomainToDto).collect(Collectors.toList());
-        return commentDTOS;
+    public List<CommentDTO> findAllByPostId(Long id) {
+        List<Comment> commentList = commentService.getAllComment(id);
+        return commentList.stream().map(CommentMapper::mapDomainToDto).collect(Collectors.toList());
     }
 
     @ExceptionHandler(OperationNotPermittedException.class)
