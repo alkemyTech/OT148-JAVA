@@ -1,6 +1,5 @@
 package com.alkemy.ong.controller.impl;
 
-
 import com.alkemy.ong.controller.CategoryController;
 import com.alkemy.ong.domain.Category;
 import com.alkemy.ong.dto.CategoryCreationDTO;
@@ -11,6 +10,7 @@ import com.alkemy.ong.dto.PageDTO;
 import com.alkemy.ong.exception.CategoryNotFoundException;
 import com.alkemy.ong.mapper.CategoryMapper;
 import com.alkemy.ong.service.CategoryService;
+import io.swagger.annotations.Api;
 import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 
+@Api(value = "CategoryResource", tags = {"Categories"})
 @RestController
 public class CategoryResource implements CategoryController {
 
@@ -32,6 +33,23 @@ public class CategoryResource implements CategoryController {
         Category categoryDomain = CategoryMapper.mapCreationDTOToDomain(categoryCreationDTO);
         CategoryDTO categoryDTO = CategoryMapper.mapDomainToDTO(categoryService.createCategory(categoryDomain));
         return categoryDTO;
+    }
+
+    @Override
+    public CategoryDTO getById(Long id) throws CategoryNotFoundException {
+        return CategoryMapper.mapDomainToDTO(categoryService.getById(id));
+    }
+
+    @Override
+    public CategoryDTO updateCategory(Long id, CategoryUpdateDTO categoryUpdateDTO) throws CategoryNotFoundException {
+        Category category = CategoryMapper.mapUpdateDTOToDomain(categoryUpdateDTO);
+        CategoryDTO categoryDTO = CategoryMapper.mapDomainToDTO(categoryService.updateCategory(id, category));
+        return categoryDTO;
+    }
+
+    @Override
+    public void deleteCategory(Long id) throws CategoryNotFoundException {
+        categoryService.deleteCategory(id);
     }
 
     @Override
@@ -54,23 +72,6 @@ public class CategoryResource implements CategoryController {
         return dto;
     }
 
-    @Override
-    public CategoryDTO getById(Long id) throws CategoryNotFoundException {
-        return CategoryMapper.mapDomainToDTO(categoryService.getById(id));
-    }
-
-    @Override
-    public CategoryDTO updateCategory(Long id, CategoryUpdateDTO categoryUpdateDTO) throws CategoryNotFoundException {
-        Category category = CategoryMapper.mapUpdateDTOToDomain(categoryUpdateDTO);
-        CategoryDTO categoryDTO = CategoryMapper.mapDomainToDTO(categoryService.updateCategory(id, category));
-        return categoryDTO;
-    }
-
-    @Override
-    public void deleteCategory(Long id) throws CategoryNotFoundException {
-        categoryService.deleteCategory(id);
-    }
-
     @ExceptionHandler(CategoryNotFoundException.class)
     public ResponseEntity<ErrorDTO> handleCategoryNotFoundExceptions(CategoryNotFoundException ex) {
         ErrorDTO categoryNotFound = ErrorDTO.builder()
@@ -78,5 +79,4 @@ public class CategoryResource implements CategoryController {
                 .message(ex.getMessage()).build();
         return new ResponseEntity(categoryNotFound, HttpStatus.NOT_FOUND);
     }
-
 }
