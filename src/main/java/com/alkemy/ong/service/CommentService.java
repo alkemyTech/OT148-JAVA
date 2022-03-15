@@ -13,7 +13,6 @@ import com.alkemy.ong.repository.model.CommentModel;
 import com.alkemy.ong.repository.model.NewsModel;
 import com.alkemy.ong.repository.model.UserModel;
 import com.alkemy.ong.security.MainUser;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -92,18 +91,15 @@ public class CommentService {
     }
 
     @Transactional
-    public List<Comment> getAllComment(Long id) {
-        Optional<NewsModel> existNews = newsRepository.findById(id);
-        List<Comment> commentList = new ArrayList<>();
-        if (existNews.isPresent()) {
-            List<CommentModel> commentModelList = commentRepository.findAll();
-            for (CommentModel commentModel : commentModelList) {
-                if (commentModel.getId().equals(existNews.get().getId())) {
-                    commentList.add(CommentMapper.mapModelToDomain(commentModel));
-                }
-            }
+    public List<Comment> getAllComment(Long id) throws CommentNotFoundException {
+        Optional<NewsModel> newsModel = newsRepository.findById(id);
+        if (newsModel.isPresent()) {
+            List<CommentModel> commentModelList = commentRepository.findByNewsId(newsModel.get().getId());
+            return commentModelList.stream().map(CommentMapper::mapModelToDomain).collect(Collectors.toList());
+        } else {
+            throw new CommentNotFoundException(String.format("Comment with ID: %s not found", id));
         }
-        return commentList;
+
     }
 
     private boolean hasValidId(MainUser mainUser, CommentModel commentModel) {
