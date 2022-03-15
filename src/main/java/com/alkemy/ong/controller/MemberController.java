@@ -4,7 +4,6 @@ import com.alkemy.ong.dto.MemberCreationDTO;
 import com.alkemy.ong.dto.MemberDTO;
 import com.alkemy.ong.dto.MemberListDTO;
 import com.alkemy.ong.dto.MemberUpdateDTO;
-import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -25,7 +24,6 @@ import javax.validation.Valid;
 
 @Tag(name = "Members", description = "Create, update show and delete Members")
 @RequestMapping("/members")
-@Api
 public interface MemberController {
 
     @Operation(

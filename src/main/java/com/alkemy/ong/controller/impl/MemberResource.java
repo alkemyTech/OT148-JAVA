@@ -11,11 +11,13 @@ import com.alkemy.ong.exception.MemberNotFoundException;
 import com.alkemy.ong.mapper.MemberMapper;
 import com.alkemy.ong.service.MemberService;
 import com.alkemy.ong.util.ContextUtils;
+import io.swagger.annotations.Api;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 
+@Api(value = "MemberResource", tags = {"Members"})
 @RestController
 public class MemberResource implements MemberController {
 
