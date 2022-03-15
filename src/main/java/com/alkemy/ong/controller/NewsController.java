@@ -4,6 +4,12 @@ import com.alkemy.ong.dto.NewsDTO;
 import com.alkemy.ong.dto.NewsListDTO;
 import com.alkemy.ong.dto.NewsUpdateDTO;
 import com.alkemy.ong.exception.NewsNotFoundException;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,26 +21,84 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+@Tag(name = "News", description = "Operations for News")
 public interface NewsController {
 
-    @GetMapping("/{id}")
+    @Operation(
+            summary = "Get all news",
+            description = "To get a paginated list of news you must access this endpoint"
+
+    )
+    @ApiResponse(responseCode = "200",
+            description = "Get all news",
+            content = {
+                    @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = NewsListDTO.class))
+            })
+    @GetMapping("/news")
+    NewsListDTO getAll(@RequestParam(defaultValue = "0") Integer page);
+
+    @Operation(
+            summary = "Get news by Id",
+            description = "To get news by Id you must access this endpoint"
+
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Get news by Id",
+                    content = {
+                            @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = NewsDTO.class))}),
+            @ApiResponse(responseCode = "400", description = "Invalid Id supplied", content = @Content),
+            @ApiResponse(responseCode = "404", description = "New not found", content = @Content)
+    })
+    @GetMapping("/news/{id}")
     @ResponseStatus(HttpStatus.OK)
     NewsDTO getById(@PathVariable Long id) throws NewsNotFoundException;
 
-    @PutMapping("{id}")
+    @Operation(
+            summary = "Create news",
+            description = "To create news you must access this endpoint"
+
+    )
+    @ApiResponse(responseCode = "201",
+            description = "Create news",
+            content = {
+                    @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = NewsDTO.class))
+            })
+    @PostMapping("/news")
+    @ResponseStatus(HttpStatus.CREATED)
+    NewsDTO createNews(@Valid @RequestBody NewsDTO newsDTO);
+
+    @Operation(
+            summary = "Update news by Id",
+            description = "To update news by Id you must access this endpoint"
+
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Update news by Id",
+                    content = {
+                            @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = NewsDTO.class))}),
+            @ApiResponse(responseCode = "400", description = "Invalid Id supplied", content = @Content),
+            @ApiResponse(responseCode = "404", description = "New not found", content = @Content)
+    })
+    @PutMapping("/news/{id}")
     @ResponseStatus(HttpStatus.OK)
     NewsDTO updateNews(@PathVariable Long id,
                        @RequestBody NewsUpdateDTO newsUpdateDTO) throws NewsNotFoundException;
 
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    NewsDTO createNews(@Valid @RequestBody NewsDTO newsDTO);
+    @Operation(
+            summary = "Delete news by Id",
+            description = "To delete news by Id you must access this endpoint"
 
-    @DeleteMapping("/{id}")
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Delete news by Id"),
+            @ApiResponse(responseCode = "400", description = "Invalid Id supplied", content = @Content),
+            @ApiResponse(responseCode = "404", description = "New not found", content = @Content)
+    })
+    @DeleteMapping("/news/{id}")
     @ResponseStatus(HttpStatus.OK)
     void deleteNews(@PathVariable Long id) throws NewsNotFoundException;
-
-    @GetMapping
-    NewsListDTO findAll(@RequestParam(defaultValue = "0") Integer page);
-    
 }
