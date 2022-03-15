@@ -28,29 +28,28 @@ public class MemberResource implements MemberController {
     }
 
     @Override
-    public ResponseEntity<MemberListDTO> getAll(Integer page) {
+    public MemberListDTO findAll(Integer page) {
         var members = memberService.getAll(page);
         MemberListDTO response = new MemberListDTO(page, members, ContextUtils.currentContextPath());
-        return ResponseEntity.ok(response);
+        return response;
     }
 
     @Override
-    public ResponseEntity<MemberDTO> updateMember(Long id, MemberUpdateDTO memberUpdateDTO) throws MemberNotFoundException {
+    public MemberDTO updateMember(Long id, MemberUpdateDTO memberUpdateDTO) throws MemberNotFoundException {
         Member member = MemberMapper.mapUpdateDTOToDomain(memberUpdateDTO);
-        return ResponseEntity.ok(MemberMapper.mapDomainToDTO(memberService.updateMember(id, member)));
+        return MemberMapper.mapDomainToDTO(memberService.updateMember(id, member));
     }
 
     @Override
-    public ResponseEntity<MemberDTO> createMember(MemberCreationDTO memberCreationDTO) {
+    public MemberDTO createMember(MemberCreationDTO memberCreationDTO) {
         Member member = MemberMapper.mapCreationDTOToDomain(memberCreationDTO);
         MemberDTO memberDTO = MemberMapper.mapDomainToDTO(memberService.createMember(member));
-        return ResponseEntity.status(HttpStatus.CREATED).body(memberDTO);
+        return memberDTO;
     }
 
     @Override
-    public ResponseEntity<?> deleteMember(Long id) throws MemberNotFoundException {
+    public void deleteMember(Long id) throws MemberNotFoundException {
         memberService.deleteMember(id);
-        return new ResponseEntity(HttpStatus.OK);
     }
 
     @ExceptionHandler(MemberNotFoundException.class)
