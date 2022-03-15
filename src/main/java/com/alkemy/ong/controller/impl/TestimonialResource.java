@@ -10,6 +10,7 @@ import com.alkemy.ong.exception.TestimonialNotFoundException;
 import com.alkemy.ong.mapper.TestimonialMapper;
 import com.alkemy.ong.service.TestimonialService;
 import com.alkemy.ong.util.ContextUtils;
+import io.swagger.annotations.Api;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.HashMap;
 import java.util.Map;
 
+@Api(value= "testimonialResource", tags = {"Testimonials"})
 @RestController
 public class TestimonialResource implements TestimonialController {
 

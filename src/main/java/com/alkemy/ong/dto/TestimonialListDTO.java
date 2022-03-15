@@ -14,9 +14,6 @@ public class TestimonialListDTO {
     private String nextPageUrl;
     private String previousPageUrl;
 
-    @Autowired
-    TestimonialService testimonialService;
-
     public TestimonialListDTO(Integer page, Page<Testimonial> testimonials, String currentContextPath) {
         if (testimonials.hasPrevious()) {
             this.previousPageUrl = currentContextPath.concat(String.format("/testimonials?page=%d", page - 1));
