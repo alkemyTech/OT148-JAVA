@@ -41,6 +41,16 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
     }
 
+    @ExceptionHandler(DuplicateEmailException.class)
+    public ResponseEntity<ApiErrorDTO> handleDuplicateEmailExceptions(DuplicateEmailException ex) {
+        ApiErrorDTO emailDuplicate =
+                ApiErrorDTO.builder()
+                        .code(HttpStatus.BAD_REQUEST)
+                        .message(ex.getMessage()).build();
+        return new ResponseEntity(emailDuplicate, HttpStatus.BAD_REQUEST);
+
+    }
+
     @ExceptionHandler(InvalidPasswordException.class)
     public ResponseEntity<Object> handleInvalidPasswordException(final InvalidPasswordException ex, final WebRequest request) {
         final ApiErrorDTO bodyOfResponse =
@@ -57,5 +67,75 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
                         .code(HttpStatus.NOT_FOUND)
                         .message(ex.getMessage()).build();
         return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
+    }
+
+    @ExceptionHandler(CategoryNotFoundException.class)
+    public ResponseEntity<ApiErrorDTO> handleCategoryNotFoundExceptions(CategoryNotFoundException ex) {
+        ApiErrorDTO categoryNotFound = ApiErrorDTO.builder()
+                .code(HttpStatus.NOT_FOUND)
+                .message(ex.getMessage()).build();
+        return new ResponseEntity(categoryNotFound, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(NewsNotFoundException.class)
+    private ResponseEntity<ApiErrorDTO> handleNewsNotFound(NewsNotFoundException ex) {
+        ApiErrorDTO newsNotFound =
+                ApiErrorDTO.builder()
+                        .code(HttpStatus.NOT_FOUND)
+                        .message(ex.getMessage()).build();
+        return new ResponseEntity(newsNotFound, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(CommentNotFoundException.class)
+    private ResponseEntity<ApiErrorDTO> handleNewsNotFound(CommentNotFoundException ex) {
+        ApiErrorDTO commentNotFound =
+                ApiErrorDTO.builder()
+                        .code(HttpStatus.NOT_FOUND)
+                        .message(ex.getMessage()).build();
+        return new ResponseEntity(commentNotFound, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(OperationNotPermittedException.class)
+    private ResponseEntity<ApiErrorDTO> handleOpNotPermittedException(OperationNotPermittedException ex) {
+        ApiErrorDTO badRequest =
+                ApiErrorDTO.builder()
+                        .code(HttpStatus.FORBIDDEN)
+                        .message(ex.getMessage()).build();
+        return new ResponseEntity(badRequest, HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(MemberNotFoundException.class)
+    public ResponseEntity<ApiErrorDTO> handleMemberNotFoundExceptions(MemberNotFoundException ex) {
+        ApiErrorDTO memberNotFound = ApiErrorDTO.builder()
+                .code(HttpStatus.NOT_FOUND)
+                .message(ex.getMessage()).build();
+        return new ResponseEntity(memberNotFound, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(NewsNotFoundException.class)
+    public ResponseEntity<ApiErrorDTO> handleNewsNotFoundExceptions(NewsNotFoundException ex) {
+        ApiErrorDTO newsNotFound =
+                ApiErrorDTO.builder()
+                        .code(HttpStatus.NOT_FOUND)
+                        .message(ex.getMessage()).build();
+        return new ResponseEntity(newsNotFound, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(OrganizationNotFoundException.class)
+    private ResponseEntity<ApiErrorDTO> handleOrganizationNotFound(OrganizationNotFoundException ex) {
+        ApiErrorDTO organizationNotFound =
+                ApiErrorDTO.builder()
+                        .code(HttpStatus.NOT_FOUND)
+                        .message(ex.getMessage()).build();
+        return new ResponseEntity(organizationNotFound, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(SlideNotFoundException.class)
+    public ResponseEntity<ApiErrorDTO> handleUserNotFoundExceptions(SlideNotFoundException ex) {
+        ApiErrorDTO slideNotFound =
+                ApiErrorDTO.builder()
+                        .code(HttpStatus.NOT_FOUND)
+                        .message(ex.getMessage()).build();
+        return new ResponseEntity(slideNotFound, HttpStatus.NOT_FOUND);
     }
 }
