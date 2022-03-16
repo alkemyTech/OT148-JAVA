@@ -41,13 +41,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/swagger-ui.html",
             "/v2/api-docs",
             "/webjars/**",
-            "/api/docs",
-            "/auth/register",
-            "/auth/login",
-            "/h2/**"
+            "/api/docs"
     };
 
-    private static final String[] GET_USER = {"/posts/**", "/auth/me"};
+    private static final String[] PERMIT_ALL = {"/auth/register", "/auth/login", "/h2/**", "/swagger-ui/**"};
+
+    private static final String[] GET_USER = {"/posts/**", "/auth/me", "/posts/**"};
 
     private static final String[] GET_ADMIN = {"/users", "/categories/**", "/members/**", "/news/**", "/comments"};
 
@@ -95,15 +94,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf()
                 .disable()
                 .authorizeRequests()
-                .antMatchers(AUTH_WHITELIST).permitAll()
+                .antMatchers(PERMIT_ALL).permitAll()
                 .and()
                 .addFilterBefore(jwtTokenFilter(), UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
                 .antMatchers(HttpMethod.GET, GET_USER).hasAnyAuthority("USER", "ADMIN")
-                .antMatchers(HttpMethod.DELETE, DELETE_USER).hasAnyAuthority("ADMIN", "USER")
-                .antMatchers(HttpMethod.PATCH, PATCH_USER).hasAnyAuthority("ADMIN", "USER")
-                .antMatchers(HttpMethod.POST, POST_USER).hasAnyAuthority("ADMIN", "USER")
-                .antMatchers(HttpMethod.PUT, PUT_USER).hasAnyAuthority("ADMIN", "USER")
+                .antMatchers(HttpMethod.DELETE, DELETE_USER).hasAnyAuthority("USER", "ADMIN")
+                .antMatchers(HttpMethod.PATCH, PATCH_USER).hasAnyAuthority("USER", "ADMIN")
+                .antMatchers(HttpMethod.POST, POST_USER).hasAnyAuthority("USER", "ADMIN")
+                .antMatchers(HttpMethod.PUT, PUT_USER).hasAnyAuthority("USER", "ADMIN")
                 .antMatchers(HttpMethod.GET, GET_ADMIN).hasAnyAuthority("ADMIN")
                 .antMatchers(HttpMethod.DELETE, DELETE_ADMIN).hasAnyAuthority("ADMIN")
                 .antMatchers(HttpMethod.PATCH, PATCH_ADMIN).hasAnyAuthority("ADMIN")
