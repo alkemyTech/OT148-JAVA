@@ -5,18 +5,19 @@ import com.alkemy.ong.domain.Category;
 import com.alkemy.ong.dto.CategoryCreationDTO;
 import com.alkemy.ong.dto.CategoryDTO;
 import com.alkemy.ong.dto.CategoryUpdateDTO;
-import com.alkemy.ong.dto.ErrorDTO;
 import com.alkemy.ong.dto.PageDTO;
+import com.alkemy.ong.exception.ApiErrorDTO;
 import com.alkemy.ong.exception.CategoryNotFoundException;
 import com.alkemy.ong.mapper.CategoryMapper;
 import com.alkemy.ong.service.CategoryService;
 import io.swagger.annotations.Api;
-import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.stream.Collectors;
 
 @Api(value = "CategoryResource", tags = {"Categories"})
 @RestController
@@ -73,8 +74,8 @@ public class CategoryResource implements CategoryController {
     }
 
     @ExceptionHandler(CategoryNotFoundException.class)
-    public ResponseEntity<ErrorDTO> handleCategoryNotFoundExceptions(CategoryNotFoundException ex) {
-        ErrorDTO categoryNotFound = ErrorDTO.builder()
+    public ResponseEntity<ApiErrorDTO> handleCategoryNotFoundExceptions(CategoryNotFoundException ex) {
+        ApiErrorDTO categoryNotFound = ApiErrorDTO.builder()
                 .code(HttpStatus.NOT_FOUND)
                 .message(ex.getMessage()).build();
         return new ResponseEntity(categoryNotFound, HttpStatus.NOT_FOUND);

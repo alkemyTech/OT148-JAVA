@@ -2,23 +2,18 @@ package com.alkemy.ong.controller.impl;
 
 import com.alkemy.ong.controller.UserController;
 import com.alkemy.ong.domain.User;
-import com.alkemy.ong.dto.ErrorDTO;
 import com.alkemy.ong.dto.JwtDTO;
 import com.alkemy.ong.dto.UserCreationDTO;
 import com.alkemy.ong.dto.UserDTO;
 import com.alkemy.ong.dto.UserLoginDTO;
 import com.alkemy.ong.dto.UserUpdateDTO;
+import com.alkemy.ong.exception.ApiErrorDTO;
 import com.alkemy.ong.exception.DuplicateEmailException;
 import com.alkemy.ong.exception.InvalidPasswordException;
 import com.alkemy.ong.exception.UserNotFoundException;
 import com.alkemy.ong.mapper.UserMapper;
-import static com.alkemy.ong.mapper.UserMapper.mapDomainToDTO;
-import static com.alkemy.ong.mapper.UserMapper.mapUpdateDTOToDomain;
 import com.alkemy.ong.service.UserService;
 import io.swagger.annotations.Api;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -27,6 +22,13 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static com.alkemy.ong.mapper.UserMapper.mapDomainToDTO;
+import static com.alkemy.ong.mapper.UserMapper.mapUpdateDTOToDomain;
 
 @Api(value = "UserResource", tags = {"Users"})
 @RestController
@@ -82,9 +84,9 @@ public class UserResource implements UserController {
 
 
     @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<ErrorDTO> handleUserNotFoundExceptions(UserNotFoundException ex) {
-        ErrorDTO userNotFound =
-                ErrorDTO.builder()
+    public ResponseEntity<ApiErrorDTO> handleUserNotFoundExceptions(UserNotFoundException ex) {
+        ApiErrorDTO userNotFound =
+                ApiErrorDTO.builder()
                         .code(HttpStatus.NOT_FOUND)
                         .message(ex.getMessage()).build();
         return new ResponseEntity(userNotFound, HttpStatus.NOT_FOUND);
@@ -92,9 +94,9 @@ public class UserResource implements UserController {
     }
 
     @ExceptionHandler(DuplicateEmailException.class)
-    public ResponseEntity<ErrorDTO> handleDuplicateEmailExceptions(DuplicateEmailException ex) {
-        ErrorDTO emailDuplicate =
-                ErrorDTO.builder()
+    public ResponseEntity<ApiErrorDTO> handleDuplicateEmailExceptions(DuplicateEmailException ex) {
+        ApiErrorDTO emailDuplicate =
+                ApiErrorDTO.builder()
                         .code(HttpStatus.BAD_REQUEST)
                         .message(ex.getMessage()).build();
         return new ResponseEntity(emailDuplicate, HttpStatus.BAD_REQUEST);
@@ -102,9 +104,9 @@ public class UserResource implements UserController {
     }
 
     @ExceptionHandler(InvalidPasswordException.class)
-    public ResponseEntity<ErrorDTO> handleInvalidPasswordException(InvalidPasswordException ex) {
-        ErrorDTO notExistsPassword =
-                ErrorDTO.builder()
+    public ResponseEntity<ApiErrorDTO> handleInvalidPasswordException(InvalidPasswordException ex) {
+        ApiErrorDTO notExistsPassword =
+                ApiErrorDTO.builder()
                         .code(HttpStatus.BAD_REQUEST)
                         .message(ex.getMessage()).build();
         return new ResponseEntity(notExistsPassword, HttpStatus.BAD_REQUEST);

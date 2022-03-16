@@ -2,11 +2,11 @@ package com.alkemy.ong.controller.impl;
 
 import com.alkemy.ong.controller.MemberController;
 import com.alkemy.ong.domain.Member;
-import com.alkemy.ong.dto.ErrorDTO;
 import com.alkemy.ong.dto.MemberCreationDTO;
 import com.alkemy.ong.dto.MemberDTO;
 import com.alkemy.ong.dto.MemberListDTO;
 import com.alkemy.ong.dto.MemberUpdateDTO;
+import com.alkemy.ong.exception.ApiErrorDTO;
 import com.alkemy.ong.exception.MemberNotFoundException;
 import com.alkemy.ong.mapper.MemberMapper;
 import com.alkemy.ong.service.MemberService;
@@ -53,8 +53,8 @@ public class MemberResource implements MemberController {
     }
 
     @ExceptionHandler(MemberNotFoundException.class)
-    public ResponseEntity<ErrorDTO> handleMemberNotFoundExceptions(MemberNotFoundException ex) {
-        ErrorDTO memberNotFound = ErrorDTO.builder()
+    public ResponseEntity<ApiErrorDTO> handleMemberNotFoundExceptions(MemberNotFoundException ex) {
+        ApiErrorDTO memberNotFound = ApiErrorDTO.builder()
                 .code(HttpStatus.NOT_FOUND)
                 .message(ex.getMessage()).build();
         return new ResponseEntity(memberNotFound, HttpStatus.NOT_FOUND);

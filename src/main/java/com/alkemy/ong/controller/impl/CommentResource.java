@@ -5,19 +5,21 @@ import com.alkemy.ong.domain.Comment;
 import com.alkemy.ong.dto.CommentBodyDTO;
 import com.alkemy.ong.dto.CommentCreationDTO;
 import com.alkemy.ong.dto.CommentDTO;
-import com.alkemy.ong.dto.ErrorDTO;
+import com.alkemy.ong.exception.ApiErrorDTO;
 import com.alkemy.ong.exception.CommentNotFoundException;
 import com.alkemy.ong.exception.NewsNotFoundException;
 import com.alkemy.ong.exception.OperationNotPermittedException;
 import com.alkemy.ong.mapper.CommentMapper;
 import com.alkemy.ong.service.CommentService;
-import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
 import static com.alkemy.ong.mapper.CommentMapper.mapBodyDTOToDomain;
 import static com.alkemy.ong.mapper.CommentMapper.mapDomainToDto;
 
@@ -46,18 +48,18 @@ public class CommentResource implements CommentController {
     }
 
     @ExceptionHandler(NewsNotFoundException.class)
-    private ResponseEntity<ErrorDTO> handleNewsNotFound(NewsNotFoundException ex) {
-        ErrorDTO newsNotFound =
-                ErrorDTO.builder()
+    private ResponseEntity<ApiErrorDTO> handleNewsNotFound(NewsNotFoundException ex) {
+        ApiErrorDTO newsNotFound =
+                ApiErrorDTO.builder()
                         .code(HttpStatus.NOT_FOUND)
                         .message(ex.getMessage()).build();
         return new ResponseEntity(newsNotFound, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(CommentNotFoundException.class)
-    private ResponseEntity<ErrorDTO> handleNewsNotFound(CommentNotFoundException ex) {
-        ErrorDTO commentNotFound =
-                ErrorDTO.builder()
+    private ResponseEntity<ApiErrorDTO> handleNewsNotFound(CommentNotFoundException ex) {
+        ApiErrorDTO commentNotFound =
+                ApiErrorDTO.builder()
                         .code(HttpStatus.NOT_FOUND)
                         .message(ex.getMessage()).build();
         return new ResponseEntity(commentNotFound, HttpStatus.NOT_FOUND);
@@ -80,9 +82,9 @@ public class CommentResource implements CommentController {
     }
 
     @ExceptionHandler(OperationNotPermittedException.class)
-    private ResponseEntity<ErrorDTO> handleOpNotPermittedException(OperationNotPermittedException ex) {
-        ErrorDTO badRequest =
-                ErrorDTO.builder()
+    private ResponseEntity<ApiErrorDTO> handleOpNotPermittedException(OperationNotPermittedException ex) {
+        ApiErrorDTO badRequest =
+                ApiErrorDTO.builder()
                         .code(HttpStatus.FORBIDDEN)
                         .message(ex.getMessage()).build();
         return new ResponseEntity(badRequest, HttpStatus.FORBIDDEN);

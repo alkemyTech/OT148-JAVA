@@ -2,19 +2,20 @@ package com.alkemy.ong.controller.impl;
 
 import com.alkemy.ong.controller.SlideController;
 import com.alkemy.ong.domain.Slide;
-import com.alkemy.ong.dto.ErrorDTO;
 import com.alkemy.ong.dto.SlideCreationDTO;
 import com.alkemy.ong.dto.SlideDTO;
 import com.alkemy.ong.dto.SlideUpdateDTO;
+import com.alkemy.ong.exception.ApiErrorDTO;
 import com.alkemy.ong.exception.SlideNotFoundException;
 import com.alkemy.ong.mapper.SlideMapper;
 import com.alkemy.ong.service.SlideService;
-import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 public class SlideResource implements SlideController {
@@ -58,9 +59,9 @@ public class SlideResource implements SlideController {
     }
 
     @ExceptionHandler(SlideNotFoundException.class)
-    public ResponseEntity<ErrorDTO> handleUserNotFoundExceptions(SlideNotFoundException ex) {
-        ErrorDTO slideNotFound =
-                ErrorDTO.builder()
+    public ResponseEntity<ApiErrorDTO> handleUserNotFoundExceptions(SlideNotFoundException ex) {
+        ApiErrorDTO slideNotFound =
+                ApiErrorDTO.builder()
                         .code(HttpStatus.NOT_FOUND)
                         .message(ex.getMessage()).build();
         return new ResponseEntity(slideNotFound, HttpStatus.NOT_FOUND);

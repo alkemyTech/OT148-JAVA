@@ -1,4 +1,4 @@
-package com.alkemy.ong.dto;
+package com.alkemy.ong.exception;
 
 import lombok.Builder;
 import lombok.Data;
@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 
 @Data
 @Builder
-public class ErrorDTO {
+public class ApiErrorDTO {
     private HttpStatus code;
     private String message;
 }
