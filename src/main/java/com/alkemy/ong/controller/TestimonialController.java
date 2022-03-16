@@ -29,7 +29,7 @@ public interface TestimonialController {
             summary = "Add new Testimonial",
             description = "To add a testimonial, you must access this endpoint")
     @PostMapping("/testimonials")
-    ResponseEntity<TestimonialDTO> createTestimonial(@Valid @RequestBody TestimonialCreationDTO testimonialCreationDTO);
+    TestimonialDTO createTestimonial(@Valid @RequestBody TestimonialCreationDTO testimonialCreationDTO);
 
     @Operation(summary = "Update a Testimonial by id")
     @ApiResponses(value = {
@@ -43,7 +43,7 @@ public interface TestimonialController {
             @ApiResponse(responseCode = "404", description = "Testimonial not found",
                     content = @Content)})
     @PutMapping("/testimonials/{id}")
-    ResponseEntity<TestimonialDTO> updateTestimonial
+    TestimonialDTO updateTestimonial
             (@PathVariable Long id, @RequestBody TestimonialUpdateDTO testimonialUpdateDTO)
             throws TestimonialNotFoundException;
 
@@ -56,12 +56,12 @@ public interface TestimonialController {
             @ApiResponse(responseCode = "404", description = "Testimonial not found",
                     content = @Content)})
     @DeleteMapping("{id}")
-    ResponseEntity<?> deleteTestimonial(@PathVariable Long id)
+    void deleteTestimonial(@PathVariable Long id)
             throws TestimonialNotFoundException;
 
     @Operation(
             summary = "Get testimonials list",
             description = "To get a paginated list of the ONG testimonials, you must access this endpoint.")
     @GetMapping
-    ResponseEntity<TestimonialListDTO> getAll(@RequestParam(defaultValue = "0") Integer page);
+   TestimonialListDTO getAll(@RequestParam(defaultValue = "0") Integer page);
 }

@@ -34,19 +34,19 @@ public class TestimonialResource implements TestimonialController {
     }
 
     @Override
-    public ResponseEntity<TestimonialDTO> createTestimonial(TestimonialCreationDTO testimonialCreationDTO) {
+    public TestimonialDTO createTestimonial(TestimonialCreationDTO testimonialCreationDTO) {
         Testimonial testimonial = TestimonialMapper.mapCreationDTOtoDomain(testimonialCreationDTO);
         testimonialService.createTestimonial(testimonial);
         TestimonialDTO testimonialDTO = TestimonialMapper.mapDomainToDTO(testimonial);
-        return ResponseEntity.status(HttpStatus.CREATED).body(testimonialDTO);
+        return testimonialDTO;
     }
 
     @Override
-    public ResponseEntity<TestimonialDTO> updateTestimonial(Long id, TestimonialUpdateDTO testimonialUpdateDTO) throws TestimonialNotFoundException {
+    public TestimonialDTO updateTestimonial(Long id, TestimonialUpdateDTO testimonialUpdateDTO) throws TestimonialNotFoundException {
         Testimonial testimonial =
                 TestimonialMapper.mapUpdateDTOToDomain(testimonialUpdateDTO);
         TestimonialDTO testimonialDTO = TestimonialMapper.mapDomainToDTO(testimonialService.updateTestimonial(id, testimonial));
-        return ResponseEntity.ok(testimonialDTO);
+        return testimonialDTO;
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -62,16 +62,15 @@ public class TestimonialResource implements TestimonialController {
     }
 
     @Override
-    public ResponseEntity<?> deleteTestimonial(Long id) throws TestimonialNotFoundException {
+    public void deleteTestimonial(Long id) throws TestimonialNotFoundException {
         testimonialService.deleteTestimonial(id);
-        return new ResponseEntity(HttpStatus.OK);
     }
 
     @Override
     @GetMapping
-    public ResponseEntity<TestimonialListDTO> getAll(Integer page) {
+    public TestimonialListDTO getAll(Integer page) {
         var testimonials = testimonialService.getAll(page);
         TestimonialListDTO response = new TestimonialListDTO(page, testimonials, ContextUtils.currentContextPath());
-        return ResponseEntity.ok(response);
+        return response;
     }
 }
