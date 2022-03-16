@@ -41,8 +41,31 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/swagger-ui.html",
             "/v2/api-docs",
             "/webjars/**",
-            "/api/docs"
+            "/api/docs",
+            "/auth/register",
+            "/auth/login",
+            "/h2/**"
     };
+
+    private static final String[] GET_USER = {"/posts/**", "/auth/me"};
+
+    private static final String[] GET_ADMIN = {"/users", "/categories/**", "/members/**", "/news/**", "/comments"};
+
+    private static final String[] DELETE_USER = {"/user/{userId}", "/comments/**"};
+
+    private static final String[] DELETE_ADMIN = {"/categories/**", "/members/**", "/news/**"};
+
+    private static final String[] PATCH_USER = {"/user/{userId}"};
+
+    private static final String[] PATCH_ADMIN = {"/user/{userId}"};
+
+    private static final String[] POST_USER = {"/comments/**"};
+
+    private static final String[] POST_ADMIN = {"/contacts", "/slides/**", "/testimonials/**", "/categories/**", "/members/**", "/news/**", "/activities"};
+
+    private static final String[] PUT_USER = {"/comments/**"};
+
+    private static final String[] PUT_ADMIN = {"/categories/**", "/members/**", "/news/**"};
 
     @Override
     public void configure(WebSecurity web) {
@@ -72,17 +95,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf()
                 .disable()
                 .authorizeRequests()
-                .antMatchers("/auth/register", "/auth/login", "/h2/**", "/swagger-ui/**").permitAll()
+                .antMatchers(AUTH_WHITELIST).permitAll()
                 .and()
                 .addFilterBefore(jwtTokenFilter(), UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
-                .antMatchers(HttpMethod.GET, "/users").hasAnyAuthority("ADMIN")
-                .antMatchers(HttpMethod.GET, "/**").hasAnyAuthority("ADMIN", "USER")
-                .antMatchers(HttpMethod.DELETE, "/**").hasAnyAuthority("ADMIN")
-                .antMatchers(HttpMethod.POST, "/comments/**").hasAnyAuthority("ADMIN", "USER")
-                .antMatchers(HttpMethod.POST, "/**").hasAnyAuthority("ADMIN")
-                .antMatchers(HttpMethod.PATCH, "/**").hasAnyAuthority("ADMIN")
-                .antMatchers(HttpMethod.PUT, "/**").hasAnyAuthority("ADMIN")
+                .antMatchers(HttpMethod.GET, GET_USER).hasAnyAuthority("USER", "ADMIN")
+                .antMatchers(HttpMethod.DELETE, DELETE_USER).hasAnyAuthority("ADMIN", "USER")
+                .antMatchers(HttpMethod.PATCH, PATCH_USER).hasAnyAuthority("ADMIN", "USER")
+                .antMatchers(HttpMethod.POST, POST_USER).hasAnyAuthority("ADMIN", "USER")
+                .antMatchers(HttpMethod.PUT, PUT_USER).hasAnyAuthority("ADMIN", "USER")
+                .antMatchers(HttpMethod.GET, GET_ADMIN).hasAnyAuthority("ADMIN")
+                .antMatchers(HttpMethod.DELETE, DELETE_ADMIN).hasAnyAuthority("ADMIN")
+                .antMatchers(HttpMethod.PATCH, PATCH_ADMIN).hasAnyAuthority("ADMIN")
+                .antMatchers(HttpMethod.POST, POST_ADMIN).hasAnyAuthority("ADMIN")
+                .antMatchers(HttpMethod.PUT, PUT_ADMIN).hasAnyAuthority("ADMIN")
                 .anyRequest().authenticated();
     }
 }
