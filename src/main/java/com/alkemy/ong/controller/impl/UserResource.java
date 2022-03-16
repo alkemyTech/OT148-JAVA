@@ -7,25 +7,15 @@ import com.alkemy.ong.dto.UserCreationDTO;
 import com.alkemy.ong.dto.UserDTO;
 import com.alkemy.ong.dto.UserLoginDTO;
 import com.alkemy.ong.dto.UserUpdateDTO;
-import com.alkemy.ong.exception.ApiErrorDTO;
-import com.alkemy.ong.exception.DuplicateEmailException;
 import com.alkemy.ong.exception.InvalidPasswordException;
 import com.alkemy.ong.exception.UserNotFoundException;
 import com.alkemy.ong.mapper.UserMapper;
 import com.alkemy.ong.service.UserService;
 import io.swagger.annotations.Api;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static com.alkemy.ong.mapper.UserMapper.mapDomainToDTO;
 import static com.alkemy.ong.mapper.UserMapper.mapUpdateDTOToDomain;
@@ -80,47 +70,5 @@ public class UserResource implements UserController {
     public UserDTO getUserInfo(String authorizationHeader) throws UserNotFoundException {
         String jwt = authorizationHeader.replace("Bearer ", "");
         return userService.getAuthenticatedUser(jwt);
-    }
-
-
-    @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<ApiErrorDTO> handleUserNotFoundExceptions(UserNotFoundException ex) {
-        ApiErrorDTO userNotFound =
-                ApiErrorDTO.builder()
-                        .code(HttpStatus.NOT_FOUND)
-                        .message(ex.getMessage()).build();
-        return new ResponseEntity(userNotFound, HttpStatus.NOT_FOUND);
-
-    }
-
-    @ExceptionHandler(DuplicateEmailException.class)
-    public ResponseEntity<ApiErrorDTO> handleDuplicateEmailExceptions(DuplicateEmailException ex) {
-        ApiErrorDTO emailDuplicate =
-                ApiErrorDTO.builder()
-                        .code(HttpStatus.BAD_REQUEST)
-                        .message(ex.getMessage()).build();
-        return new ResponseEntity(emailDuplicate, HttpStatus.BAD_REQUEST);
-
-    }
-
-    @ExceptionHandler(InvalidPasswordException.class)
-    public ResponseEntity<ApiErrorDTO> handleInvalidPasswordException(InvalidPasswordException ex) {
-        ApiErrorDTO notExistsPassword =
-                ApiErrorDTO.builder()
-                        .code(HttpStatus.BAD_REQUEST)
-                        .message(ex.getMessage()).build();
-        return new ResponseEntity(notExistsPassword, HttpStatus.BAD_REQUEST);
-    }
-
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public Map<String, String> handleValidationExceptions(MethodArgumentNotValidException ex) {
-        Map<String, String> errors = new HashMap<>();
-        ex.getBindingResult().getAllErrors().forEach((error) -> {
-            String fieldName = ((FieldError) error).getField();
-            String errorMessage = error.getDefaultMessage();
-            errors.put(fieldName, errorMessage);
-        });
-        return errors;
     }
 }

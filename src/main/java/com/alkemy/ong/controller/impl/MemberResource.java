@@ -6,15 +6,11 @@ import com.alkemy.ong.dto.MemberCreationDTO;
 import com.alkemy.ong.dto.MemberDTO;
 import com.alkemy.ong.dto.MemberListDTO;
 import com.alkemy.ong.dto.MemberUpdateDTO;
-import com.alkemy.ong.exception.ApiErrorDTO;
 import com.alkemy.ong.exception.MemberNotFoundException;
 import com.alkemy.ong.mapper.MemberMapper;
 import com.alkemy.ong.service.MemberService;
 import com.alkemy.ong.util.ContextUtils;
 import io.swagger.annotations.Api;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 
 @Api(value = "MemberResource", tags = {"Members"})
@@ -50,13 +46,5 @@ public class MemberResource implements MemberController {
     @Override
     public void deleteMember(Long id) throws MemberNotFoundException {
         memberService.deleteMember(id);
-    }
-
-    @ExceptionHandler(MemberNotFoundException.class)
-    public ResponseEntity<ApiErrorDTO> handleMemberNotFoundExceptions(MemberNotFoundException ex) {
-        ApiErrorDTO memberNotFound = ApiErrorDTO.builder()
-                .code(HttpStatus.NOT_FOUND)
-                .message(ex.getMessage()).build();
-        return new ResponseEntity(memberNotFound, HttpStatus.NOT_FOUND);
     }
 }

@@ -4,13 +4,9 @@ import com.alkemy.ong.controller.OrganizationController;
 import com.alkemy.ong.domain.Organization;
 import com.alkemy.ong.dto.OrganizationDTO;
 import com.alkemy.ong.dto.OrganizationUpdateDTO;
-import com.alkemy.ong.exception.ApiErrorDTO;
 import com.alkemy.ong.exception.OrganizationNotFoundException;
 import com.alkemy.ong.mapper.OrganizationMapper;
 import com.alkemy.ong.service.OrganizationService;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -47,15 +43,5 @@ public class OrganizationResource implements OrganizationController {
                         organizationService.updateOrganization(id, organization, image));
         return organizationDTO;
     }
-
-    @ExceptionHandler(OrganizationNotFoundException.class)
-    private ResponseEntity<ApiErrorDTO> handleOrganizationNotFound(OrganizationNotFoundException ex) {
-        ApiErrorDTO organizationNotFound =
-                ApiErrorDTO.builder()
-                        .code(HttpStatus.NOT_FOUND)
-                        .message(ex.getMessage()).build();
-        return new ResponseEntity(organizationNotFound, HttpStatus.NOT_FOUND);
-    }
-
 }
 

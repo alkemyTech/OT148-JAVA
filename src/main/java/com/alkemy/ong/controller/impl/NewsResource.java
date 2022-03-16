@@ -5,16 +5,12 @@ import com.alkemy.ong.domain.News;
 import com.alkemy.ong.dto.NewsDTO;
 import com.alkemy.ong.dto.NewsListDTO;
 import com.alkemy.ong.dto.NewsUpdateDTO;
-import com.alkemy.ong.exception.ApiErrorDTO;
 import com.alkemy.ong.exception.NewsNotFoundException;
 import com.alkemy.ong.mapper.NewsMapper;
 import com.alkemy.ong.service.NewsService;
 import com.alkemy.ong.util.ContextUtils;
 import io.swagger.annotations.Api;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 
 import static com.alkemy.ong.mapper.NewsMapper.mapDomainToDTO;
@@ -58,14 +54,5 @@ public class NewsResource implements NewsController {
     @Override
     public void deleteNews(Long id) throws NewsNotFoundException {
         newsService.deleteNews(id);
-    }
-
-    @ExceptionHandler(NewsNotFoundException.class)
-    public ResponseEntity<ApiErrorDTO> handleNewsNotFoundExceptions(NewsNotFoundException ex) {
-        ApiErrorDTO newsNotFound =
-                ApiErrorDTO.builder()
-                        .code(HttpStatus.NOT_FOUND)
-                        .message(ex.getMessage()).build();
-        return new ResponseEntity(newsNotFound, HttpStatus.NOT_FOUND);
     }
 }
