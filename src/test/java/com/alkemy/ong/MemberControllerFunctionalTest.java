@@ -4,7 +4,9 @@ import com.alkemy.ong.dto.ErrorDTO;
 import com.alkemy.ong.dto.MemberCreationDTO;
 import com.alkemy.ong.dto.MemberDTO;
 import com.alkemy.ong.dto.MemberUpdateDTO;
+import com.alkemy.ong.repository.MemberRepository;
 import com.alkemy.ong.util.HeaderBuilder;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -30,12 +32,19 @@ public class MemberControllerFunctionalTest {
 
     @Autowired
     private TestRestTemplate testRestTemplate;
+    @Autowired
+    private MemberRepository memberRepository;
     private String memberControllerUrl;
     private HttpEntity<?> entity;
 
     @BeforeEach
     void setUp() {
         memberControllerUrl = testRestTemplate.getRootUri() + "/members";
+    }
+
+    @AfterEach
+    void deleteAll() {
+        memberRepository.deleteAll();
     }
 
     @Test
