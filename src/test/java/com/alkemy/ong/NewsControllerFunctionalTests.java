@@ -2,6 +2,7 @@ package com.alkemy.ong;
 
 import com.alkemy.ong.dto.CategoryDTO;
 import com.alkemy.ong.dto.ErrorDTO;
+import com.alkemy.ong.dto.NewsCreationDTO;
 import com.alkemy.ong.dto.NewsDTO;
 import com.alkemy.ong.dto.NewsUpdateDTO;
 import com.alkemy.ong.util.HeaderBuilder;
@@ -59,7 +60,7 @@ public class NewsControllerFunctionalTests {
 
     @Test
     void testGetNewsById() {
-        String endpointUrl = newsControllerUrl + "{id}";
+        String endpointUrl = newsControllerUrl + "/{id}";
         HttpHeaders headers = new HeaderBuilder()
                 .withValidToken("admin1@gmail.com", 3600L)
                 .build();
@@ -80,14 +81,14 @@ public class NewsControllerFunctionalTests {
 
     @Test
     void testCreateNews() {
-        NewsDTO newsDTO = NewsDTO.builder()
+        NewsCreationDTO newsCreationDTO = NewsCreationDTO.builder()
                 .name("novedad1")
                 .content("Contenido de novedad1")
                 .image("novedad1.jpg")
-                .category(CategoryDTO.builder().id(1L).build())
+                .categoryId(1L)
                 .build();
         String endpointUrl = newsControllerUrl;
-        entity = new HttpEntity(newsDTO, null);
+        entity = new HttpEntity(newsCreationDTO, null);
 
         //When
         ResponseEntity<NewsDTO> response = testRestTemplate.exchange(
@@ -108,12 +109,13 @@ public class NewsControllerFunctionalTests {
                 .name("Nueva novedad")
                 .content("Contenido de nueva novedad")
                 .image("nueva_novedad.jpg")
+                .category(CategoryDTO.builder().id(1L).build())
                 .build();
-        String endpointUrl = newsControllerUrl + "{id}";
+        String endpointUrl = newsControllerUrl + "/{id}";
         HttpHeaders headers = new HeaderBuilder()
                 .withValidToken("admin1@gmail.com", 3600L)
                 .build();
-        entity = new HttpEntity(null, headers);
+        entity = new HttpEntity(newsUpdateDTO, headers);
 
         //When
         ResponseEntity<NewsDTO> response = testRestTemplate.exchange(
@@ -130,7 +132,7 @@ public class NewsControllerFunctionalTests {
 
     @Test
     void testDeleteNews() {
-        String endpointUrl = newsControllerUrl + "{id}";
+        String endpointUrl = newsControllerUrl + "/{id}";
         HttpHeaders headers = new HeaderBuilder()
                 .withValidToken("admin1@gmail.com", 3600L)
                 .build();
@@ -151,7 +153,7 @@ public class NewsControllerFunctionalTests {
 
     @Test
     void testGetNewsById_shouldReturnErrorDTO() {
-        String endpointUrl = newsControllerUrl + "{id}";
+        String endpointUrl = newsControllerUrl + "/{id}";
         HttpHeaders headers = new HeaderBuilder()
                 .withValidToken("admin1@gmail.com", 3600L)
                 .build();
@@ -171,17 +173,42 @@ public class NewsControllerFunctionalTests {
     }
 
     @Test
+    void testCreateNews_ShouldReturnErrorDTO() {
+        NewsCreationDTO newsCreationDTO = NewsCreationDTO.builder()
+                .name("novedad1")
+                .content("Contenido de novedad1")
+                .image("novedad1.jpg")
+                .categoryId(1L)
+                .build();
+        String endpointUrl = newsControllerUrl;
+        entity = new HttpEntity(newsCreationDTO, null);
+
+        //When
+        ResponseEntity<ErrorDTO> response = testRestTemplate.exchange(
+                endpointUrl,
+                HttpMethod.POST,
+                entity,
+                new ParameterizedTypeReference<>() {
+                },
+                Map.of()
+        );
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getBody().getCode());
+    }
+
+    @Test
     void testUpdateNews_shouldReturnErrorDTO() {
         NewsUpdateDTO newsUpdateDTO = NewsUpdateDTO.builder()
                 .name("Nueva novedad")
                 .content("Contenido de nueva novedad")
                 .image("nueva_novedad.jpg")
+                .category(CategoryDTO.builder().id(1L).build())
                 .build();
-        String endpointUrl = newsControllerUrl + "{id}";
+        String endpointUrl = newsControllerUrl + "/{id}";
         HttpHeaders headers = new HeaderBuilder()
                 .withValidToken("admin1@gmail.com", 3600L)
                 .build();
-        entity = new HttpEntity(null, headers);
+        entity = new HttpEntity(newsUpdateDTO, headers);
 
         //When
         ResponseEntity<ErrorDTO> response = testRestTemplate.exchange(
@@ -198,7 +225,7 @@ public class NewsControllerFunctionalTests {
 
     @Test
     void testDeleteNews_shouldReturnErrorDTO() {
-        String endpointUrl = newsControllerUrl + "{id}";
+        String endpointUrl = newsControllerUrl + "/{id}";
         HttpHeaders headers = new HeaderBuilder()
                 .withValidToken("admin1@gmail.com", 3600L)
                 .build();

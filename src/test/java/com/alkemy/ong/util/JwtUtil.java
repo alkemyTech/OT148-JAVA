@@ -7,6 +7,7 @@ import java.util.Date;
 public class JwtUtil {
 
     private final String SECRET = "secret";
+    private final String DEFAULT_EMAIL = "some@email.com";
 
     public String generateToken(String email, Long expiresIn) {
         return Jwts.builder().setSubject(email)
