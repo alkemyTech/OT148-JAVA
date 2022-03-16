@@ -1,8 +1,10 @@
 package com.alkemy.ong;
 
+import com.alkemy.ong.dto.CategoryCreationDTO;
 import com.alkemy.ong.dto.CategoryDTO;
+import com.alkemy.ong.dto.CategoryUpdateDTO;
+import com.alkemy.ong.dto.ErrorDTO;
 import java.util.Map;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -13,9 +15,11 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import test.java.com.alkemy.ong.util.HeaderBuilder;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -33,7 +37,7 @@ public class CategoryControllerFunctionalTest {
     }
 
     @Test
-    void testGetCategories_shouldReturnErrorDTO() {
+    void testGetCategories_shouldReturnCategoryDTO() {
         String endpointUrl = categoryControllerUrl;
         HttpHeaders headers = new HeaderBuilder()
                 .withValidToken("admin1@gmail.com", 3600L)
@@ -47,8 +51,127 @@ public class CategoryControllerFunctionalTest {
                 },
                 Map.of()
         );
-        Assertions.assertEquals(200, response.getStatusCode().value());
+        assertEquals(200, response.getStatusCode().value());
     }
 
+    @Test
+    void testGetCategoryById_shouldReturnCategoryDTO() {
+        String endpointUrl = categoryControllerUrl + "/{id}";
+        Long id = withCreatedCategory();
+        HttpHeaders headers = new HeaderBuilder()
+                .withValidToken("admin1@gmail.com", 3600L)
+                .build();
+        entity = new HttpEntity(null, headers);
 
+        // When
+        ResponseEntity<CategoryDTO> response = testRestTemplate.exchange(
+                endpointUrl,
+                HttpMethod.GET,
+                entity,
+                new ParameterizedTypeReference<>() {
+                },
+                Map.of("id", id)
+        );
+        assertEquals(200, response.getStatusCode().value());
+    }
+
+    @Test
+    void testDeleteCategoryById_shouldReturnErrorDto() {
+        String endpointUrl = categoryControllerUrl + "/{id}";
+        HttpHeaders headers = new HeaderBuilder()
+                .withValidToken("admin1@gmail.com", 3600L)
+                .build();
+        entity = new HttpEntity(null, headers);
+
+        // When
+        ResponseEntity<ErrorDTO> response = testRestTemplate.exchange(
+                endpointUrl,
+                HttpMethod.DELETE,
+                entity,
+                new ParameterizedTypeReference<>() {
+                },
+                Map.of("id", "100")
+        );
+        assertEquals(HttpStatus.NOT_FOUND, response.getBody().getCode());
+    }
+
+    @Test
+    void testCreateCategory_shouldReturnCategoryDTO() {
+        //Given
+        CategoryCreationDTO categoryCreationDTO = CategoryCreationDTO.builder()
+                .name("Nahuel")
+                .image("nahuel.img")
+                .description("Nahuel Description")
+                .build();
+        String endpointUrl = categoryControllerUrl;
+        HttpHeaders headers = new HeaderBuilder()
+                .withValidToken("admin1@gmail.com", 3600L)
+                .build();
+        entity = new HttpEntity(categoryCreationDTO, headers);
+
+        //When
+        ResponseEntity<CategoryDTO> response = testRestTemplate.exchange(
+                endpointUrl,
+                HttpMethod.POST,
+                entity,
+                new ParameterizedTypeReference<>() {
+                },
+                Map.of()
+        );
+        //Then
+        assertEquals(201, response.getStatusCode().value());
+    }
+
+    @Test
+    void testUpdateCategory_shouldReturnErrorDTO() {
+        //Given
+        CategoryUpdateDTO categoryUpdateDTO = CategoryUpdateDTO.builder()
+                .name("Walter")
+                .image("Walter.img")
+                .description("Walter Description")
+                .build();
+        String endpointUrl = categoryControllerUrl + "/{id}";
+        HttpHeaders headers = new HeaderBuilder()
+                .withValidToken("admin1@gmail.com", 3600L)
+                .build();
+        entity = new HttpEntity(categoryUpdateDTO, headers);
+
+        //When
+        ResponseEntity<CategoryDTO> response = testRestTemplate.exchange(
+                endpointUrl,
+                HttpMethod.PUT,
+                entity,
+                new ParameterizedTypeReference<>() {
+                },
+                Map.of("id", "100")
+        );
+        //Then
+        assertEquals(404, response.getStatusCode().value());
+    }
+
+    private Long withCreatedCategory() {
+        //Given
+        CategoryCreationDTO categoryCreationDTO = CategoryCreationDTO.builder()
+                .name("Nahuel")
+                .image("nahuel.img")
+                .description("Nahuel Description")
+                .build();
+        String endpointUrl = categoryControllerUrl;
+        HttpHeaders headers = new HeaderBuilder()
+                .withValidToken("admin1@gmail.com", 3600L)
+                .build();
+        entity = new HttpEntity(categoryCreationDTO, headers);
+
+        //When
+        ResponseEntity<CategoryDTO> response = testRestTemplate.exchange(
+                endpointUrl,
+                HttpMethod.POST,
+                entity,
+                new ParameterizedTypeReference<>() {
+                },
+                Map.of()
+        );
+        assertEquals(201, response.getStatusCode().value());
+        return response.getBody().getId();
+    }
 }
