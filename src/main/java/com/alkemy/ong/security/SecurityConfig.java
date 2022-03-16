@@ -89,12 +89,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.DELETE, "/categories/**").hasAnyAuthority("ADMIN")
                 .antMatchers(HttpMethod.GET, "/members/**").hasAnyAuthority("ADMIN")
                 .antMatchers(HttpMethod.POST, "/members/**").hasAnyAuthority("ADMIN")
+                .antMatchers(HttpMethod.PUT, "/members/**").hasAnyAuthority("ADMIN")
                 .antMatchers(HttpMethod.DELETE, "/members/**").hasAnyAuthority("ADMIN")
                 .antMatchers(HttpMethod.GET, "/news/**").hasAnyAuthority("ADMIN")
                 .antMatchers(HttpMethod.POST, "/news/**").hasAnyAuthority("ADMIN")
                 .antMatchers(HttpMethod.PUT, "/news/**").hasAnyAuthority("ADMIN")
                 .antMatchers(HttpMethod.DELETE, "/news/**").hasAnyAuthority("ADMIN")
                 .antMatchers(HttpMethod.POST, "/activities").hasAnyAuthority("ADMIN")
+                .antMatchers(HttpMethod.GET, "/comments").hasAnyAuthority("ADMIN")
+                .antMatchers(HttpMethod.GET, "/posts/**").hasAnyAuthority("ADMIN", "USER")
+                .antMatchers(HttpMethod.DELETE, "/comments/**").hasAnyAuthority("ADMIN", "USER")
+                .antMatchers(HttpMethod.POST, "/comments/**").hasAnyAuthority("ADMIN", "USER")
+                .antMatchers(HttpMethod.PUT, "/comments/**").hasAnyAuthority("ADMIN", "USER")
                 .antMatchers("/organization/**", "/auth/me").authenticated()
                 .anyRequest().authenticated();
     }

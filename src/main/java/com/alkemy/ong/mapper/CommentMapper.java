@@ -1,6 +1,8 @@
 package com.alkemy.ong.mapper;
 
 import com.alkemy.ong.domain.Comment;
+import com.alkemy.ong.dto.CommentBodyDTO;
+import com.alkemy.ong.dto.CommentCreationDTO;
 import com.alkemy.ong.dto.CommentDTO;
 import com.alkemy.ong.repository.model.CommentModel;
 
@@ -48,4 +50,36 @@ public class CommentMapper {
                 .build();
         return comment;
     }
+
+    public static CommentBodyDTO mapDomainToBodyDTO(Comment comment) {
+        CommentBodyDTO commentBodyDTO = CommentBodyDTO.builder()
+                .body(comment.getBody())
+                .build();
+        return commentBodyDTO;
+    }
+
+    public static Comment mapBodyDTOToDomain(CommentBodyDTO commentBodyDTO) {
+        Comment comment = Comment.builder()
+                .body(commentBodyDTO.getBody())
+                .build();
+        return comment;
+    }
+
+    public static Comment mapCreationDTOToDomain(CommentCreationDTO commentCreationDTO) {
+        Comment comment = Comment.builder()
+                .body(commentCreationDTO.getBody())
+                .newsId(commentCreationDTO.getNewsId())
+                .build();
+        return comment;
+    }
+
+    public static CommentModel mapDomainCreationToModel(Comment comment) {
+        CommentModel commentModel = CommentModel.builder()
+                .body(comment.getBody())
+                .newsId(comment.getNewsId())
+                .userId(comment.getUserId())
+                .build();
+        return commentModel;
+    }
+
 }

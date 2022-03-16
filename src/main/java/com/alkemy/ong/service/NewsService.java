@@ -6,11 +6,20 @@ import com.alkemy.ong.mapper.CategoryMapper;
 import com.alkemy.ong.mapper.NewsMapper;
 import com.alkemy.ong.repository.NewsRepository;
 import com.alkemy.ong.repository.model.NewsModel;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.transaction.annotation.Transactional;
 
 public class NewsService {
 
     private final NewsRepository newsRepository;
+
+    private static final Integer PAGE_SIZE = 10;
 
     public NewsService(NewsRepository newsRepository) {
         this.newsRepository = newsRepository;
@@ -56,5 +65,13 @@ public class NewsService {
         } else {
             throw new NewsNotFoundException(String.format("News with ID: %s not found", id));
         }
+    }
+
+    @Transactional
+    public Page<News> getAll(Integer page) {
+        Pageable pageable = PageRequest.of(page, PAGE_SIZE);
+        Page<NewsModel> paginatedNews = newsRepository.findAll(pageable);
+        List<News> news = paginatedNews.getContent().stream().map(NewsMapper::mapModelToDomain).collect(Collectors.toList());
+        return new PageImpl<>(news, pageable, paginatedNews.getTotalElements());
     }
 }

@@ -76,10 +76,11 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public List<User> getAll() {
+    public List<UserDTO> getAll() {
         List<UserModel> userModelList = userRepository.findAll();
         return userModelList.stream()
                 .map(UserMapper::mapModelToDomain)
+                .map(UserMapper::mapDomainToDTO)
                 .collect(Collectors.toList());
     }
 

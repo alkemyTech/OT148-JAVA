@@ -1,6 +1,7 @@
 package com.alkemy.ong.service;
 
 import com.alkemy.ong.domain.User;
+import com.alkemy.ong.dto.UserDTO;
 import com.alkemy.ong.exception.UserNotFoundException;
 import com.alkemy.ong.repository.RoleRepository;
 import com.alkemy.ong.repository.UserRepository;
@@ -88,7 +89,7 @@ public class UserServiceTest {
         // When
         when(userRepository.findAll()).thenReturn(listOfUserModel);
 
-        List<User> listOfUsers = userService.getAll();
+        List<UserDTO> listOfUsers = userService.getAll();
 
         // Then
         assertEquals(1, listOfUsers.size());
