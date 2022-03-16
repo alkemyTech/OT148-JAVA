@@ -1,6 +1,9 @@
 package com.alkemy.ong;
 
 import com.alkemy.ong.dto.ErrorDTO;
+import com.alkemy.ong.dto.MemberCreationDTO;
+import com.alkemy.ong.dto.MemberDTO;
+import com.alkemy.ong.dto.MemberUpdateDTO;
 import com.alkemy.ong.util.HeaderBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,13 +39,12 @@ public class MemberControllerFunctionalTest {
     }
 
     @Test
-    void testUpdateMember_shouldReturnErrorDto() {
+    void testDeleteMember_shouldReturnErrorDto() {
         String endpointUrl = memberControllerUrl + "/{id}";
         HttpHeaders headers = new HeaderBuilder()
                 .withValidToken("admin1@gmail.com", 3600L)
                 .build();
         entity = new HttpEntity(null, headers);
-
         // When
         ResponseEntity<ErrorDTO> response = testRestTemplate.exchange(
                 endpointUrl,
@@ -52,7 +54,76 @@ public class MemberControllerFunctionalTest {
                 },
                 Map.of("id", "1")
         );
-
         assertEquals(HttpStatus.NOT_FOUND, response.getBody().getCode());
     }
+
+    @Test
+    void testCreateMember_shouldReturnCreated() {
+        MemberCreationDTO memberCreationDTO = MemberCreationDTO.builder()
+                .name("Daniel")
+                .facebookUrl("facebookUrl")
+                .instagramUrl("instagramUrl")
+                .linkedinUrl("linkedinUrl")
+                .image("imageDaniel")
+                .description("description")
+                .build();
+        String endpointUrl = memberControllerUrl;
+        HttpHeaders headers = new HeaderBuilder()
+                .withValidToken("admin1@gmail.com", 3600L)
+                .build();
+        entity = new HttpEntity(memberCreationDTO, headers);
+        ResponseEntity<MemberDTO> response = testRestTemplate.exchange(
+                endpointUrl,
+                HttpMethod.POST,
+                entity,
+                new ParameterizedTypeReference<>() {
+                },
+                Map.of()
+        );
+        assertEquals(201, response.getStatusCode().value());
+    }
+
+    @Test
+    void testUpdateMember_shouldReturnErrorDto() {
+        MemberUpdateDTO memberUpdateDTO = MemberUpdateDTO.builder()
+                .name("Daniel")
+                .facebookUrl("facebookUrl")
+                .instagramUrl("instagramUrl")
+                .linkedinUrl("linkedinUrl")
+                .image("imageDaniel")
+                .description("description")
+                .build();
+        String endpointUrl = memberControllerUrl + "/{id}";
+
+        entity = new HttpEntity(memberUpdateDTO, null);
+        // When
+        ResponseEntity<ErrorDTO> response = testRestTemplate.exchange(
+                endpointUrl,
+                HttpMethod.PUT,
+                entity,
+                new ParameterizedTypeReference<>() {
+                },
+                Map.of("id", "1")
+        );
+        assertEquals(403, response.getStatusCode().value());
+    }
+
+    @Test
+    void testGetMembers_shouldReturnErrorDTO() {
+        String endpointUrl = memberControllerUrl;
+        HttpHeaders headers = new HeaderBuilder()
+                .withValidToken("admin1@gmail.com", 3600L)
+                .build();
+        entity = new HttpEntity(null, headers);
+        ResponseEntity<MemberDTO> response = testRestTemplate.exchange(
+                endpointUrl,
+                HttpMethod.GET,
+                entity,
+                new ParameterizedTypeReference<>() {
+                },
+                Map.of()
+        );
+        assertEquals(200, response.getStatusCode().value());
+    }
+
 }
