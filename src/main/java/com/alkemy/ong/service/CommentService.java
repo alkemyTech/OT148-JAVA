@@ -6,7 +6,6 @@ import com.alkemy.ong.exception.NewsNotFoundException;
 import com.alkemy.ong.exception.OperationNotPermittedException;
 import com.alkemy.ong.exception.UserNotFoundException;
 import com.alkemy.ong.mapper.CommentMapper;
-import static com.alkemy.ong.mapper.CommentMapper.mapModelToDomain;
 import com.alkemy.ong.repository.CommentRepository;
 import com.alkemy.ong.repository.NewsRepository;
 import com.alkemy.ong.repository.UserRepository;
@@ -14,11 +13,12 @@ import com.alkemy.ong.repository.model.CommentModel;
 import com.alkemy.ong.repository.model.NewsModel;
 import com.alkemy.ong.repository.model.UserModel;
 import com.alkemy.ong.security.MainUser;
-import static com.alkemy.ong.security.SecurityUtils.getMainUser;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.transaction.annotation.Transactional;
+import static com.alkemy.ong.mapper.CommentMapper.mapModelToDomain;
+import static com.alkemy.ong.security.SecurityUtils.getMainUser;
 
 
 public class CommentService {
@@ -88,6 +88,17 @@ public class CommentService {
         }
         comment.setBody(commentUpdate.getBody());
         return mapModelToDomain(commentRepository.save(comment));
+    }
+
+    @Transactional
+    public List<Comment> getAllComment(Long id) throws NewsNotFoundException {
+        Optional<NewsModel> newsModel = newsRepository.findById(id);
+        if (newsModel.isPresent()) {
+            List<CommentModel> commentModelList = commentRepository.findByNewsId(newsModel.get().getId());
+            return commentModelList.stream().map(CommentMapper::mapModelToDomain).collect(Collectors.toList());
+        } else {
+            throw new NewsNotFoundException(String.format("News with ID: %s not found", id));
+        }
     }
 
     private boolean hasValidId(MainUser mainUser, CommentModel commentModel) {
