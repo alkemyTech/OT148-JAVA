@@ -1,5 +1,7 @@
 package com.alkemy.ong.service;
 
+import static com.alkemy.ong.mapper.UserMapper.mapModelToDomain;
+
 import com.alkemy.ong.domain.User;
 import com.alkemy.ong.dto.JwtDTO;
 import com.alkemy.ong.dto.UserDTO;
@@ -14,9 +16,7 @@ import com.alkemy.ong.repository.model.RoleModel;
 import com.alkemy.ong.repository.model.UserModel;
 import com.alkemy.ong.security.JwtProvider;
 import com.alkemy.ong.security.MainUser;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -24,7 +24,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import static com.alkemy.ong.mapper.UserMapper.mapModelToDomain;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class UserService {
 
@@ -53,7 +56,7 @@ public class UserService {
     }
 
     @Transactional
-    public UserDTO registerUser(User user) {
+    public User registerUser(User user) {
         if (userRepository.existsByEmail(user.getEmail())) {
             throw new DuplicateEmailException("This email is in use");
         }
@@ -64,19 +67,19 @@ public class UserService {
         UserModel save = userRepository.save(userModel);
         User userDomain = mapModelToDomain(save);
         emailService.welcomeEmail(userDomain.getEmail());
-        return UserMapper.mapDomainToDTO(userDomain);
+        return userDomain;
     }
 
     private String encryptPassword(User user) {
         String password = user.getPassword();
-        String encryptedPassword = passwordEncoder.encode(password);
-        return encryptedPassword;
+        return passwordEncoder.encode(password);
     }
 
     @Transactional(readOnly = true)
     public List<UserDTO> getAll() {
         List<UserModel> userModelList = userRepository.findAll();
-        return userModelList.stream().map(UserMapper::mapModelToDomain)
+        return userModelList.stream()
+                .map(UserMapper::mapModelToDomain)
                 .map(UserMapper::mapDomainToDTO)
                 .collect(Collectors.toList());
     }
@@ -154,7 +157,7 @@ public class UserService {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtProvider.generateToken(authentication);
         MainUser userLog = (MainUser) authentication.getPrincipal();
-        return new JwtDTO(jwt, userLog.getEmail(), userLog.getAuthorities());
+        return new JwtDTO(jwt, userLog.getEmail());
     }
 
 }

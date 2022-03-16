@@ -20,6 +20,7 @@ public class UserMapper {
 
     public static User mapModelToDomain(UserModel userModel) {
         User userDomain = User.builder()
+                .id(userModel.getId())
                 .firstName(userModel.getFirstName())
                 .lastName(userModel.getLastName())
                 .email(userModel.getEmail())
