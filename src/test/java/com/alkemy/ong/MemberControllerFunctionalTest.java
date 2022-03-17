@@ -37,6 +37,35 @@ public class MemberControllerFunctionalTest {
     private String memberControllerUrl;
     private HttpEntity<?> entity;
 
+    public MemberCreationDTO createMemberDto() {
+        MemberCreationDTO memberDTO = MemberCreationDTO.builder()
+                .name("Daniel")
+                .facebookUrl("facebookUrl")
+                .instagramUrl("instagramUrl")
+                .linkedinUrl("linkedinUrl")
+                .image("imageDaniel")
+                .description("description")
+                .build();
+        return memberDTO;
+    }
+
+    private Long withCreatedMember() {
+        MemberCreationDTO memberCreationDTO = createMemberDto();
+        HttpHeaders headers = new HeaderBuilder()
+                .withValidToken("admin1@gmail.com", 3600L)
+                .build();
+        entity = new HttpEntity(memberCreationDTO, headers);
+        ResponseEntity<MemberDTO> response = testRestTemplate.exchange(
+                memberControllerUrl,
+                HttpMethod.POST,
+                entity,
+                new ParameterizedTypeReference<>() {
+                },
+                Map.of()
+        );
+        return response.getBody().getId();
+    }
+
     @BeforeEach
     void setUp() {
         memberControllerUrl = testRestTemplate.getRootUri() + "/members";
@@ -64,6 +93,27 @@ public class MemberControllerFunctionalTest {
                 Map.of("id", "1")
         );
         assertEquals(HttpStatus.NOT_FOUND, response.getBody().getCode());
+    }
+
+    @Test
+    void testDeleteMember_shouldReturnOkResponse() {
+        MemberCreationDTO memberCreationDTO = createMemberDto();
+        Long id = withCreatedMember();
+        HttpHeaders headers = new HeaderBuilder()
+                .withValidToken("admin1@gmail.com", 3600L)
+                .build();
+        entity = new HttpEntity(memberCreationDTO, headers);
+        String endpointUrl = memberControllerUrl + "/{id}";
+        // When
+        ResponseEntity<ErrorDTO> response = testRestTemplate.exchange(
+                endpointUrl,
+                HttpMethod.DELETE,
+                entity,
+                new ParameterizedTypeReference<>() {
+                },
+                Map.of("id", id)
+        );
+        assertEquals(200, response.getStatusCode().value());
     }
 
     @Test
