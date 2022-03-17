@@ -203,7 +203,7 @@ public class CategoryControllerFunctionalTest {
                 Map.of()
         );
         //Then
-        assertEquals(400, response.getStatusCode().value()); // 400 bad request
+        assertEquals(400, response.getStatusCode().value());
     }
 
     @Test
