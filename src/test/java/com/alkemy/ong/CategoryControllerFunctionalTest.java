@@ -241,7 +241,7 @@ public class CategoryControllerFunctionalTest {
         entity = new HttpEntity(categoryUpdateDTO, headers);
 
         //When
-        ResponseEntity<CategoryDTO> response = testRestTemplate.exchange(
+        ResponseEntity<ErrorDTO> response = testRestTemplate.exchange(
                 endpointUrl,
                 HttpMethod.PUT,
                 entity,
