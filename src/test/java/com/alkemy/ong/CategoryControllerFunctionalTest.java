@@ -5,7 +5,9 @@ import com.alkemy.ong.dto.CategoryDTO;
 import com.alkemy.ong.dto.CategoryUpdateDTO;
 import com.alkemy.ong.dto.ErrorDTO;
 import com.alkemy.ong.dto.PageDTO;
+import com.alkemy.ong.repository.CategoryRepository;
 import java.util.Map;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -32,19 +34,28 @@ public class CategoryControllerFunctionalTest {
     private String categoryControllerUrl;
     private HttpEntity<?> entity;
 
+    @Autowired
+    CategoryRepository categoryRepository;
+
     @BeforeEach
     void setUp() {
         categoryControllerUrl = testRestTemplate.getRootUri() + "/categories";
     }
 
-    //Get Categories
+    @AfterEach
+    void deleteAll() {
+        categoryRepository.deleteAll();
+    }
+
     @Test
     void testGetCategories_shouldReturnPageDTO() {
+        //Given
         String endpointUrl = categoryControllerUrl;
         HttpHeaders headers = new HeaderBuilder()
                 .withValidToken("admin1@gmail.com", 3600L)
                 .build();
         entity = new HttpEntity(null, headers);
+        //When
         ResponseEntity<PageDTO<CategoryDTO>> response = testRestTemplate.exchange(
                 endpointUrl,
                 HttpMethod.GET,
@@ -53,19 +64,19 @@ public class CategoryControllerFunctionalTest {
                 },
                 Map.of()
         );
+        //Then
         assertEquals(200, response.getStatusCode().value());
     }
 
-    //Get By Id. error 404 and 200
     @Test
     void testGetCategoryById_shouldReturnCategoryDTO() {
+        //Given
         String endpointUrl = categoryControllerUrl + "/{id}";
         Long id = withCreatedCategory();
         HttpHeaders headers = new HeaderBuilder()
                 .withValidToken("admin1@gmail.com", 3600L)
                 .build();
         entity = new HttpEntity(null, headers);
-
         // When
         ResponseEntity<CategoryDTO> response = testRestTemplate.exchange(
                 endpointUrl,
@@ -75,17 +86,18 @@ public class CategoryControllerFunctionalTest {
                 },
                 Map.of("id", id)
         );
+        //Then
         assertEquals(200, response.getStatusCode().value());
     }
 
     @Test
     void testGetCategoryById_shouldReturnErrorDTO() {
+        //Given
         String endpointUrl = categoryControllerUrl + "/{id}";
         HttpHeaders headers = new HeaderBuilder()
                 .withValidToken("admin1@gmail.com", 3600L)
                 .build();
         entity = new HttpEntity(null, headers);
-
         // When
         ResponseEntity<ErrorDTO> response = testRestTemplate.exchange(
                 endpointUrl,
@@ -95,21 +107,19 @@ public class CategoryControllerFunctionalTest {
                 },
                 Map.of("id", "10")
         );
+        //Then
         assertEquals(404, response.getStatusCode().value());
     }
 
-
-    //Delete categories. Error 404 and 200
-
     @Test
-    void testDeleteCategoryById_shouldReturnVoid() { // Review this method
+    void testDeleteCategoryById_shouldReturnOkResponse() {
+        //given
         String endpointUrl = categoryControllerUrl + "/{id}";
         Long id = withCreatedCategory();
         HttpHeaders headers = new HeaderBuilder()
                 .withValidToken("admin1@gmail.com", 3600L)
                 .build();
         entity = new HttpEntity(null, headers);
-
         // When
         ResponseEntity<CategoryDTO> response = testRestTemplate.exchange(
                 endpointUrl,
@@ -119,17 +129,18 @@ public class CategoryControllerFunctionalTest {
                 },
                 Map.of("id", id)
         );
+        //Then
         assertEquals(200, response.getStatusCode().value());
     }
 
     @Test
     void testDeleteCategoryById_shouldReturnErrorDto() {
+        //Given
         String endpointUrl = categoryControllerUrl + "/{id}";
         HttpHeaders headers = new HeaderBuilder()
                 .withValidToken("admin1@gmail.com", 3600L)
                 .build();
         entity = new HttpEntity(null, headers);
-
         // When
         ResponseEntity<ErrorDTO> response = testRestTemplate.exchange(
                 endpointUrl,
@@ -139,10 +150,10 @@ public class CategoryControllerFunctionalTest {
                 },
                 Map.of("id", "100")
         );
+        //Then
         assertEquals(HttpStatus.NOT_FOUND, response.getBody().getCode());
     }
 
-    //Create Category
     @Test
     void testCreateCategory_shouldReturnCategoryDTO() {
         //Given
@@ -156,7 +167,6 @@ public class CategoryControllerFunctionalTest {
                 .withValidToken("admin1@gmail.com", 3600L)
                 .build();
         entity = new HttpEntity(categoryCreationDTO, headers);
-
         //When
         ResponseEntity<CategoryDTO> response = testRestTemplate.exchange(
                 endpointUrl,
@@ -171,7 +181,7 @@ public class CategoryControllerFunctionalTest {
     }
 
     @Test
-    void testCreateCategory_shouldReturnErrorDto() { // Review
+    void testCreateCategory_shouldReturnErrorDto() {
         //Given
         CategoryCreationDTO categoryCreationDTO = CategoryCreationDTO.builder()
                 .name("")
@@ -183,7 +193,6 @@ public class CategoryControllerFunctionalTest {
                 .withValidToken("admin1@gmail.com", 3600L)
                 .build();
         entity = new HttpEntity(categoryCreationDTO, headers);
-
         //When
         ResponseEntity<ErrorDTO> response = testRestTemplate.exchange(
                 endpointUrl,
@@ -197,7 +206,6 @@ public class CategoryControllerFunctionalTest {
         assertEquals(400, response.getStatusCode().value()); // 400 bad request
     }
 
-    //PUT error 404 and 200
     @Test
     void testUpdateCategory_shouldReturnCategoryDTO() {
         //Given
@@ -212,7 +220,6 @@ public class CategoryControllerFunctionalTest {
                 .withValidToken("admin1@gmail.com", 3600L)
                 .build();
         entity = new HttpEntity(categoryUpdateDTO, headers);
-
         //When
         ResponseEntity<CategoryDTO> response = testRestTemplate.exchange(
                 endpointUrl,
@@ -239,7 +246,6 @@ public class CategoryControllerFunctionalTest {
                 .withValidToken("admin1@gmail.com", 3600L)
                 .build();
         entity = new HttpEntity(categoryUpdateDTO, headers);
-
         //When
         ResponseEntity<ErrorDTO> response = testRestTemplate.exchange(
                 endpointUrl,
@@ -265,7 +271,6 @@ public class CategoryControllerFunctionalTest {
                 .withValidToken("admin1@gmail.com", 3600L)
                 .build();
         entity = new HttpEntity(categoryCreationDTO, headers);
-
         //When
         ResponseEntity<CategoryDTO> response = testRestTemplate.exchange(
                 endpointUrl,
@@ -275,6 +280,7 @@ public class CategoryControllerFunctionalTest {
                 },
                 Map.of()
         );
+        //Then
         assertEquals(201, response.getStatusCode().value());
         return response.getBody().getId();
     }
