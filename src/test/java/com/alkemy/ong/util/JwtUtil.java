@@ -1,7 +1,8 @@
-package test.java.com.alkemy.ong.util;
+package com.alkemy.ong.util;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+
 import java.util.Date;
 
 public class JwtUtil {

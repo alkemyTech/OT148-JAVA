@@ -6,7 +6,7 @@ import com.alkemy.ong.dto.CategoryUpdateDTO;
 import com.alkemy.ong.dto.ErrorDTO;
 import com.alkemy.ong.dto.PageDTO;
 import com.alkemy.ong.repository.CategoryRepository;
-import java.util.Map;
+import com.alkemy.ong.util.HeaderBuilder;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,7 +21,9 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
-import test.java.com.alkemy.ong.util.HeaderBuilder;
+
+import java.util.Map;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
