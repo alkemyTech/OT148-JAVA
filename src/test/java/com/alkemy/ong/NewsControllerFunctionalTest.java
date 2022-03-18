@@ -1,11 +1,14 @@
 package com.alkemy.ong;
 
+import com.alkemy.ong.dto.CategoryCreationDTO;
 import com.alkemy.ong.dto.CategoryDTO;
 import com.alkemy.ong.dto.ErrorDTO;
 import com.alkemy.ong.dto.NewsCreationDTO;
 import com.alkemy.ong.dto.NewsDTO;
 import com.alkemy.ong.dto.NewsUpdateDTO;
+import com.alkemy.ong.mapper.CategoryMapper;
 import com.alkemy.ong.repository.NewsRepository;
+import com.alkemy.ong.service.CategoryService;
 import com.alkemy.ong.util.HeaderBuilder;
 import java.util.Map;
 import org.junit.jupiter.api.AfterEach;
@@ -37,9 +40,22 @@ public class NewsControllerFunctionalTest {
     @Autowired
     private NewsRepository newsRepository;
 
+    @Autowired
+    private CategoryService categoryService;
+
     @BeforeEach
     void setUp() {
         newsControllerUrl = testRestTemplate.getRootUri() + "/news";
+    }
+
+    @BeforeEach
+    void createdCategory() {
+        CategoryCreationDTO categoryCreationDTO = CategoryCreationDTO.builder()
+                .name("Categoria1")
+                .description("Esta es la categoria1")
+                .image("categoria1.jpg")
+                .build();
+        categoryService.createCategory(CategoryMapper.mapCreationDTOToDomain(categoryCreationDTO));
     }
 
     @AfterEach
@@ -211,14 +227,15 @@ public class NewsControllerFunctionalTest {
     @Test
     void testUpdateNewsById() {
         //Given
+        String endpointUrl = newsControllerUrl + "/{id}";
         Long id = createdNews();
+        CategoryDTO categoryDTO = CategoryDTO.builder().id(1L).build();
         NewsUpdateDTO newsUpdateDTO = NewsUpdateDTO.builder()
                 .name("Nueva novedad")
                 .content("Nuevo contenido")
                 .image("nueva_novedad.jpg")
-                .category(CategoryDTO.builder().id(2L).build())
+                .category(categoryDTO)
                 .build();
-        String endpointUrl = newsControllerUrl + "/{id}";
         HttpHeaders headers = new HeaderBuilder()
                 .withValidToken("admin1@gmail.com", 3600L)
                 .build();
@@ -240,10 +257,10 @@ public class NewsControllerFunctionalTest {
     void testUpdateNews_shouldReturnErrorDTO() {
         //Given
         NewsUpdateDTO newsUpdateDTO = NewsUpdateDTO.builder()
-                .name("Nueva novedad")
+                .name("")
                 .content("Nuevo contenido")
                 .image("nueva_novedad.jpg")
-                .category(CategoryDTO.builder().id(2L).build())
+                .category(CategoryDTO.builder().id(10L).build())
                 .build();
         String endpointUrl = newsControllerUrl + "/{id}";
         HttpHeaders headers = new HeaderBuilder()
