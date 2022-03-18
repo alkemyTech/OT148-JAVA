@@ -10,8 +10,6 @@ import com.alkemy.ong.exception.CommentNotFoundException;
 import com.alkemy.ong.exception.NewsNotFoundException;
 import com.alkemy.ong.exception.OperationNotPermittedException;
 import com.alkemy.ong.mapper.CommentMapper;
-import static com.alkemy.ong.mapper.CommentMapper.mapBodyDTOToDomain;
-import static com.alkemy.ong.mapper.CommentMapper.mapDomainToDto;
 import com.alkemy.ong.service.CommentService;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,6 +18,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+import static com.alkemy.ong.mapper.CommentMapper.mapBodyDTOToDomain;
+import static com.alkemy.ong.mapper.CommentMapper.mapDomainToDto;
 
 @RestController
 public class CommentResource implements CommentController {
@@ -71,6 +71,12 @@ public class CommentResource implements CommentController {
     @Override
     public CommentDTO updateComment(Long id, CommentBodyDTO commentBodyDTO) {
         return mapDomainToDto(commentService.updateComment(id, mapBodyDTOToDomain(commentBodyDTO)));
+    }
+
+    @Override
+    public List<CommentDTO> findAllByPostId(Long id) {
+        List<Comment> commentList = commentService.getAllComment(id);
+        return commentList.stream().map(CommentMapper::mapDomainToDto).collect(Collectors.toList());
     }
 
     @ExceptionHandler(OperationNotPermittedException.class)

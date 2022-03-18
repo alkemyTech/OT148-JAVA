@@ -44,6 +44,28 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/api/docs"
     };
 
+    private static final String[] PERMIT_ALL = {"/auth/register", "/auth/login", "/h2/**", "/swagger-ui/**"};
+
+    private static final String[] GET_USER = {"/posts/**", "/auth/me", "/posts/**"};
+
+    private static final String[] GET_ADMIN = {"/users", "/categories/**", "/members/**", "/news/**", "/comments"};
+
+    private static final String[] DELETE_USER = {"/user/{userId}", "/comments/**"};
+
+    private static final String[] DELETE_ADMIN = {"/categories/**", "/members/**", "/news/**"};
+
+    private static final String[] PATCH_USER = {"/user/{userId}"};
+
+    private static final String[] PATCH_ADMIN = {"/user/{userId}"};
+
+    private static final String[] POST_USER = {"/comments/**"};
+
+    private static final String[] POST_ADMIN = {"/contacts", "/slides/**", "/testimonials/**", "/categories/**", "/members/**", "/news/**", "/activities"};
+
+    private static final String[] PUT_USER = {"/comments/**"};
+
+    private static final String[] PUT_ADMIN = {"/categories/**", "/members/**", "/news/**"};
+
     @Override
     public void configure(WebSecurity web) {
         web.ignoring().antMatchers(AUTH_WHITELIST);
@@ -72,35 +94,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf()
                 .disable()
                 .authorizeRequests()
-                .antMatchers("/auth/register", "/auth/login", "/h2/**", "/swagger-ui/**").permitAll()
+                .antMatchers(PERMIT_ALL).permitAll()
                 .and()
                 .addFilterBefore(jwtTokenFilter(), UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
-                .antMatchers(HttpMethod.GET, "/users").hasAnyAuthority("ADMIN")
-                .antMatchers(HttpMethod.DELETE, "/user/{userId}").hasAnyAuthority("ADMIN", "USER")
-                .antMatchers(HttpMethod.PATCH, "/user/{userId}").hasAnyAuthority("ADMIN", "USER")
-                .antMatchers(HttpMethod.POST, "/contacts").hasAnyAuthority("ADMIN")
-                .antMatchers(HttpMethod.POST, "/slides/**").hasAnyAuthority("ADMIN")
-                .antMatchers(HttpMethod.POST, "/testimonials/**").hasAnyAuthority("ADMIN")
-                .antMatchers(HttpMethod.PATCH, "/organization/{id}").hasAnyAuthority("ADMIN")
-                .antMatchers(HttpMethod.GET, "/categories/**").hasAnyAuthority("ADMIN")
-                .antMatchers(HttpMethod.POST, "/categories/**").hasAnyAuthority("ADMIN")
-                .antMatchers(HttpMethod.PUT, "/categories/**").hasAnyAuthority("ADMIN")
-                .antMatchers(HttpMethod.DELETE, "/categories/**").hasAnyAuthority("ADMIN")
-                .antMatchers(HttpMethod.GET, "/members/**").hasAnyAuthority("ADMIN")
-                .antMatchers(HttpMethod.POST, "/members/**").hasAnyAuthority("ADMIN")
-                .antMatchers(HttpMethod.PUT, "/members/**").hasAnyAuthority("ADMIN")
-                .antMatchers(HttpMethod.DELETE, "/members/**").hasAnyAuthority("ADMIN")
-                .antMatchers(HttpMethod.GET, "/news/**").hasAnyAuthority("ADMIN")
-                .antMatchers(HttpMethod.POST, "/news/**").hasAnyAuthority("ADMIN")
-                .antMatchers(HttpMethod.PUT, "/news/**").hasAnyAuthority("ADMIN")
-                .antMatchers(HttpMethod.DELETE, "/news/**").hasAnyAuthority("ADMIN")
-                .antMatchers(HttpMethod.POST, "/activities").hasAnyAuthority("ADMIN")
-                .antMatchers(HttpMethod.GET, "/comments").hasAnyAuthority("ADMIN")
-                .antMatchers(HttpMethod.DELETE, "/comments/**").hasAnyAuthority("ADMIN", "USER")
-                .antMatchers(HttpMethod.POST, "/comments/**").hasAnyAuthority("ADMIN", "USER")
-                .antMatchers(HttpMethod.PUT, "/comments/**").hasAnyAuthority("ADMIN", "USER")
-                .antMatchers("/organization/**", "/auth/me").authenticated()
+                .antMatchers(HttpMethod.GET, GET_USER).hasAnyAuthority("USER", "ADMIN")
+                .antMatchers(HttpMethod.DELETE, DELETE_USER).hasAnyAuthority("USER", "ADMIN")
+                .antMatchers(HttpMethod.PATCH, PATCH_USER).hasAnyAuthority("USER", "ADMIN")
+                .antMatchers(HttpMethod.POST, POST_USER).hasAnyAuthority("USER", "ADMIN")
+                .antMatchers(HttpMethod.PUT, PUT_USER).hasAnyAuthority("USER", "ADMIN")
+                .antMatchers(HttpMethod.GET, GET_ADMIN).hasAnyAuthority("ADMIN")
+                .antMatchers(HttpMethod.DELETE, DELETE_ADMIN).hasAnyAuthority("ADMIN")
+                .antMatchers(HttpMethod.PATCH, PATCH_ADMIN).hasAnyAuthority("ADMIN")
+                .antMatchers(HttpMethod.POST, POST_ADMIN).hasAnyAuthority("ADMIN")
+                .antMatchers(HttpMethod.PUT, PUT_ADMIN).hasAnyAuthority("ADMIN")
                 .anyRequest().authenticated();
     }
 }
+
