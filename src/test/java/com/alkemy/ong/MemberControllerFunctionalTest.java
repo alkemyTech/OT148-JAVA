@@ -37,34 +37,6 @@ class MemberControllerFunctionalTest {
     private String memberControllerUrl;
     private HttpEntity<?> entity;
 
-    public MemberCreationDTO createMemberDto() {
-        return MemberCreationDTO.builder()
-                .name("Daniel")
-                .facebookUrl("facebookUrl")
-                .instagramUrl("instagramUrl")
-                .linkedinUrl("linkedinUrl")
-                .image("imageDaniel")
-                .description("description")
-                .build();
-    }
-
-    private Long withCreatedMember() {
-        MemberCreationDTO memberCreationDTO = createMemberDto();
-        HttpHeaders headers = new HeaderBuilder()
-                .withValidToken("admin1@gmail.com", 3600L)
-                .build();
-        entity = new HttpEntity(memberCreationDTO, headers);
-        ResponseEntity<MemberDTO> response = testRestTemplate.exchange(
-                memberControllerUrl,
-                HttpMethod.POST,
-                entity,
-                new ParameterizedTypeReference<>() {
-                },
-                Map.of()
-        );
-        return response.getBody().getId();
-    }
-
     @BeforeEach
     void setUp() {
         memberControllerUrl = testRestTemplate.getRootUri() + "/members";
@@ -250,5 +222,33 @@ class MemberControllerFunctionalTest {
                 Map.of()
         );
         assertEquals(403, response.getStatusCode().value());
+    }
+
+    private MemberCreationDTO createMemberDto() {
+        return MemberCreationDTO.builder()
+                .name("Daniel")
+                .facebookUrl("facebookUrl")
+                .instagramUrl("instagramUrl")
+                .linkedinUrl("linkedinUrl")
+                .image("imageDaniel")
+                .description("description")
+                .build();
+    }
+
+    private Long withCreatedMember() {
+        MemberCreationDTO memberCreationDTO = createMemberDto();
+        HttpHeaders headers = new HeaderBuilder()
+                .withValidToken("admin1@gmail.com", 3600L)
+                .build();
+        entity = new HttpEntity(memberCreationDTO, headers);
+        ResponseEntity<MemberDTO> response = testRestTemplate.exchange(
+                memberControllerUrl,
+                HttpMethod.POST,
+                entity,
+                new ParameterizedTypeReference<>() {
+                },
+                Map.of()
+        );
+        return response.getBody().getId();
     }
 }
