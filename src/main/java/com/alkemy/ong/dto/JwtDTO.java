@@ -11,5 +11,4 @@ import java.util.Collection;
 public class JwtDTO {
     private String token;
     private String email;
-    private Collection<? extends GrantedAuthority> authorities;
 }
