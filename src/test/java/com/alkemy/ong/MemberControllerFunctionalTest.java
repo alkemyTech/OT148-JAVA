@@ -28,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ActiveProfiles("test")
-public class MemberControllerFunctionalTest {
+class MemberControllerFunctionalTest {
 
     @Autowired
     private TestRestTemplate testRestTemplate;
@@ -38,7 +38,7 @@ public class MemberControllerFunctionalTest {
     private HttpEntity<?> entity;
 
     public MemberCreationDTO createMemberDto() {
-        MemberCreationDTO memberDTO = MemberCreationDTO.builder()
+        return MemberCreationDTO.builder()
                 .name("Daniel")
                 .facebookUrl("facebookUrl")
                 .instagramUrl("instagramUrl")
@@ -46,7 +46,6 @@ public class MemberControllerFunctionalTest {
                 .image("imageDaniel")
                 .description("description")
                 .build();
-        return memberDTO;
     }
 
     private Long withCreatedMember() {
@@ -136,6 +135,32 @@ public class MemberControllerFunctionalTest {
     }
 
     @Test
+    void testCreateMember_shouldReturnErrorDTO() {
+        MemberCreationDTO memberDTO = MemberCreationDTO.builder()
+                .name("")
+                .facebookUrl("facebookUrl")
+                .instagramUrl("instagramUrl")
+                .linkedinUrl("linkedinUrl")
+                .image("imageDaniel")
+                .description("description")
+                .build();
+        String endpointUrl = memberControllerUrl;
+        HttpHeaders headers = new HeaderBuilder()
+                .withValidToken("admin1@gmail.com", 3600L)
+                .build();
+        entity = new HttpEntity(memberDTO, headers);
+        ResponseEntity<MemberDTO> response = testRestTemplate.exchange(
+                endpointUrl,
+                HttpMethod.POST,
+                entity,
+                new ParameterizedTypeReference<>() {
+                },
+                Map.of()
+        );
+        assertEquals(400, response.getStatusCode().value());
+    }
+
+    @Test
     void testUpdateMember_shouldReturnErrorDto() {
         MemberUpdateDTO memberUpdateDTO = MemberUpdateDTO.builder()
                 .name("Daniel")
@@ -161,12 +186,42 @@ public class MemberControllerFunctionalTest {
     }
 
     @Test
-    void testGetMembers_shouldReturnErrorDTO() {
+    void testUpdateMember_shouldReturnOkResponse() {
+        MemberCreationDTO memberCreationDTO = createMemberDto();
+        Long id = withCreatedMember();
+        HttpHeaders headers = new HeaderBuilder()
+                .withValidToken("admin1@gmail.com", 3600L)
+                .build();
+        MemberUpdateDTO memberUpdateDTO = MemberUpdateDTO.builder()
+                .name("Daniel2")
+                .facebookUrl("facebookUrl")
+                .instagramUrl("instagramUrl")
+                .linkedinUrl("linkedinUrl")
+                .image("imageDaniel")
+                .description("description")
+                .build();
+        entity = new HttpEntity(memberUpdateDTO, headers);
+        String endpointUrl = memberControllerUrl + "/{id}";
+        // When
+        ResponseEntity<ErrorDTO> response = testRestTemplate.exchange(
+                endpointUrl,
+                HttpMethod.PUT,
+                entity,
+                new ParameterizedTypeReference<>() {
+                },
+                Map.of("id", id)
+        );
+        assertEquals(200, response.getStatusCode().value());
+    }
+
+    @Test
+    void testGetMembers_shouldReturnOkResponse() {
+        MemberCreationDTO memberCreationDTO = createMemberDto();
         String endpointUrl = memberControllerUrl;
         HttpHeaders headers = new HeaderBuilder()
                 .withValidToken("admin1@gmail.com", 3600L)
                 .build();
-        entity = new HttpEntity(null, headers);
+        entity = new HttpEntity(memberCreationDTO, headers);
         ResponseEntity<MemberDTO> response = testRestTemplate.exchange(
                 endpointUrl,
                 HttpMethod.GET,
@@ -178,4 +233,22 @@ public class MemberControllerFunctionalTest {
         assertEquals(200, response.getStatusCode().value());
     }
 
+    @Test
+    void testGetMembers_shouldReturnErrorDTO() {
+        MemberCreationDTO memberCreationDTO = createMemberDto();
+        String endpointUrl = memberControllerUrl;
+        HttpHeaders headers = new HeaderBuilder()
+                .withValidToken("user1@gmail.com", 3600L)
+                .build();
+        entity = new HttpEntity(memberCreationDTO, headers);
+        ResponseEntity<ErrorDTO> response = testRestTemplate.exchange(
+                endpointUrl,
+                HttpMethod.GET,
+                entity,
+                new ParameterizedTypeReference<>() {
+                },
+                Map.of()
+        );
+        assertEquals(403, response.getStatusCode().value());
+    }
 }
