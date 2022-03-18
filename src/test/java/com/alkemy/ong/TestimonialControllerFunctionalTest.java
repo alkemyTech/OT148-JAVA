@@ -14,8 +14,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
@@ -31,14 +29,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest
 @AutoConfigureJsonTesters
 @AutoConfigureMockMvc
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@ActiveProfiles("test")
 public class TestimonialControllerFunctionalTest {
-
-
 
     @Autowired
     private WebApplicationContext wac;
@@ -67,11 +61,9 @@ public class TestimonialControllerFunctionalTest {
         this.testimonialCreationDTO.setImage("Name.jpg");
         this.testimonialCreationDTO.setContent("NameContent");
 
-        this.testimonialDTO = new TestimonialDTO();
-        this.testimonialDTO.setId(this.id);
-        this.testimonialDTO.setName(this.testimonialCreationDTO.getName());
-        this.testimonialDTO.setImage(this.testimonialCreationDTO.getImage());
-        this.testimonialDTO.setContent(this.testimonialCreationDTO.getContent());
+        this.testimonialDTO =  testimonialDTO.builder().id(this.id).name(this.testimonialCreationDTO.getName())
+                .image(this.testimonialCreationDTO.getImage()).content(this.testimonialCreationDTO.getContent())
+                .build();
     }
 
     @Test
@@ -79,7 +71,7 @@ public class TestimonialControllerFunctionalTest {
     public void addNewTestimonials() throws Exception {
         Mockito.when(testimonialService.createTestimonial
                         (TestimonialMapper.mapCreationDTOtoDomain(testimonialCreationDTO)))
-                .thenReturn(testimonialDTO);
+                .thenReturn(this.testimonialDTO);
 
         RequestBuilder request = MockMvcRequestBuilders
                 .post("/testimonials")
