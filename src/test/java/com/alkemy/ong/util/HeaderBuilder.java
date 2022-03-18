@@ -1,10 +1,9 @@
 package com.alkemy.ong.util;
 
-
 import org.springframework.http.HttpHeaders;
 
 public class HeaderBuilder {
-
+    
     private final HttpHeaders headers = new HttpHeaders();
 
     public HttpHeaders build() {
