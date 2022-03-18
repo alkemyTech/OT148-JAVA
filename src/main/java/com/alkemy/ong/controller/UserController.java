@@ -5,8 +5,8 @@ import com.alkemy.ong.dto.UserCreationDTO;
 import com.alkemy.ong.dto.UserDTO;
 import com.alkemy.ong.dto.UserLoginDTO;
 import com.alkemy.ong.dto.UserUpdateDTO;
-import com.alkemy.ong.exception.InvalidPasswordException;
 import com.alkemy.ong.exception.UserNotFoundException;
+import com.alkemy.ong.exception.WrongValuesException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -101,7 +101,7 @@ public interface UserController {
     })
     @PostMapping("/auth/login")
     @ResponseStatus(HttpStatus.OK)
-    JwtDTO userLogin(@Valid @RequestBody UserLoginDTO userLoginDTO) throws UserNotFoundException, InvalidPasswordException;
+    JwtDTO userLogin(@Valid @RequestBody UserLoginDTO userLoginDTO) throws WrongValuesException;
 
 
     @Operation(summary = "Delete a User by id")

@@ -11,9 +11,8 @@ import com.alkemy.ong.dto.UserUpdateDTO;
 import com.alkemy.ong.exception.DuplicateEmailException;
 import com.alkemy.ong.exception.InvalidPasswordException;
 import com.alkemy.ong.exception.UserNotFoundException;
+import com.alkemy.ong.exception.WrongValuesException;
 import com.alkemy.ong.mapper.UserMapper;
-import static com.alkemy.ong.mapper.UserMapper.mapDomainToDTO;
-import static com.alkemy.ong.mapper.UserMapper.mapUpdateDTOToDomain;
 import com.alkemy.ong.service.UserService;
 import io.swagger.annotations.Api;
 import java.util.HashMap;
@@ -27,6 +26,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import static com.alkemy.ong.mapper.UserMapper.mapDomainToDTO;
+import static com.alkemy.ong.mapper.UserMapper.mapUpdateDTOToDomain;
 
 @Api(value = "UserResource", tags = {"Users"})
 @RestController
@@ -62,7 +63,7 @@ public class UserResource implements UserController {
     }
 
     @Override
-    public JwtDTO userLogin(UserLoginDTO userLoginDTO) throws UserNotFoundException, InvalidPasswordException {
+    public JwtDTO userLogin(UserLoginDTO userLoginDTO) throws WrongValuesException {
         User userDomain = UserMapper.mapLoginDTOToDomain(userLoginDTO);
         UserMapper.mapDomainToDTO(userService.loginUser(userDomain));
         JwtDTO jwtDto = userService.generateAuthenticationToken(userDomain);
@@ -120,5 +121,13 @@ public class UserResource implements UserController {
             errors.put(fieldName, errorMessage);
         });
         return errors;
+    }
+
+    @ExceptionHandler(WrongValuesException.class)
+    public ResponseEntity<ErrorDTO> handleWrongValuesException(WrongValuesException ex) {
+        ErrorDTO wrongValues = ErrorDTO.builder()
+                .code(HttpStatus.UNAUTHORIZED)
+                .message(ex.getMessage()).build();
+        return new ResponseEntity(wrongValues, HttpStatus.UNAUTHORIZED);
     }
 }

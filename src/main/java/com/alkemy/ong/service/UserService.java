@@ -4,8 +4,8 @@ import com.alkemy.ong.domain.User;
 import com.alkemy.ong.dto.JwtDTO;
 import com.alkemy.ong.dto.UserDTO;
 import com.alkemy.ong.exception.DuplicateEmailException;
-import com.alkemy.ong.exception.InvalidPasswordException;
 import com.alkemy.ong.exception.UserNotFoundException;
+import com.alkemy.ong.exception.WrongValuesException;
 import com.alkemy.ong.mapper.RoleMapper;
 import com.alkemy.ong.mapper.UserMapper;
 import com.alkemy.ong.repository.RoleRepository;
@@ -104,24 +104,24 @@ public class UserService {
         return amazonService.uploadFile(file);
     }
 
-    public User loginUser(User user) throws UserNotFoundException, InvalidPasswordException {
+    public User loginUser(User user) throws WrongValuesException {
         if (userRepository.existsByEmail(user.getEmail())) {
             String email = user.getEmail();
             String password = user.getPassword();
             UserModel userModel = userRepository.findByEmail(email);
             return getUserPasswordChecked(password, userModel);
         } else {
-            throw new UserNotFoundException("User not found");
+            throw new WrongValuesException("User or password is incorrect");
         }
     }
 
     private User getUserPasswordChecked
-            (String password, UserModel userModel) throws InvalidPasswordException {
+            (String password, UserModel userModel) throws WrongValuesException {
         if (passwordMatches(password, userModel.getPassword())) {
             User userDomain = mapModelToDomain(userModel);
             return userDomain;
         } else {
-            throw new InvalidPasswordException("The password is invalid");
+            throw new WrongValuesException("User or password is incorrect");
         }
     }
 
