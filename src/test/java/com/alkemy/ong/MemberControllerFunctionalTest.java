@@ -118,14 +118,7 @@ public class MemberControllerFunctionalTest {
 
     @Test
     void testCreateMember_shouldReturnCreated() {
-        MemberCreationDTO memberCreationDTO = MemberCreationDTO.builder()
-                .name("Daniel")
-                .facebookUrl("facebookUrl")
-                .instagramUrl("instagramUrl")
-                .linkedinUrl("linkedinUrl")
-                .image("imageDaniel")
-                .description("description")
-                .build();
+        MemberCreationDTO memberCreationDTO = createMemberDto();
         String endpointUrl = memberControllerUrl;
         HttpHeaders headers = new HeaderBuilder()
                 .withValidToken("admin1@gmail.com", 3600L)
