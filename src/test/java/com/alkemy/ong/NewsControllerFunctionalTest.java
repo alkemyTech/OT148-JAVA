@@ -1,5 +1,6 @@
 package com.alkemy.ong;
 
+import com.alkemy.ong.domain.Category;
 import com.alkemy.ong.dto.CategoryCreationDTO;
 import com.alkemy.ong.dto.CategoryDTO;
 import com.alkemy.ong.dto.ErrorDTO;
@@ -7,8 +8,9 @@ import com.alkemy.ong.dto.NewsCreationDTO;
 import com.alkemy.ong.dto.NewsDTO;
 import com.alkemy.ong.dto.NewsUpdateDTO;
 import com.alkemy.ong.mapper.CategoryMapper;
+import com.alkemy.ong.repository.CategoryRepository;
 import com.alkemy.ong.repository.NewsRepository;
-import com.alkemy.ong.service.CategoryService;
+import com.alkemy.ong.repository.model.CategoryModel;
 import com.alkemy.ong.util.HeaderBuilder;
 import java.util.Map;
 import org.junit.jupiter.api.AfterEach;
@@ -36,26 +38,28 @@ public class NewsControllerFunctionalTest {
     private TestRestTemplate testRestTemplate;
     private String newsControllerUrl;
     private HttpEntity<?> entity;
+    private Long idCategory;
+    private CategoryDTO categoryDTO;
 
     @Autowired
     private NewsRepository newsRepository;
 
     @Autowired
-    private CategoryService categoryService;
+    private CategoryRepository categoryRepository;
 
     @BeforeEach
     void setUp() {
         newsControllerUrl = testRestTemplate.getRootUri() + "/news";
-    }
-
-    @BeforeEach
-    void createdCategory() {
         CategoryCreationDTO categoryCreationDTO = CategoryCreationDTO.builder()
                 .name("Categoria1")
                 .description("Esta es la categoria1")
                 .image("categoria1.jpg")
                 .build();
-        categoryService.createCategory(CategoryMapper.mapCreationDTOToDomain(categoryCreationDTO));
+        Category category = CategoryMapper.mapCreationDTOToDomain(categoryCreationDTO);
+        CategoryModel categoryModel = CategoryMapper.mapDomainToModel(category);
+        categoryRepository.save(categoryModel);
+        idCategory = categoryModel.getId();
+        categoryDTO = CategoryMapper.mapDomainToDTO(category);
     }
 
     @AfterEach
@@ -177,7 +181,7 @@ public class NewsControllerFunctionalTest {
                 .name("Novedad1")
                 .content("Contenido de novedad1")
                 .image("novedad1.jpg")
-                .categoryId(1L)
+                .categoryId(idCategory)
                 .build();
         String endpointUrl = newsControllerUrl;
         HttpHeaders headers = new HeaderBuilder()
@@ -204,7 +208,7 @@ public class NewsControllerFunctionalTest {
                 .name("")
                 .content("Contenido de novedad1")
                 .image("novedad1.jpg")
-                .categoryId(1L)
+                .categoryId(idCategory)
                 .build();
         String endpointUrl = newsControllerUrl;
         HttpHeaders headers = new HeaderBuilder()
@@ -225,21 +229,17 @@ public class NewsControllerFunctionalTest {
     }
 
     @Test
-    void testUpdateNewsById() {
+    void testUpdateNewsById_ShouldReturnForbidden() {
         //Given
         String endpointUrl = newsControllerUrl + "/{id}";
         Long id = createdNews();
-        CategoryDTO categoryDTO = CategoryDTO.builder().id(1L).build();
         NewsUpdateDTO newsUpdateDTO = NewsUpdateDTO.builder()
                 .name("Nueva novedad")
                 .content("Nuevo contenido")
                 .image("nueva_novedad.jpg")
                 .category(categoryDTO)
                 .build();
-        HttpHeaders headers = new HeaderBuilder()
-                .withValidToken("admin1@gmail.com", 3600L)
-                .build();
-        entity = new HttpEntity(newsUpdateDTO, headers);
+        entity = new HttpEntity(newsUpdateDTO, null);
         //When
         ResponseEntity<NewsDTO> response = testRestTemplate.exchange(
                 endpointUrl,
@@ -250,7 +250,7 @@ public class NewsControllerFunctionalTest {
                 Map.of("id", id)
         );
         //Then
-        assertEquals(200, response.getStatusCode().value());
+        assertEquals(403, response.getStatusCode().value());
     }
 
     @Test
@@ -260,7 +260,7 @@ public class NewsControllerFunctionalTest {
                 .name("")
                 .content("Nuevo contenido")
                 .image("nueva_novedad.jpg")
-                .category(CategoryDTO.builder().id(10L).build())
+                .category(categoryDTO)
                 .build();
         String endpointUrl = newsControllerUrl + "/{id}";
         HttpHeaders headers = new HeaderBuilder()
@@ -286,7 +286,7 @@ public class NewsControllerFunctionalTest {
                 .name("Novedad1")
                 .content("Contenido de novedad1")
                 .image("novedad1.jpg")
-                .categoryId(1L)
+                .categoryId(idCategory)
                 .build();
         String endpointUrl = newsControllerUrl;
         HttpHeaders headers = new HeaderBuilder()
