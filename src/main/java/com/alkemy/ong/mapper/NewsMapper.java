@@ -1,6 +1,8 @@
 package com.alkemy.ong.mapper;
 
+import com.alkemy.ong.domain.Category;
 import com.alkemy.ong.domain.News;
+import com.alkemy.ong.dto.NewsCreationDTO;
 import com.alkemy.ong.dto.NewsDTO;
 import com.alkemy.ong.dto.NewsUpdateDTO;
 import com.alkemy.ong.repository.model.NewsModel;
@@ -63,5 +65,15 @@ public class NewsMapper {
                 .creationDate(news.getCreationDate())
                 .build();
         return newsDTO;
+    }
+
+    public static News mapCreationDTOToDomain(NewsCreationDTO newsCreationDTO) {
+        News news = News.builder()
+                .name(newsCreationDTO.getName())
+                .content(newsCreationDTO.getContent())
+                .image(newsCreationDTO.getImage())
+                .category(Category.builder().id(newsCreationDTO.getCategoryId()).build())
+                .build();
+        return news;
     }
 }
