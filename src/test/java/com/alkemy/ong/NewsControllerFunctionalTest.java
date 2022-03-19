@@ -68,7 +68,7 @@ public class NewsControllerFunctionalTest {
     }
 
     @Test
-    void testGetNews() {
+    void testGetNews_ShouldReturnResponseOk() {
         //Given
         String endpointUrl = newsControllerUrl;
         HttpHeaders headers = new HeaderBuilder()
@@ -89,7 +89,7 @@ public class NewsControllerFunctionalTest {
     }
 
     @Test
-    void testGetNewsById() {
+    void testGetNewsById_ShouldReturnResponseOk() {
         //Given
         String endpointUrl = newsControllerUrl + "/{id}";
         Long id = createdNews();
@@ -132,7 +132,7 @@ public class NewsControllerFunctionalTest {
     }
 
     @Test
-    void testDeleteNewsById() {
+    void testDeleteNewsById_ShouldReturnResponseOk() {
         //Given
         String endpointUrl = newsControllerUrl + "/{id}";
         Long id = createdNews();
@@ -175,7 +175,7 @@ public class NewsControllerFunctionalTest {
     }
 
     @Test
-    void testCreateNews() {
+    void testCreateNews_ShouldReturnResponseCreated() {
         //Given
         NewsCreationDTO newsCreationDTO = NewsCreationDTO.builder()
                 .name("Novedad1")
