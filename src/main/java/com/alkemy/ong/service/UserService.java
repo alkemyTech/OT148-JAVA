@@ -111,7 +111,7 @@ public class UserService {
             UserModel userModel = userRepository.findByEmail(email);
             return getUserPasswordChecked(password, userModel);
         } else {
-            throw new WrongValuesException("User or password is incorrect");
+            throw new WrongValuesException();
         }
     }
 
@@ -121,7 +121,7 @@ public class UserService {
             User userDomain = mapModelToDomain(userModel);
             return userDomain;
         } else {
-            throw new WrongValuesException("User or password is incorrect");
+            throw new WrongValuesException();
         }
     }
 
