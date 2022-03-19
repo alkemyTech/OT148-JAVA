@@ -78,7 +78,7 @@ public interface UserController {
     @ResponseStatus(HttpStatus.OK)
     UserDTO updateUser(
             @PathVariable Integer userId,
-            @RequestPart("photo") MultipartFile photo,
+            @RequestPart(value = "photo", required = false) MultipartFile photo,
             @RequestPart("user") UserUpdateDTO updateDTO) throws UserNotFoundException;
 
     @Operation(
