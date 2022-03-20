@@ -49,7 +49,7 @@ public class CommentControllerFunctionalTest {
 
     @BeforeEach
     void setUp() {
-        commentControllerUrl = testRestTemplate.getRootUri() + "/comments";
+        commentControllerUrl = testRestTemplate.getRootUri();
         CategoryModel categoryModel = CategoryModel.builder().name("Categoria1").description("Descripcion de categoria1").image("categoria1.jpg").build();
         categoryRepository.save(categoryModel);
         NewsModel newsModel = NewsModel.builder().name("Novedad1").content("Contenido de novedad1").image("novedad1.jpg").build();
@@ -65,7 +65,7 @@ public class CommentControllerFunctionalTest {
     @Test
     void testGetComments_ShouldReturnResponseOk() {
         //Given
-        String endpointUrl = commentControllerUrl;
+        String endpointUrl = commentControllerUrl + "/comments";
         HttpHeaders headers = new HeaderBuilder()
                 .withValidToken("admin1@gmail.com", 3600L)
                 .build();
@@ -84,9 +84,51 @@ public class CommentControllerFunctionalTest {
     }
 
     @Test
+    void testGetCommentsByPostId_ShouldReturnNotFound() {
+        //Given
+        String endpointUrl = commentControllerUrl + "/post/{id}/comments";
+        HttpHeaders headers = new HeaderBuilder()
+                .withValidToken("admin1@gmail.com", 3600L)
+                .build();
+        entity = new HttpEntity(null, headers);
+        // When
+        ResponseEntity<CommentDTO> response = testRestTemplate.exchange(
+                endpointUrl,
+                HttpMethod.GET,
+                entity,
+                new ParameterizedTypeReference<>() {
+                },
+                Map.of("id", idNews)
+        );
+        //Then
+        assertEquals(404, response.getStatusCode().value());
+    }
+
+    @Test
+    void testGetCommentsByPostId_shouldReturnErrorDTO() {
+        //Given
+        String endpointUrl = commentControllerUrl + "/post/{id}/comments";
+        HttpHeaders headers = new HeaderBuilder()
+                .withValidToken("admin1@gmail.com", 3600L)
+                .build();
+        entity = new HttpEntity(null, headers);
+        // When
+        ResponseEntity<ErrorDTO> response = testRestTemplate.exchange(
+                endpointUrl,
+                HttpMethod.GET,
+                entity,
+                new ParameterizedTypeReference<>() {
+                },
+                Map.of("id", "5")
+        );
+        //Then
+        assertEquals(404, response.getStatusCode().value());
+    }
+
+    @Test
     void testDeleteCommentsById_ShouldReturnResponseOk() {
         //Given
-        String endpointUrl = commentControllerUrl + "/{id}";
+        String endpointUrl = commentControllerUrl + "/comments/{id}";
         Long id = createdComment();
         HttpHeaders headers = new HeaderBuilder()
                 .withValidToken("admin1@gmail.com", 3600L)
@@ -108,7 +150,7 @@ public class CommentControllerFunctionalTest {
     @Test
     void testDeleteCommentsById_shouldReturnErrorDTO() {
         //Given
-        String endpointUrl = commentControllerUrl + "/{id}";
+        String endpointUrl = commentControllerUrl + "/comments/{id}";
         HttpHeaders headers = new HeaderBuilder()
                 .withValidToken("admin1@gmail.com", 3600L)
                 .build();
@@ -133,7 +175,7 @@ public class CommentControllerFunctionalTest {
                 .body("Cuerpo del commentario")
                 .newsId(idNews)
                 .build();
-        String endpointUrl = commentControllerUrl;
+        String endpointUrl = commentControllerUrl + "/comments";
         HttpHeaders headers = new HeaderBuilder()
                 .withValidToken("admin1@gmail.com", 3600L)
                 .build();
@@ -158,7 +200,7 @@ public class CommentControllerFunctionalTest {
                 .body("")
                 .newsId(idNews)
                 .build();
-        String endpointUrl = commentControllerUrl;
+        String endpointUrl = commentControllerUrl + "/comments";
         HttpHeaders headers = new HeaderBuilder()
                 .withValidToken("admin1@gmail.com", 3600L)
                 .build();
@@ -179,7 +221,7 @@ public class CommentControllerFunctionalTest {
     @Test
     void testUpdateCommentsById_ShouldReturnForbidden() {
         //Given
-        String endpointUrl = commentControllerUrl + "/{id}";
+        String endpointUrl = commentControllerUrl + "/comments/{id}";
         Long id = createdComment();
         CommentBodyDTO commentBodyDTO = CommentBodyDTO.builder()
                 .body("Nuevo cuerpo")
@@ -204,7 +246,7 @@ public class CommentControllerFunctionalTest {
         CommentBodyDTO commentBodyDTO = CommentBodyDTO.builder()
                 .body("Nuevo cuerpo")
                 .build();
-        String endpointUrl = commentControllerUrl + "/{id}";
+        String endpointUrl = commentControllerUrl + "/comments/{id}";
         HttpHeaders headers = new HeaderBuilder()
                 .withValidToken("admin1@gmail.com", 3600L)
                 .build();
@@ -228,7 +270,7 @@ public class CommentControllerFunctionalTest {
                 .body("Cuerpo del comentario")
                 .newsId(idNews)
                 .build();
-        String endpointUrl = commentControllerUrl;
+        String endpointUrl = commentControllerUrl + "/comments";
         HttpHeaders headers = new HeaderBuilder()
                 .withValidToken("admin1@gmail.com", 3600L)
                 .build();
