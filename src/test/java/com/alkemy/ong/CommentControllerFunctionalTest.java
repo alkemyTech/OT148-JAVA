@@ -22,7 +22,6 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -36,7 +35,7 @@ public class CommentControllerFunctionalTest {
     private TestRestTemplate testRestTemplate;
     private String commentControllerUrl;
     private HttpEntity<?> entity;
-    private Long idNews;
+    private Long newsId;
 
     @Autowired
     private CommentRepository commentRepository;
@@ -52,9 +51,9 @@ public class CommentControllerFunctionalTest {
         commentControllerUrl = testRestTemplate.getRootUri();
         CategoryModel categoryModel = CategoryModel.builder().name("Categoria1").description("Descripcion de categoria1").image("categoria1.jpg").build();
         categoryRepository.save(categoryModel);
-        NewsModel newsModel = NewsModel.builder().name("Novedad1").content("Contenido de novedad1").image("novedad1.jpg").build();
+        NewsModel newsModel = NewsModel.builder().name("Novedad1").content("Contenido de novedad1").image("novedad1.jpg").categoryModel(categoryModel).build();
         newsRepository.save(newsModel);
-        idNews = newsModel.getId();
+        newsId = newsModel.getId();
     }
 
     @AfterEach
@@ -70,6 +69,7 @@ public class CommentControllerFunctionalTest {
                 .withValidToken("admin1@gmail.com", 3600L)
                 .build();
         entity = new HttpEntity(null, headers);
+
         //When
         ResponseEntity<?> response = testRestTemplate.exchange(
                 endpointUrl,
@@ -79,39 +79,43 @@ public class CommentControllerFunctionalTest {
                 },
                 Map.of()
         );
+
         //Then
         assertEquals(200, response.getStatusCode().value());
     }
 
     @Test
-    void testGetCommentsByPostId_ShouldReturnNotFound() {
+    void testGetCommentsByPostId_ShouldReturnResponseOk() {
         //Given
-        String endpointUrl = commentControllerUrl + "/post/{id}/comments";
+        String endpointUrl = commentControllerUrl + "/posts/{id}/comments";
         HttpHeaders headers = new HeaderBuilder()
                 .withValidToken("admin1@gmail.com", 3600L)
                 .build();
         entity = new HttpEntity(null, headers);
+
         // When
-        ResponseEntity<CommentDTO> response = testRestTemplate.exchange(
+        ResponseEntity<?> response = testRestTemplate.exchange(
                 endpointUrl,
                 HttpMethod.GET,
                 entity,
                 new ParameterizedTypeReference<>() {
                 },
-                Map.of("id", idNews)
+                Map.of("id", newsId)
         );
+
         //Then
-        assertEquals(404, response.getStatusCode().value());
+        assertEquals(200, response.getStatusCode().value());
     }
 
     @Test
-    void testGetCommentsByPostId_shouldReturnErrorDTO() {
+    void testGetCommentsByPostId_whenIdDoesNotExist_shouldReturnNotFound() {
         //Given
-        String endpointUrl = commentControllerUrl + "/post/{id}/comments";
+        String endpointUrl = commentControllerUrl + "/posts/{id}/comments";
         HttpHeaders headers = new HeaderBuilder()
                 .withValidToken("admin1@gmail.com", 3600L)
                 .build();
         entity = new HttpEntity(null, headers);
+
         // When
         ResponseEntity<ErrorDTO> response = testRestTemplate.exchange(
                 endpointUrl,
@@ -119,8 +123,9 @@ public class CommentControllerFunctionalTest {
                 entity,
                 new ParameterizedTypeReference<>() {
                 },
-                Map.of("id", "5")
+                Map.of("id", "500")
         );
+
         //Then
         assertEquals(404, response.getStatusCode().value());
     }
@@ -134,6 +139,7 @@ public class CommentControllerFunctionalTest {
                 .withValidToken("admin1@gmail.com", 3600L)
                 .build();
         entity = new HttpEntity(null, headers);
+
         // When
         ResponseEntity<CommentDTO> response = testRestTemplate.exchange(
                 endpointUrl,
@@ -143,18 +149,20 @@ public class CommentControllerFunctionalTest {
                 },
                 Map.of("id", id)
         );
+
         //Then
         assertEquals(200, response.getStatusCode().value());
     }
 
     @Test
-    void testDeleteCommentsById_shouldReturnErrorDTO() {
+    void testDeleteCommentsById_whenIdDoesNotExist_shouldReturnNotFound() {
         //Given
         String endpointUrl = commentControllerUrl + "/comments/{id}";
         HttpHeaders headers = new HeaderBuilder()
                 .withValidToken("admin1@gmail.com", 3600L)
                 .build();
         entity = new HttpEntity(null, headers);
+
         // When
         ResponseEntity<ErrorDTO> response = testRestTemplate.exchange(
                 endpointUrl,
@@ -162,10 +170,11 @@ public class CommentControllerFunctionalTest {
                 entity,
                 new ParameterizedTypeReference<>() {
                 },
-                Map.of("id", "5")
+                Map.of("id", "500")
         );
+
         //Then
-        assertEquals(HttpStatus.NOT_FOUND, response.getBody().getCode());
+        assertEquals(404, response.getStatusCode().value());
     }
 
     @Test
@@ -173,13 +182,14 @@ public class CommentControllerFunctionalTest {
         //Given
         CommentCreationDTO commentCreationDTO = CommentCreationDTO.builder()
                 .body("Cuerpo del commentario")
-                .newsId(idNews)
+                .newsId(newsId)
                 .build();
         String endpointUrl = commentControllerUrl + "/comments";
         HttpHeaders headers = new HeaderBuilder()
                 .withValidToken("admin1@gmail.com", 3600L)
                 .build();
         entity = new HttpEntity(commentCreationDTO, headers);
+
         //When
         ResponseEntity<CommentDTO> response = testRestTemplate.exchange(
                 endpointUrl,
@@ -189,22 +199,24 @@ public class CommentControllerFunctionalTest {
                 },
                 Map.of()
         );
+
         //Then
         assertEquals(201, response.getStatusCode().value());
     }
 
     @Test
-    void testCreateComments_shouldReturnErrorDto() {
+    void testCreateComments_whenBodyIsBlank_shouldReturnBadRequest() {
         //Given
         CommentCreationDTO commentCreationDTO = CommentCreationDTO.builder()
                 .body("")
-                .newsId(idNews)
+                .newsId(newsId)
                 .build();
         String endpointUrl = commentControllerUrl + "/comments";
         HttpHeaders headers = new HeaderBuilder()
                 .withValidToken("admin1@gmail.com", 3600L)
                 .build();
         entity = new HttpEntity(commentCreationDTO, headers);
+
         //When
         ResponseEntity<ErrorDTO> response = testRestTemplate.exchange(
                 endpointUrl,
@@ -214,19 +226,24 @@ public class CommentControllerFunctionalTest {
                 },
                 Map.of()
         );
+
         //Then
         assertEquals(400, response.getStatusCode().value());
     }
 
     @Test
-    void testUpdateCommentsById_ShouldReturnForbidden() {
+    void testUpdateCommentsById_ShouldReturnResponseOk() {
         //Given
         String endpointUrl = commentControllerUrl + "/comments/{id}";
         Long id = createdComment();
         CommentBodyDTO commentBodyDTO = CommentBodyDTO.builder()
                 .body("Nuevo cuerpo")
                 .build();
-        entity = new HttpEntity(commentBodyDTO, null);
+        HttpHeaders headers = new HeaderBuilder()
+                .withValidToken("admin1@gmail.com", 3600L)
+                .build();
+        entity = new HttpEntity(commentBodyDTO, headers);
+
         //When
         ResponseEntity<CommentDTO> response = testRestTemplate.exchange(
                 endpointUrl,
@@ -236,12 +253,13 @@ public class CommentControllerFunctionalTest {
                 },
                 Map.of("id", id)
         );
+
         //Then
-        assertEquals(403, response.getStatusCode().value());
+        assertEquals(200, response.getStatusCode().value());
     }
 
     @Test
-    void testUpdateComment_shouldReturnErrorDTO() {
+    void testUpdateComment_whenIdDoesNotExist_shouldReturnNotFound() {
         //Given
         CommentBodyDTO commentBodyDTO = CommentBodyDTO.builder()
                 .body("Nuevo cuerpo")
@@ -251,6 +269,7 @@ public class CommentControllerFunctionalTest {
                 .withValidToken("admin1@gmail.com", 3600L)
                 .build();
         entity = new HttpEntity(commentBodyDTO, headers);
+
         //When
         ResponseEntity<ErrorDTO> response = testRestTemplate.exchange(
                 endpointUrl,
@@ -258,8 +277,9 @@ public class CommentControllerFunctionalTest {
                 entity,
                 new ParameterizedTypeReference<>() {
                 },
-                Map.of("id", "5")
+                Map.of("id", "500")
         );
+
         //Then
         assertEquals(404, response.getStatusCode().value());
     }
@@ -268,13 +288,14 @@ public class CommentControllerFunctionalTest {
         //Given
         CommentCreationDTO commentCreationDTO = CommentCreationDTO.builder()
                 .body("Cuerpo del comentario")
-                .newsId(idNews)
+                .newsId(newsId)
                 .build();
         String endpointUrl = commentControllerUrl + "/comments";
         HttpHeaders headers = new HeaderBuilder()
                 .withValidToken("admin1@gmail.com", 3600L)
                 .build();
         entity = new HttpEntity(commentCreationDTO, headers);
+
         //When
         ResponseEntity<CommentDTO> response = testRestTemplate.exchange(
                 endpointUrl,
@@ -284,6 +305,7 @@ public class CommentControllerFunctionalTest {
                 },
                 Map.of()
         );
+
         //Then
         assertEquals(201, response.getStatusCode().value());
         return response.getBody().getId();
