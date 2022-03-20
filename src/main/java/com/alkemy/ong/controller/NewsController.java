@@ -1,5 +1,6 @@
 package com.alkemy.ong.controller;
 
+import com.alkemy.ong.dto.NewsCreationDTO;
 import com.alkemy.ong.dto.NewsDTO;
 import com.alkemy.ong.dto.NewsListDTO;
 import com.alkemy.ong.dto.NewsUpdateDTO;
@@ -68,7 +69,7 @@ public interface NewsController {
             })
     @PostMapping("/news")
     @ResponseStatus(HttpStatus.CREATED)
-    NewsDTO createNews(@Valid @RequestBody NewsDTO newsDTO);
+    NewsDTO createNews(@Valid @RequestBody NewsCreationDTO newsCreationDTO);
 
     @Operation(
             summary = "Update news by Id",

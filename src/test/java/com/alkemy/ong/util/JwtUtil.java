@@ -6,6 +6,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import java.util.Date;
 
 public class JwtUtil {
+
     private final String SECRET = "secret";
     private final String DEFAULT_EMAIL = "some@email.com";
 
