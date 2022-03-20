@@ -3,8 +3,11 @@ package com.alkemy.ong;
 import com.alkemy.ong.dto.ErrorDTO;
 import com.alkemy.ong.dto.JwtDTO;
 import com.alkemy.ong.dto.UserCreationDTO;
+import com.alkemy.ong.dto.UserDTO;
 import com.alkemy.ong.dto.UserLoginDTO;
+import com.alkemy.ong.dto.UserUpdateDTO;
 import com.alkemy.ong.util.HeaderBuilder;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -18,8 +21,6 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -125,7 +126,7 @@ public class UserControllerFuncionalTest {
                 Map.of()
         );
 
-        assertEquals(404, response.getStatusCode().value());
+        assertEquals(401, response.getStatusCode().value());
     }
 
     @Test
@@ -193,11 +194,6 @@ public class UserControllerFuncionalTest {
         LinkedMultiValueMap<String, Object> parameters = new LinkedMultiValueMap<String, Object>();
         parameters.add("photo", null);
         parameters.add("user", this.createUserUpdateDTO());
-
-        HttpHeaders headers = new HeaderBuilder()
-                .withValidToken("admin1@gmail.com", 3600L)
-                .build();
-        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 
         String endpointUrl = testRestTemplate.getRootUri() + "/users/{id}";
         HttpEntity<LinkedMultiValueMap<String, Object>> entity =
