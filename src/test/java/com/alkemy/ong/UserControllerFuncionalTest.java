@@ -1,10 +1,15 @@
 package com.alkemy.ong;
 
+import com.alkemy.ong.dto.ErrorDTO;
 import com.alkemy.ong.dto.JwtDTO;
 import com.alkemy.ong.dto.UserCreationDTO;
+import com.alkemy.ong.dto.UserDTO;
 import com.alkemy.ong.dto.UserLoginDTO;
+import com.alkemy.ong.dto.UserUpdateDTO;
 import com.alkemy.ong.util.HeaderBuilder;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,8 +21,11 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.util.LinkedMultiValueMap;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -118,7 +126,7 @@ public class UserControllerFuncionalTest {
                 Map.of()
         );
 
-        assertEquals(404, response.getStatusCode().value());
+        assertEquals(401, response.getStatusCode().value());
     }
 
     @Test
@@ -140,7 +148,7 @@ public class UserControllerFuncionalTest {
 
         assertEquals(200, response.getStatusCode().value());
     }
-    
+
     @Test
     void testAuthMe_returnsErrorDto() {
         HttpHeaders headers = new HeaderBuilder()
@@ -161,4 +169,139 @@ public class UserControllerFuncionalTest {
         assertEquals(403, response.getStatusCode().value());
     }
 
+    @Test
+    void testFindAllUsers() {
+        String endpointUrl = testRestTemplate.getRootUri() + "/users";
+        HttpHeaders headers = new HeaderBuilder().withValidToken("admin1@gmail.com", 3600L)
+                .build();
+        entity = new HttpEntity(null, headers);
+
+        ResponseEntity<List<UserDTO>> response = testRestTemplate.exchange(
+                endpointUrl,
+                HttpMethod.GET,
+                entity,
+                new ParameterizedTypeReference<>() {
+                },
+                Map.of()
+        );
+
+        assertEquals(200, response.getStatusCode().value());
+        assertEquals(20, Objects.requireNonNull(response.getBody()).size());
+    }
+
+    @Test
+    void testUpdateUser_shouldReturnForbidden() {
+        LinkedMultiValueMap<String, Object> parameters = new LinkedMultiValueMap<String, Object>();
+        parameters.add("photo", null);
+        parameters.add("user", this.createUserUpdateDTO());
+
+        String endpointUrl = testRestTemplate.getRootUri() + "/users/{id}";
+        HttpEntity<LinkedMultiValueMap<String, Object>> entity =
+                new HttpEntity(parameters, null);
+        ResponseEntity<ErrorDTO> response = testRestTemplate.exchange(
+                endpointUrl,
+                HttpMethod.PATCH,
+                entity,
+                new ParameterizedTypeReference<>() {
+                },
+                Map.of("id", "1")
+        );
+        assertEquals(403, response.getStatusCode().value());
+    }
+
+    @Test
+    void testUpdateUser_shouldReturnNotFound() {
+        LinkedMultiValueMap<String, Object> parameters = new LinkedMultiValueMap<String, Object>();
+        parameters.add("photo", null);
+        parameters.add("user", this.createUserUpdateDTO());
+
+        HttpHeaders headers = new HeaderBuilder()
+                .withValidToken("admin1@gmail.com", 3600L)
+                .build();
+        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+
+        String endpointUrl = testRestTemplate.getRootUri() + "/users/{id}";
+        HttpEntity<LinkedMultiValueMap<String, Object>> entity =
+                new HttpEntity(parameters, headers);
+        ResponseEntity<ErrorDTO> response = testRestTemplate.exchange(
+                endpointUrl,
+                HttpMethod.PATCH,
+                entity,
+                new ParameterizedTypeReference<>() {
+                },
+                Map.of("id", "89")
+        );
+        assertEquals(404, response.getStatusCode().value());
+    }
+
+    @Test
+    void testUpdateUser_shouldReturnOk() {
+        LinkedMultiValueMap<String, Object> parameters = new LinkedMultiValueMap<String, Object>();
+        parameters.add("photo", null);
+        parameters.add("user", this.createUserUpdateDTO());
+
+        HttpHeaders headers = new HeaderBuilder()
+                .withValidToken("admin1@gmail.com", 3600L)
+                .build();
+        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+
+        String endpointUrl = testRestTemplate.getRootUri() + "/users/{id}";
+        HttpEntity<LinkedMultiValueMap<String, Object>> entity =
+                new HttpEntity(parameters, headers);
+        ResponseEntity<ErrorDTO> response = testRestTemplate.exchange(
+                endpointUrl,
+                HttpMethod.PATCH,
+                entity,
+                new ParameterizedTypeReference<>() {
+                },
+                Map.of("id", "2")
+        );
+        assertEquals(200, response.getStatusCode().value());
+    }
+
+    @Test
+    void testDeleteUser_shouldReturnErrorDto() {
+        String endpointUrl = testRestTemplate.getRootUri() + "/users/{id}";
+        HttpHeaders headers = new HeaderBuilder()
+                .withValidToken("admin1@gmail.com", 3600L)
+                .build();
+        entity = new HttpEntity(null, headers);
+        ResponseEntity<ErrorDTO> response = testRestTemplate.exchange(
+                endpointUrl,
+                HttpMethod.DELETE,
+                entity,
+                new ParameterizedTypeReference<>() {
+                },
+                Map.of("id", "22")
+        );
+        assertEquals(HttpStatus.NOT_FOUND, response.getBody().getCode());
+    }
+
+    @Test
+    void testDeleteUser_shouldReturnOk() {
+        String endpointUrl = testRestTemplate.getRootUri() + "/users/{id}";
+        HttpHeaders headers = new HeaderBuilder()
+                .withValidToken("admin1@gmail.com", 3600L)
+                .build();
+        entity = new HttpEntity(null, headers);
+        ResponseEntity<ErrorDTO> response = testRestTemplate.exchange(
+                endpointUrl,
+                HttpMethod.DELETE,
+                entity,
+                new ParameterizedTypeReference<>() {
+                },
+                Map.of("id", "1")
+        );
+        assertEquals(200, response.getStatusCode().value());
+    }
+
+    private UserUpdateDTO createUserUpdateDTO() {
+        UserUpdateDTO userUpdateDTO = UserUpdateDTO.builder()
+                .firstName("Pablini")
+                .lastName("Diaz")
+                .email("pablo@gmail.com")
+                .password("40651209")
+                .build();
+        return userUpdateDTO;
+    }
 }
