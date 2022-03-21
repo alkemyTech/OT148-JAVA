@@ -66,7 +66,7 @@ public class TestimonialControllerFunctionalTest {
                 },
                 Map.of()
         );
-        assertEquals(201, response.getStatusCode().value());
+        assertEquals(200, response.getStatusCode().value());
     }
 
     private TestimonialCreationDTO createTestimonialDTO() {
@@ -154,7 +154,7 @@ public class TestimonialControllerFunctionalTest {
                 },
                 Map.of("id", "1")
         );
-        assertEquals(HttpStatus.NOT_FOUND, response.getBody().getCode());
+        assertEquals(404, response.getStatusCode().value());
     }
 
     @Test

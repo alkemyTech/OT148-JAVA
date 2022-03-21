@@ -54,13 +54,13 @@ public interface TestimonialController {
                     content = @Content),
             @ApiResponse(responseCode = "404", description = "Testimonial not found",
                     content = @Content)})
-    @DeleteMapping("{id}")
+    @DeleteMapping("/testimonials/{id}")
     void deleteTestimonial(@PathVariable Long id)
             throws TestimonialNotFoundException;
 
     @Operation(
             summary = "Get testimonials list",
             description = "To get a paginated list of the ONG testimonials, you must access this endpoint.")
-    @GetMapping
+    @GetMapping("/testimonials")
    TestimonialListDTO getAll(@RequestParam(defaultValue = "0") Integer page);
 }

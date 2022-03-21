@@ -67,7 +67,6 @@ public class TestimonialResource implements TestimonialController {
     }
 
     @Override
-    @GetMapping
     public TestimonialListDTO getAll(Integer page) {
         var testimonials = testimonialService.getAll(page);
         TestimonialListDTO response = new TestimonialListDTO(page, testimonials, ContextUtils.currentContextPath());
