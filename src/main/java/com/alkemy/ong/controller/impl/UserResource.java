@@ -7,8 +7,8 @@ import com.alkemy.ong.dto.UserCreationDTO;
 import com.alkemy.ong.dto.UserDTO;
 import com.alkemy.ong.dto.UserLoginDTO;
 import com.alkemy.ong.dto.UserUpdateDTO;
-import com.alkemy.ong.exception.InvalidPasswordException;
 import com.alkemy.ong.exception.UserNotFoundException;
+import com.alkemy.ong.exception.WrongValuesException;
 import com.alkemy.ong.mapper.UserMapper;
 import com.alkemy.ong.service.UserService;
 import io.swagger.annotations.Api;
@@ -54,7 +54,7 @@ public class UserResource implements UserController {
     }
 
     @Override
-    public JwtDTO userLogin(UserLoginDTO userLoginDTO) throws UserNotFoundException, InvalidPasswordException {
+    public JwtDTO userLogin(UserLoginDTO userLoginDTO) throws WrongValuesException {
         User userDomain = UserMapper.mapLoginDTOToDomain(userLoginDTO);
         UserMapper.mapDomainToDTO(userService.loginUser(userDomain));
         JwtDTO jwtDto = userService.generateAuthenticationToken(userDomain);

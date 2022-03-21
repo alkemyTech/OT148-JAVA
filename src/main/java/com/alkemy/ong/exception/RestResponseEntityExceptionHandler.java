@@ -29,16 +29,15 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
             bodyOfResponse.put(fieldName, errorMessage);
         });
         return handleExceptionInternal(ex, bodyOfResponse, headers, HttpStatus.BAD_REQUEST, request);
-
     }
 
-    @ExceptionHandler({UserNotFoundException.class})
-    public ResponseEntity<Object> handleUserNotFoundExceptions(final UserNotFoundException ex, final WebRequest request) {
-        final ApiErrorDTO bodyOfResponse =
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<ApiErrorDTO> handleUserNotFoundExceptions(UserNotFoundException ex) {
+        ApiErrorDTO userNotFound =
                 ApiErrorDTO.builder()
                         .code(HttpStatus.NOT_FOUND)
                         .message(ex.getMessage()).build();
-        return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
+        return new ResponseEntity(userNotFound, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(DuplicateEmailException.class)
@@ -58,6 +57,14 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
                         .code(HttpStatus.BAD_REQUEST)
                         .message(ex.getMessage()).build();
         return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+    }
+
+    @ExceptionHandler(WrongValuesException.class)
+    public ResponseEntity<ApiErrorDTO> handleWrongValuesException(WrongValuesException ex) {
+        ApiErrorDTO wrongValues = ApiErrorDTO.builder()
+                .code(HttpStatus.UNAUTHORIZED)
+                .message(ex.getMessage()).build();
+        return new ResponseEntity(wrongValues, HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(OrganizationNotFoundException.class)

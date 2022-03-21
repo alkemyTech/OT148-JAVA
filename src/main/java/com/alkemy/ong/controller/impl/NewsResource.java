@@ -2,6 +2,7 @@ package com.alkemy.ong.controller.impl;
 
 import com.alkemy.ong.controller.NewsController;
 import com.alkemy.ong.domain.News;
+import com.alkemy.ong.dto.NewsCreationDTO;
 import com.alkemy.ong.dto.NewsDTO;
 import com.alkemy.ong.dto.NewsListDTO;
 import com.alkemy.ong.dto.NewsUpdateDTO;
@@ -38,8 +39,8 @@ public class NewsResource implements NewsController {
     }
 
     @Override
-    public NewsDTO createNews(NewsDTO newsDTO) {
-        News news = newsService.createNews((NewsMapper.mapDTOToDomain(newsDTO)));
+    public NewsDTO createNews(NewsCreationDTO newsCreationDTO) {
+        News news = newsService.createNews((NewsMapper.mapCreationDTOToDomain(newsCreationDTO)));
         NewsDTO result = mapDomainToDTO(news);
         return result;
     }
