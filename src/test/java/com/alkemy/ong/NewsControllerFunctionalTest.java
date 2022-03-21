@@ -1,13 +1,15 @@
 package com.alkemy.ong;
 
-import com.alkemy.ong.dto.CategoryCreationDTO;
 import com.alkemy.ong.dto.CategoryDTO;
-import com.alkemy.ong.dto.CategoryUpdateDTO;
 import com.alkemy.ong.dto.ErrorDTO;
-import com.alkemy.ong.dto.PageDTO;
+import com.alkemy.ong.dto.NewsCreationDTO;
+import com.alkemy.ong.dto.NewsDTO;
+import com.alkemy.ong.dto.NewsUpdateDTO;
 import com.alkemy.ong.repository.CategoryRepository;
+import com.alkemy.ong.repository.NewsRepository;
+import com.alkemy.ong.repository.model.CategoryModel;
 import com.alkemy.ong.util.HeaderBuilder;
-
+import java.util.Map;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,44 +24,48 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
-
-import java.util.Map;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ActiveProfiles("test")
-public class CategoryControllerFunctionalTest {
+public class NewsControllerFunctionalTest {
 
     @Autowired
     private TestRestTemplate testRestTemplate;
-    private String categoryControllerUrl;
+    private String newsControllerUrl;
     private HttpEntity<?> entity;
+    private Long idCategory;
 
     @Autowired
-    CategoryRepository categoryRepository;
+    private NewsRepository newsRepository;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     @BeforeEach
     void setUp() {
-        categoryControllerUrl = testRestTemplate.getRootUri() + "/categories";
+        newsControllerUrl = testRestTemplate.getRootUri() + "/news";
+        CategoryModel categoryModel = CategoryModel.builder().name("Categoria1").description("Descripcion de categoria1").image("categoria1.jpg").build();
+        categoryRepository.save(categoryModel);
+        idCategory = categoryModel.getId();
     }
 
     @AfterEach
     void deleteAll() {
-        categoryRepository.deleteAll();
+        newsRepository.deleteAll();
     }
 
     @Test
-    void testGetCategories_shouldReturnPageDTO() {
+    void testGetNews_ShouldReturnResponseOk() {
         //Given
-        String endpointUrl = categoryControllerUrl;
+        String endpointUrl = newsControllerUrl;
         HttpHeaders headers = new HeaderBuilder()
                 .withValidToken("admin1@gmail.com", 3600L)
                 .build();
         entity = new HttpEntity(null, headers);
         //When
-        ResponseEntity<PageDTO<CategoryDTO>> response = testRestTemplate.exchange(
+        ResponseEntity<?> response = testRestTemplate.exchange(
                 endpointUrl,
                 HttpMethod.GET,
                 entity,
@@ -72,16 +78,16 @@ public class CategoryControllerFunctionalTest {
     }
 
     @Test
-    void testGetCategoryById_shouldReturnCategoryDTO() {
+    void testGetNewsById_ShouldReturnResponseOk() {
         //Given
-        String endpointUrl = categoryControllerUrl + "/{id}";
-        Long id = withCreatedCategory();
+        String endpointUrl = newsControllerUrl + "/{id}";
+        Long id = createdNews();
         HttpHeaders headers = new HeaderBuilder()
                 .withValidToken("admin1@gmail.com", 3600L)
                 .build();
         entity = new HttpEntity(null, headers);
         // When
-        ResponseEntity<CategoryDTO> response = testRestTemplate.exchange(
+        ResponseEntity<NewsDTO> response = testRestTemplate.exchange(
                 endpointUrl,
                 HttpMethod.GET,
                 entity,
@@ -94,9 +100,9 @@ public class CategoryControllerFunctionalTest {
     }
 
     @Test
-    void testGetCategoryById_shouldReturnErrorDTO() {
+    void testGetNewsById_shouldReturnErrorDTO() {
         //Given
-        String endpointUrl = categoryControllerUrl + "/{id}";
+        String endpointUrl = newsControllerUrl + "/{id}";
         HttpHeaders headers = new HeaderBuilder()
                 .withValidToken("admin1@gmail.com", 3600L)
                 .build();
@@ -108,23 +114,23 @@ public class CategoryControllerFunctionalTest {
                 entity,
                 new ParameterizedTypeReference<>() {
                 },
-                Map.of("id", "10")
+                Map.of("id", "5")
         );
         //Then
         assertEquals(404, response.getStatusCode().value());
     }
 
     @Test
-    void testDeleteCategoryById_shouldReturnOkResponse() {
-        //given
-        String endpointUrl = categoryControllerUrl + "/{id}";
-        Long id = withCreatedCategory();
+    void testDeleteNewsById_ShouldReturnResponseOk() {
+        //Given
+        String endpointUrl = newsControllerUrl + "/{id}";
+        Long id = createdNews();
         HttpHeaders headers = new HeaderBuilder()
                 .withValidToken("admin1@gmail.com", 3600L)
                 .build();
         entity = new HttpEntity(null, headers);
         // When
-        ResponseEntity<CategoryDTO> response = testRestTemplate.exchange(
+        ResponseEntity<NewsDTO> response = testRestTemplate.exchange(
                 endpointUrl,
                 HttpMethod.DELETE,
                 entity,
@@ -137,9 +143,9 @@ public class CategoryControllerFunctionalTest {
     }
 
     @Test
-    void testDeleteCategoryById_shouldReturnErrorDto() {
+    void testDeleteNewsById_shouldReturnErrorDTO() {
         //Given
-        String endpointUrl = categoryControllerUrl + "/{id}";
+        String endpointUrl = newsControllerUrl + "/{id}";
         HttpHeaders headers = new HeaderBuilder()
                 .withValidToken("admin1@gmail.com", 3600L)
                 .build();
@@ -151,27 +157,28 @@ public class CategoryControllerFunctionalTest {
                 entity,
                 new ParameterizedTypeReference<>() {
                 },
-                Map.of("id", "100")
+                Map.of("id", "5")
         );
         //Then
         assertEquals(HttpStatus.NOT_FOUND, response.getBody().getCode());
     }
 
     @Test
-    void testCreateCategory_shouldReturnCategoryDTO() {
+    void testCreateNews_ShouldReturnResponseCreated() {
         //Given
-        CategoryCreationDTO categoryCreationDTO = CategoryCreationDTO.builder()
-                .name("Nahuel")
-                .image("nahuel.img")
-                .description("Nahuel Description")
+        NewsCreationDTO newsCreationDTO = NewsCreationDTO.builder()
+                .name("Novedad1")
+                .content("Contenido de novedad1")
+                .image("novedad1.jpg")
+                .categoryId(idCategory)
                 .build();
-        String endpointUrl = categoryControllerUrl;
+        String endpointUrl = newsControllerUrl;
         HttpHeaders headers = new HeaderBuilder()
                 .withValidToken("admin1@gmail.com", 3600L)
                 .build();
-        entity = new HttpEntity(categoryCreationDTO, headers);
+        entity = new HttpEntity(newsCreationDTO, headers);
         //When
-        ResponseEntity<CategoryDTO> response = testRestTemplate.exchange(
+        ResponseEntity<NewsDTO> response = testRestTemplate.exchange(
                 endpointUrl,
                 HttpMethod.POST,
                 entity,
@@ -184,18 +191,19 @@ public class CategoryControllerFunctionalTest {
     }
 
     @Test
-    void testCreateCategory_shouldReturnErrorDto() {
+    void testCreateNews_shouldReturnErrorDto() {
         //Given
-        CategoryCreationDTO categoryCreationDTO = CategoryCreationDTO.builder()
+        NewsCreationDTO newsCreationDTO = NewsCreationDTO.builder()
                 .name("")
-                .image("nahuel.img")
-                .description("Nahuel Description")
+                .content("Contenido de novedad1")
+                .image("novedad1.jpg")
+                .categoryId(idCategory)
                 .build();
-        String endpointUrl = categoryControllerUrl;
+        String endpointUrl = newsControllerUrl;
         HttpHeaders headers = new HeaderBuilder()
                 .withValidToken("admin1@gmail.com", 3600L)
                 .build();
-        entity = new HttpEntity(categoryCreationDTO, headers);
+        entity = new HttpEntity(newsCreationDTO, headers);
         //When
         ResponseEntity<ErrorDTO> response = testRestTemplate.exchange(
                 endpointUrl,
@@ -210,21 +218,19 @@ public class CategoryControllerFunctionalTest {
     }
 
     @Test
-    void testUpdateCategory_shouldReturnCategoryDTO() {
+    void testUpdateNewsById_ShouldReturnForbidden() {
         //Given
-        Long id = withCreatedCategory();
-        CategoryUpdateDTO categoryUpdateDTO = CategoryUpdateDTO.builder()
-                .name("Walter")
-                .image("Walter.img")
-                .description("Walter Description")
+        String endpointUrl = newsControllerUrl + "/{id}";
+        Long id = createdNews();
+        NewsUpdateDTO newsUpdateDTO = NewsUpdateDTO.builder()
+                .name("Nueva novedad")
+                .content("Nuevo contenido")
+                .image("nueva_novedad.jpg")
+                .category(CategoryDTO.builder().id(idCategory).build())
                 .build();
-        String endpointUrl = categoryControllerUrl + "/{id}";
-        HttpHeaders headers = new HeaderBuilder()
-                .withValidToken("admin1@gmail.com", 3600L)
-                .build();
-        entity = new HttpEntity(categoryUpdateDTO, headers);
+        entity = new HttpEntity(newsUpdateDTO, null);
         //When
-        ResponseEntity<CategoryDTO> response = testRestTemplate.exchange(
+        ResponseEntity<NewsDTO> response = testRestTemplate.exchange(
                 endpointUrl,
                 HttpMethod.PUT,
                 entity,
@@ -233,22 +239,23 @@ public class CategoryControllerFunctionalTest {
                 Map.of("id", id)
         );
         //Then
-        assertEquals(200, response.getStatusCode().value());
+        assertEquals(403, response.getStatusCode().value());
     }
 
     @Test
-    void testUpdateCategory_shouldReturnErrorDTO() {
+    void testUpdateNews_shouldReturnErrorDTO() {
         //Given
-        CategoryUpdateDTO categoryUpdateDTO = CategoryUpdateDTO.builder()
-                .name("Walter")
-                .image("Walter.img")
-                .description("Walter Description")
+        NewsUpdateDTO newsUpdateDTO = NewsUpdateDTO.builder()
+                .name("")
+                .content("Nuevo contenido")
+                .image("nueva_novedad.jpg")
+                .category(CategoryDTO.builder().id(idCategory).build())
                 .build();
-        String endpointUrl = categoryControllerUrl + "/{id}";
+        String endpointUrl = newsControllerUrl + "/{id}";
         HttpHeaders headers = new HeaderBuilder()
                 .withValidToken("admin1@gmail.com", 3600L)
                 .build();
-        entity = new HttpEntity(categoryUpdateDTO, headers);
+        entity = new HttpEntity(newsUpdateDTO, headers);
         //When
         ResponseEntity<ErrorDTO> response = testRestTemplate.exchange(
                 endpointUrl,
@@ -256,26 +263,27 @@ public class CategoryControllerFunctionalTest {
                 entity,
                 new ParameterizedTypeReference<>() {
                 },
-                Map.of("id", "100")
+                Map.of("id", "5")
         );
         //Then
         assertEquals(404, response.getStatusCode().value());
     }
 
-    private Long withCreatedCategory() {
+    private Long createdNews() {
         //Given
-        CategoryCreationDTO categoryCreationDTO = CategoryCreationDTO.builder()
-                .name("Nahuel")
-                .image("nahuel.img")
-                .description("Nahuel Description")
+        NewsCreationDTO newsCreationDTO = NewsCreationDTO.builder()
+                .name("Novedad1")
+                .content("Contenido de novedad1")
+                .image("novedad1.jpg")
+                .categoryId(idCategory)
                 .build();
-        String endpointUrl = categoryControllerUrl;
+        String endpointUrl = newsControllerUrl;
         HttpHeaders headers = new HeaderBuilder()
                 .withValidToken("admin1@gmail.com", 3600L)
                 .build();
-        entity = new HttpEntity(categoryCreationDTO, headers);
+        entity = new HttpEntity(newsCreationDTO, headers);
         //When
-        ResponseEntity<CategoryDTO> response = testRestTemplate.exchange(
+        ResponseEntity<NewsDTO> response = testRestTemplate.exchange(
                 endpointUrl,
                 HttpMethod.POST,
                 entity,
