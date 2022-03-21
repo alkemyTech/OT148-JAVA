@@ -1,5 +1,12 @@
 # OT148-JAVA
 
+## Variables de Ambiente requeridas
+
+AWS_ENDPOINT_URL= ```https://s3.us-east-2.amazonaws.com```; AWS_ACCESS_KEY=```AKIAS2JWQJCDIGZRCIJY```;
+AWS_SECRET_KEY=```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```; AWS_BUCKET_NAME=```cohorte-febrero-b35bfd02```
+;            
+JWT_SECRET=```secret ```;
+
 ## Run Project
 
 mvn spring-boot:run
@@ -11,13 +18,6 @@ Ctrl + F9. Click derecho en la carpeta de proyecto, pinchar en la opcion build m
 ## Run Test
 
 mvn test
-
-## Variables de Ambiente requeridas
-
-AWS_ENDPOINT_URL= ```https://s3.us-east-2.amazonaws.com```; AWS_ACCESS_KEY=```AKIAS2JWQJCDIGZRCIJY```;
-AWS_SECRET_KEY=```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```; AWS_BUCKET_NAME=```cohorte-febrero-b35bfd02```
-;            
-JWT_SECRET=```secret ```;
 
 ## Tecnología
 
