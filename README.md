@@ -1,5 +1,13 @@
 # OT148-JAVA
 
+## Run Project
+
+mvn spring-boot:run
+
+## Build Project
+
+Ctrl + F9. Click derecho en la carpeta de proyecto, pinchar en la opcion build module.
+
 ## Tecnología
 
 La aplicación se desarrolló utilizando ``` Spring Boot``` siguiendo el patron REST
@@ -35,4 +43,5 @@ De esta manera, ya se cuenta con un set de usuarios para probar la aplicación.
 
 ## Documentación
 
-Para acceder a la documentación de la api, solo debe levantar la aplicación e ingresar [aqui](http://localhost:8080/api/docs).
+Para acceder a la documentación de la api, solo debe levantar la aplicación e
+ingresar [aqui](http://localhost:8080/api/docs).
