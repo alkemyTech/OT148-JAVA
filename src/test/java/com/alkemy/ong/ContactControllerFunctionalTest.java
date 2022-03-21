@@ -103,7 +103,7 @@ public class ContactControllerFunctionalTest {
                 .withValidToken("admin1@gmail.com", 3600L)
                 .build();
         entity = new HttpEntity(contactDTO, headers);
-        ResponseEntity<ContactDTO> response = testRestTemplate.exchange(
+        ResponseEntity<?> response = testRestTemplate.exchange(
                 endpointUrl,
                 HttpMethod.GET,
                 entity,
@@ -122,7 +122,7 @@ public class ContactControllerFunctionalTest {
                 .withValidToken("user1@gmail.com", 3600L)
                 .build();
         entity = new HttpEntity(contactDTO, headers);
-        ResponseEntity<ErrorDTO> response = testRestTemplate.exchange(
+        ResponseEntity<?> response = testRestTemplate.exchange(
                 endpointUrl,
                 HttpMethod.GET,
                 entity,
