@@ -117,7 +117,7 @@ public class OrganizationControllerFunctionalTest {
         assertEquals(404, response.getStatusCode().value());
     }
 
-    private OrganizationUpdateDTO createOrganization() {
+    private OrganizationUpdateDTO organizationUpdateDto() {
         OrganizationUpdateDTO organizationUpdateDTO = OrganizationUpdateDTO.builder()
                 .name("nahu")
                 .address("asd")
@@ -135,7 +135,7 @@ public class OrganizationControllerFunctionalTest {
     private LinkedMultiValueMap<String, Object> getParameters() {
         LinkedMultiValueMap<String, Object> parameters = new LinkedMultiValueMap<String, Object>();
         parameters.add("image", null);
-        parameters.add("organization", this.createOrganization());
+        parameters.add("organization", this.organizationUpdateDto());
         return parameters;
     }
 
