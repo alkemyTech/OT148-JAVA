@@ -141,4 +141,11 @@ public class AppConfig {
                 userRepository,
                 newsRepository);
     }
+
+    @Bean
+    public JwtProvider jwtProvider(
+            @Value("${jwt.secret}") String secret,
+            @Value("${jwt.expiration}") int expiration) {
+        return new JwtProvider(secret, expiration);
+    }
 }
