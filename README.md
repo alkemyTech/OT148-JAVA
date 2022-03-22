@@ -2,10 +2,17 @@
 
 ## Variables de Ambiente requeridas
 
-AWS_ENDPOINT_URL= ```https://s3.us-east-2.amazonaws.com```; AWS_ACCESS_KEY=```AKIAS2JWQJCDIGZRCIJY```;
-AWS_SECRET_KEY=```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```; AWS_BUCKET_NAME=```cohorte-febrero-b35bfd02```
-;            
-JWT_SECRET=```secret ```;
+Antes de ejecutar el proyecto o correr los test, hay que tener seteados los siguientes valores:
+
+AWS_ENDPOINT_URL
+
+AWS_ACCESS_KEY
+
+AWS_SECRET_KEY
+
+AWS_BUCKET_NAME
+
+JWT_SECRET
 
 ## Run Project
 
