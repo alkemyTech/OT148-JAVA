@@ -2,7 +2,8 @@
 
 ## Variables de Ambiente requeridas
 
-Antes de ejecutar el proyecto o correr los test, hay que tener seteados los siguientes valores:
+Antes de ejecutar el proyecto o correr los test, hay que tener los valores correctos seteados en las siguientes
+variables de ambiente:
 
 AWS_ENDPOINT_URL
 
