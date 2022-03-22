@@ -83,7 +83,7 @@ public class CommentService {
         }
         CommentModel comment = commentModel.get();
         if (!hasValidId(mainUser, comment) && !isAdmin(mainUser)) {
-            throw new OngRequestException("Invalid user", "not.valid");
+            throw new OngRequestException("Invalid permissions", "invalid.permissions");
         }
         comment.setBody(commentUpdate.getBody());
         return mapModelToDomain(commentRepository.save(comment));

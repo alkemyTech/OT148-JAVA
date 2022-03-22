@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
@@ -13,9 +14,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 @ControllerAdvice
-public class ExceptionHandler extends ResponseEntityExceptionHandler {
+public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
-    public ExceptionHandler() {
+    public GlobalExceptionHandler() {
         super();
     }
 
@@ -30,11 +31,12 @@ public class ExceptionHandler extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(ex, bodyOfResponse, headers, HttpStatus.BAD_REQUEST, request);
     }
 
+    @ExceptionHandler
     public ResponseEntity<ApiErrorDTO> handleOngExceptions(OngRequestException ex) {
         ApiErrorDTO error =
                 ApiErrorDTO.builder()
                         .code(ex.getCode())
                         .message(ex.getMessage()).build();
-        return ResponseEntity.ok(error);
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 }

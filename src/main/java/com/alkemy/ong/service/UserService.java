@@ -55,7 +55,7 @@ public class UserService {
     @Transactional
     public UserDTO registerUser(User user) {
         if (userRepository.existsByEmail(user.getEmail())) {
-            throw new OngRequestException("This email is duplicated", "duplicated.mail");
+            throw new OngRequestException("This email is already registered", "duplicated.mail");
         }
         RoleModel roleModel = roleRepository.findByName("USER");
         user.setRole(RoleMapper.mapModelToDomain(roleModel));
@@ -121,7 +121,7 @@ public class UserService {
             User userDomain = mapModelToDomain(userModel);
             return userDomain;
         } else {
-            throw new OngRequestException("Wrong password checked", "invalid.access");
+            throw new OngRequestException("Wrong username or password", "invalid.access");
         }
     }
 
