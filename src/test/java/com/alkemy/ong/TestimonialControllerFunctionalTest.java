@@ -129,7 +129,7 @@ public class TestimonialControllerFunctionalTest {
                 },
                 Map.of("id", 2)
         );
-        assertEquals(404, response.getStatusCode().value());
+        assertEquals(HttpStatus.NOT_FOUND, response.getBody().getCode());
     }
 
     @Test

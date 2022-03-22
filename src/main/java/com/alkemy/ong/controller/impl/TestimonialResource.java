@@ -2,10 +2,12 @@ package com.alkemy.ong.controller.impl;
 
 import com.alkemy.ong.controller.TestimonialController;
 import com.alkemy.ong.domain.Testimonial;
+import com.alkemy.ong.dto.ErrorDTO;
 import com.alkemy.ong.dto.TestimonialCreationDTO;
 import com.alkemy.ong.dto.TestimonialDTO;
 import com.alkemy.ong.dto.TestimonialListDTO;
 import com.alkemy.ong.dto.TestimonialUpdateDTO;
+import com.alkemy.ong.exception.NewsNotFoundException;
 import com.alkemy.ong.exception.TestimonialNotFoundException;
 import com.alkemy.ong.mapper.TestimonialMapper;
 import com.alkemy.ong.service.TestimonialService;
@@ -46,6 +48,16 @@ public class TestimonialResource implements TestimonialController {
                 TestimonialMapper.mapUpdateDTOToDomain(testimonialUpdateDTO);
         TestimonialDTO testimonialDTO = TestimonialMapper.mapDomainToDTO(testimonialService.updateTestimonial(id, testimonial));
         return testimonialDTO;
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(TestimonialNotFoundException.class)
+    private ResponseEntity<ErrorDTO> handleTestimonialNotFound(TestimonialNotFoundException ex) {
+        ErrorDTO testimonialNotFound =
+                ErrorDTO.builder()
+                        .code(HttpStatus.NOT_FOUND)
+                        .message(ex.getMessage()).build();
+        return new ResponseEntity(testimonialNotFound, HttpStatus.NOT_FOUND);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
