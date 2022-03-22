@@ -63,14 +63,6 @@ public class ContactControllerFunctionalTest {
         assertEquals(201, response.getStatusCode().value());
     }
 
-    private ContactDTO createContactDto() {
-        return ContactDTO.builder()
-                .name("Sebastian")
-                .phone(261883992)
-                .email("sebas@gmail.com")
-                .message("Gracias por todo ")
-                .build();
-    }
 
     @Test
     void testCreateContact_shouldReturnErrorDTO() {
@@ -95,14 +87,14 @@ public class ContactControllerFunctionalTest {
         );
         assertEquals(400, response.getStatusCode().value());
     }
+
     @Test
     void testGetContacts_shouldReturnOkResponse() {
-        ContactDTO contactDTO = createContactDto();
         String endpointUrl = contactControllerUrl;
         HttpHeaders headers = new HeaderBuilder()
                 .withValidToken("admin1@gmail.com", 3600L)
                 .build();
-        entity = new HttpEntity(contactDTO, headers);
+        entity = new HttpEntity(null, headers);
         ResponseEntity<?> response = testRestTemplate.exchange(
                 endpointUrl,
                 HttpMethod.GET,
@@ -114,23 +106,12 @@ public class ContactControllerFunctionalTest {
         assertEquals(200, response.getStatusCode().value());
     }
 
-    @Test
-    void testGetContacts_shouldReturnErrorDTO() {
-        ContactDTO contactDTO = createContactDto();
-        String endpointUrl = contactControllerUrl;
-        HttpHeaders headers = new HeaderBuilder()
-                .withValidToken("user1@gmail.com", 3600L)
+    private ContactDTO createContactDto() {
+        return ContactDTO.builder()
+                .name("Sebastian")
+                .phone(261883992)
+                .email("sebas@gmail.com")
+                .message("Gracias por todo ")
                 .build();
-        entity = new HttpEntity(contactDTO, headers);
-        ResponseEntity<?> response = testRestTemplate.exchange(
-                endpointUrl,
-                HttpMethod.GET,
-                entity,
-                new ParameterizedTypeReference<>() {
-                },
-                Map.of()
-        );
-        assertEquals(403, response.getStatusCode().value());
     }
-
 }
