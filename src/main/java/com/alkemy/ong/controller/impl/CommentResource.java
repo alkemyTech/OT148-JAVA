@@ -5,7 +5,7 @@ import com.alkemy.ong.domain.Comment;
 import com.alkemy.ong.dto.CommentBodyDTO;
 import com.alkemy.ong.dto.CommentCreationDTO;
 import com.alkemy.ong.dto.CommentDTO;
-import com.alkemy.ong.exception.CommentNotFoundException;
+import com.alkemy.ong.exception.OngRequestException;
 import com.alkemy.ong.mapper.CommentMapper;
 import com.alkemy.ong.service.CommentService;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -42,7 +42,7 @@ public class CommentResource implements CommentController {
     }
 
     @Override
-    public void deleteComment(@PathVariable Long id) throws CommentNotFoundException {
+    public void deleteComment(@PathVariable Long id) throws OngRequestException {
         commentService.deleteComment(id);
     }
 

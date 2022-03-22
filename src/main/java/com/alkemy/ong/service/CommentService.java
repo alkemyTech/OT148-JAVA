@@ -1,10 +1,7 @@
 package com.alkemy.ong.service;
 
 import com.alkemy.ong.domain.Comment;
-import com.alkemy.ong.exception.CommentNotFoundException;
-import com.alkemy.ong.exception.NewsNotFoundException;
 import com.alkemy.ong.exception.OngRequestException;
-import com.alkemy.ong.exception.UserNotFoundException;
 import com.alkemy.ong.mapper.CommentMapper;
 import com.alkemy.ong.repository.CommentRepository;
 import com.alkemy.ong.repository.NewsRepository;
@@ -56,23 +53,23 @@ public class CommentService {
         Optional<UserModel> user = userRepository.findById(mainUser.getId());
         Optional<NewsModel> news = newsRepository.findById(comment.getNewsId());
         if (!user.isPresent()) {
-            throw new UserNotFoundException(String.format("User with ID: %s not found", comment.getUserId()));
+            throw new OngRequestException("User not found", "not.found");
         }
         if (!news.isPresent()) {
-            throw new NewsNotFoundException(String.format("News with ID: %s not found", comment.getNewsId()));
+            throw new OngRequestException("News not found", "not.found");
         }
         comment.setUserId(mainUser.getId());
         return mapModelToDomain(commentRepository.save(CommentMapper.mapDomainCreationToModel(comment)));
     }
 
     @Transactional
-    public void deleteComment(Long id) throws CommentNotFoundException {
+    public void deleteComment(Long id) throws OngRequestException {
         Optional<CommentModel> commentModelOptional = commentRepository.findById(id);
         if (!commentModelOptional.isEmpty()) {
             CommentModel commentModel = commentModelOptional.get();
             commentRepository.delete(commentModel);
         } else {
-            throw new CommentNotFoundException(String.format("Comment with ID: %s not found", id));
+            throw new OngRequestException("Comment not found", "not.found");
         }
     }
 

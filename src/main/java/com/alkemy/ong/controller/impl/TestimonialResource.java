@@ -6,7 +6,7 @@ import com.alkemy.ong.dto.TestimonialCreationDTO;
 import com.alkemy.ong.dto.TestimonialDTO;
 import com.alkemy.ong.dto.TestimonialListDTO;
 import com.alkemy.ong.dto.TestimonialUpdateDTO;
-import com.alkemy.ong.exception.TestimonialNotFoundException;
+import com.alkemy.ong.exception.OngRequestException;
 import com.alkemy.ong.mapper.TestimonialMapper;
 import com.alkemy.ong.service.TestimonialService;
 import com.alkemy.ong.util.ContextUtils;
@@ -35,7 +35,7 @@ public class TestimonialResource implements TestimonialController {
     }
 
     @Override
-    public ResponseEntity<TestimonialDTO> updateTestimonial(Long id, TestimonialUpdateDTO testimonialUpdateDTO) throws TestimonialNotFoundException {
+    public ResponseEntity<TestimonialDTO> updateTestimonial(Long id, TestimonialUpdateDTO testimonialUpdateDTO) throws OngRequestException {
         Testimonial testimonial =
                 TestimonialMapper.mapUpdateDTOToDomain(testimonialUpdateDTO);
         TestimonialDTO testimonialDTO = TestimonialMapper.mapDomainToDTO(testimonialService.updateTestimonial(id, testimonial));
@@ -43,7 +43,7 @@ public class TestimonialResource implements TestimonialController {
     }
 
     @Override
-    public ResponseEntity<?> deleteTestimonial(Long id) throws TestimonialNotFoundException {
+    public ResponseEntity<?> deleteTestimonial(Long id) throws OngRequestException {
         testimonialService.deleteTestimonial(id);
         return new ResponseEntity(HttpStatus.OK);
     }

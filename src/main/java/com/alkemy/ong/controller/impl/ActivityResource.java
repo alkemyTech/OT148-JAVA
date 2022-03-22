@@ -5,7 +5,7 @@ import com.alkemy.ong.domain.Activity;
 import com.alkemy.ong.dto.ActivityCreationDTO;
 import com.alkemy.ong.dto.ActivityDTO;
 import com.alkemy.ong.dto.ActivityUpdateDTO;
-import com.alkemy.ong.exception.ActivityNotFoundException;
+import com.alkemy.ong.exception.OngRequestException;
 import com.alkemy.ong.mapper.ActivityMapper;
 import com.alkemy.ong.service.ActivityService;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,7 +27,7 @@ public class ActivityResource implements ActivityController {
     }
 
     @Override
-    public ActivityDTO updateActivity(Long id, ActivityUpdateDTO activityUpdateDTO) throws ActivityNotFoundException {
+    public ActivityDTO updateActivity(Long id, ActivityUpdateDTO activityUpdateDTO) throws OngRequestException {
         Activity activityDomain = ActivityMapper.mapUpdateDTOToDomain(activityUpdateDTO);
         ActivityDTO activityDTO = ActivityMapper.mapDomainToDTO(activityService.updateActivity(id, activityDomain));
         return activityDTO;

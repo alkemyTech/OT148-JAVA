@@ -6,7 +6,7 @@ import com.alkemy.ong.dto.MemberCreationDTO;
 import com.alkemy.ong.dto.MemberDTO;
 import com.alkemy.ong.dto.MemberListDTO;
 import com.alkemy.ong.dto.MemberUpdateDTO;
-import com.alkemy.ong.exception.MemberNotFoundException;
+import com.alkemy.ong.exception.OngRequestException;
 import com.alkemy.ong.mapper.MemberMapper;
 import com.alkemy.ong.service.MemberService;
 import com.alkemy.ong.util.ContextUtils;
@@ -31,7 +31,7 @@ public class MemberResource implements MemberController {
     }
 
     @Override
-    public MemberDTO updateMember(Long id, MemberUpdateDTO memberUpdateDTO) throws MemberNotFoundException {
+    public MemberDTO updateMember(Long id, MemberUpdateDTO memberUpdateDTO) throws OngRequestException {
         Member member = MemberMapper.mapUpdateDTOToDomain(memberUpdateDTO);
         return MemberMapper.mapDomainToDTO(memberService.updateMember(id, member));
     }
@@ -44,7 +44,7 @@ public class MemberResource implements MemberController {
     }
 
     @Override
-    public void deleteMember(Long id) throws MemberNotFoundException {
+    public void deleteMember(Long id) throws OngRequestException {
         memberService.deleteMember(id);
     }
 }

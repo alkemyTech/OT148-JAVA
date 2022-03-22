@@ -6,7 +6,7 @@ import com.alkemy.ong.dto.CategoryCreationDTO;
 import com.alkemy.ong.dto.CategoryDTO;
 import com.alkemy.ong.dto.CategoryUpdateDTO;
 import com.alkemy.ong.dto.PageDTO;
-import com.alkemy.ong.exception.CategoryNotFoundException;
+import com.alkemy.ong.exception.OngRequestException;
 import com.alkemy.ong.mapper.CategoryMapper;
 import com.alkemy.ong.service.CategoryService;
 import io.swagger.annotations.Api;
@@ -33,19 +33,19 @@ public class CategoryResource implements CategoryController {
     }
 
     @Override
-    public CategoryDTO getById(Long id) throws CategoryNotFoundException {
+    public CategoryDTO getById(Long id) throws OngRequestException {
         return CategoryMapper.mapDomainToDTO(categoryService.getById(id));
     }
 
     @Override
-    public CategoryDTO updateCategory(Long id, CategoryUpdateDTO categoryUpdateDTO) throws CategoryNotFoundException {
+    public CategoryDTO updateCategory(Long id, CategoryUpdateDTO categoryUpdateDTO) throws OngRequestException {
         Category category = CategoryMapper.mapUpdateDTOToDomain(categoryUpdateDTO);
         CategoryDTO categoryDTO = CategoryMapper.mapDomainToDTO(categoryService.updateCategory(id, category));
         return categoryDTO;
     }
 
     @Override
-    public void deleteCategory(Long id) throws CategoryNotFoundException {
+    public void deleteCategory(Long id) throws OngRequestException {
         categoryService.deleteCategory(id);
     }
 

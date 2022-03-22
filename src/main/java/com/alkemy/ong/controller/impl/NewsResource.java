@@ -6,7 +6,7 @@ import com.alkemy.ong.dto.NewsCreationDTO;
 import com.alkemy.ong.dto.NewsDTO;
 import com.alkemy.ong.dto.NewsListDTO;
 import com.alkemy.ong.dto.NewsUpdateDTO;
-import com.alkemy.ong.exception.NewsNotFoundException;
+import com.alkemy.ong.exception.OngRequestException;
 import com.alkemy.ong.mapper.NewsMapper;
 import com.alkemy.ong.service.NewsService;
 import com.alkemy.ong.util.ContextUtils;
@@ -34,7 +34,7 @@ public class NewsResource implements NewsController {
     }
 
     @Override
-    public NewsDTO getById(Long id) throws NewsNotFoundException {
+    public NewsDTO getById(Long id) throws OngRequestException {
         return mapDomainToDTO(newsService.getById(id));
     }
 
@@ -46,14 +46,14 @@ public class NewsResource implements NewsController {
     }
 
     @Override
-    public NewsDTO updateNews(Long id, NewsUpdateDTO newsUpdateDTO) throws NewsNotFoundException {
+    public NewsDTO updateNews(Long id, NewsUpdateDTO newsUpdateDTO) throws OngRequestException {
         News news = NewsMapper.mapUpdateDTOToDomain(newsUpdateDTO);
         NewsDTO newsUpdated = mapDomainToDTO(newsService.updateNews(id, news));
         return newsUpdated;
     }
 
     @Override
-    public void deleteNews(Long id) throws NewsNotFoundException {
+    public void deleteNews(Long id) throws OngRequestException {
         newsService.deleteNews(id);
     }
 }

@@ -4,7 +4,7 @@ import com.alkemy.ong.controller.OrganizationController;
 import com.alkemy.ong.domain.Organization;
 import com.alkemy.ong.dto.OrganizationDTO;
 import com.alkemy.ong.dto.OrganizationUpdateDTO;
-import com.alkemy.ong.exception.OrganizationNotFoundException;
+import com.alkemy.ong.exception.OngRequestException;
 import com.alkemy.ong.mapper.OrganizationMapper;
 import com.alkemy.ong.service.OrganizationService;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,7 +35,7 @@ public class OrganizationResource implements OrganizationController {
             Long id,
             MultipartFile image,
             OrganizationUpdateDTO organizationUpdateDTO)
-            throws OrganizationNotFoundException {
+            throws OngRequestException {
         Organization organization = OrganizationMapper
                 .mapUpdateDTOToDomain(organizationUpdateDTO);
         OrganizationDTO organizationDTO =

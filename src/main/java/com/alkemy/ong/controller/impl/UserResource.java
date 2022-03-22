@@ -7,8 +7,7 @@ import com.alkemy.ong.dto.UserCreationDTO;
 import com.alkemy.ong.dto.UserDTO;
 import com.alkemy.ong.dto.UserLoginDTO;
 import com.alkemy.ong.dto.UserUpdateDTO;
-import com.alkemy.ong.exception.UserNotFoundException;
-import com.alkemy.ong.exception.WrongValuesException;
+import com.alkemy.ong.exception.OngRequestException;
 import com.alkemy.ong.mapper.UserMapper;
 import com.alkemy.ong.service.UserService;
 import io.swagger.annotations.Api;
@@ -47,14 +46,14 @@ public class UserResource implements UserController {
     public UserDTO updateUser(
             Integer userId,
             MultipartFile photo,
-            UserUpdateDTO updateDTO) throws UserNotFoundException {
+            UserUpdateDTO updateDTO) throws OngRequestException {
         User user = mapUpdateDTOToDomain(updateDTO);
         UserDTO userDTO = mapDomainToDTO(userService.updateUser(userId, user, photo));
         return userDTO;
     }
 
     @Override
-    public JwtDTO userLogin(UserLoginDTO userLoginDTO) throws WrongValuesException {
+    public JwtDTO userLogin(UserLoginDTO userLoginDTO) throws OngRequestException {
         User userDomain = UserMapper.mapLoginDTOToDomain(userLoginDTO);
         UserMapper.mapDomainToDTO(userService.loginUser(userDomain));
         JwtDTO jwtDto = userService.generateAuthenticationToken(userDomain);
@@ -62,12 +61,12 @@ public class UserResource implements UserController {
     }
 
     @Override
-    public void deleteUser(Long userId) throws UserNotFoundException {
+    public void deleteUser(Long userId) throws OngRequestException {
         userService.deleteUser(userId);
     }
 
     @Override
-    public UserDTO getUserInfo(String authorizationHeader) throws UserNotFoundException {
+    public UserDTO getUserInfo(String authorizationHeader) throws OngRequestException {
         String jwt = authorizationHeader.replace("Bearer ", "");
         return userService.getAuthenticatedUser(jwt);
     }
