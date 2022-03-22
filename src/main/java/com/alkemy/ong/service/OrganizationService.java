@@ -6,6 +6,7 @@ import com.alkemy.ong.repository.OrganizationRepository;
 import com.alkemy.ong.repository.SlideRepository;
 import com.alkemy.ong.repository.model.OrganizationModel;
 import com.alkemy.ong.repository.model.SlideModel;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
@@ -49,7 +50,7 @@ public class OrganizationService {
         Optional<OrganizationModel> optionalOrg = organizationRepository.findById(id);
         if (optionalOrg.isEmpty()) {
             throw new OngRequestException(
-                    "Organization not found", "not.found");
+                    "Organization not found", "not.found", HttpStatus.NOT_FOUND);
         }
         OrganizationModel organizationOld = optionalOrg.get();
         organizationOld.setAddress(organization.getAddress());

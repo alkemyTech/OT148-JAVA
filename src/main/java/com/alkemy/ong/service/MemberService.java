@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 
 import javax.transaction.Transactional;
 import java.util.Optional;
@@ -36,7 +37,7 @@ public class MemberService {
     public Member updateMember(Long id, Member member) throws OngRequestException {
         Optional<MemberModel> optionalMemberModel = memberRepository.findById(id);
         if (optionalMemberModel.isEmpty()) {
-            throw new OngRequestException("Member not found", "not.found");
+            throw new OngRequestException("Member not found", "not.found", HttpStatus.NOT_FOUND);
         }
         MemberModel memberModel = optionalMemberModel.get();
         memberModel.setName(member.getName());
@@ -60,7 +61,7 @@ public class MemberService {
             MemberModel memberModel = memberOptional.get();
             memberRepository.delete(memberModel);
         } else {
-            throw new OngRequestException("Member not found", "not.found");
+            throw new OngRequestException("Member not found", "not.found", HttpStatus.NOT_FOUND);
         }
     }
 

@@ -8,6 +8,7 @@ import com.alkemy.ong.repository.SlideRepository;
 import com.alkemy.ong.repository.model.OrganizationModel;
 import com.alkemy.ong.repository.model.SlideModel;
 import com.alkemy.ong.util.Base64DecodedMultiPartFile;
+import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -39,7 +40,7 @@ public class SlideService {
                     .build();
             return slide;
         } else {
-            throw new OngRequestException("Slide not found", "not.found");
+            throw new OngRequestException("Slide not found", "not.found", HttpStatus.NOT_FOUND);
         }
     }
 
@@ -49,7 +50,7 @@ public class SlideService {
         if (!slide.isEmpty()) {
             slideRepository.delete(slide.get());
         } else {
-            throw new OngRequestException("Slide not found", "not.found");
+            throw new OngRequestException("Slide not found", "not.found", HttpStatus.NOT_FOUND);
         }
     }
 
@@ -57,7 +58,7 @@ public class SlideService {
     public Slide updateSlide(Long id, Slide slide) throws OngRequestException {
         Optional<SlideModel> optionalSlideModel = slideRepository.findById(id);
         if (optionalSlideModel.isEmpty()) {
-            throw new OngRequestException("Slide not found", "not.found");
+            throw new OngRequestException("Slide not found", "not.found", HttpStatus.NOT_FOUND);
         }
         SlideModel slideModel = optionalSlideModel.get();
         slideModel.setImage(uploadImage(decodeImage(slide.getImage())));
@@ -70,7 +71,7 @@ public class SlideService {
         SlideModel slideModel = SlideMapper.mapDomainToModel(slide);
         Optional<OrganizationModel> organizationModelOptional = organizationRepository.findById(slideModel.getOrganization().getId());
         if (organizationModelOptional.isEmpty()) {
-            throw new OngRequestException("Organization not found", "not.found");
+            throw new OngRequestException("Organization not found", "not.found", HttpStatus.NOT_FOUND);
         }
         slideModel.setOrganization(organizationModelOptional.get());
         if (slideModel.getOrganizationOrder() == null) {

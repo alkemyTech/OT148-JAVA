@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -32,7 +33,7 @@ public class NewsService {
             NewsModel newsModel = modelOptional.get();
             return NewsMapper.mapModelToDomain(newsModel);
         } else {
-            throw new OngRequestException("News not found", "not.found");
+            throw new OngRequestException("News not found", "not.found", HttpStatus.NOT_FOUND);
         }
     }
 
@@ -54,7 +55,7 @@ public class NewsService {
             NewsModel newsSaved = newsRepository.save(newsModel);
             return NewsMapper.mapModelToDomain(newsSaved);
         } else {
-            throw new OngRequestException("News not found", "not.found");
+            throw new OngRequestException("News not found", "not.found", HttpStatus.NOT_FOUND);
         }
     }
 
@@ -64,7 +65,7 @@ public class NewsService {
             NewsModel newsModel = modelOptional.get();
             newsRepository.delete(newsModel);
         } else {
-            throw new OngRequestException("News not found", "not.found");
+            throw new OngRequestException("News not found", "not.found", HttpStatus.NOT_FOUND);
         }
     }
 

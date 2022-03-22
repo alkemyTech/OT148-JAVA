@@ -12,6 +12,7 @@ import com.alkemy.ong.repository.model.RoleModel;
 import com.alkemy.ong.repository.model.UserModel;
 import com.alkemy.ong.security.JwtProvider;
 import com.alkemy.ong.security.MainUser;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -55,7 +56,7 @@ public class UserService {
     @Transactional
     public UserDTO registerUser(User user) {
         if (userRepository.existsByEmail(user.getEmail())) {
-            throw new OngRequestException("This email is already registered", "duplicated.mail");
+            throw new OngRequestException("This email is already registered", "duplicated.mail", HttpStatus.BAD_REQUEST);
         }
         RoleModel roleModel = roleRepository.findByName("USER");
         user.setRole(RoleMapper.mapModelToDomain(roleModel));
@@ -95,7 +96,7 @@ public class UserService {
             UserModel save = userRepository.save(userModel);
             return mapModelToDomain(save);
         } else {
-            throw new OngRequestException("User not found", "not.found");
+            throw new OngRequestException("User not found", "not.found", HttpStatus.NOT_FOUND);
         }
 
     }
@@ -111,7 +112,7 @@ public class UserService {
             UserModel userModel = userRepository.findByEmail(email);
             return getUserPasswordChecked(password, userModel);
         } else {
-            throw new OngRequestException("Wrong username or password", "invalid.access");
+            throw new OngRequestException("Wrong username or password", "invalid.access", HttpStatus.UNAUTHORIZED);
         }
     }
 
@@ -121,7 +122,7 @@ public class UserService {
             User userDomain = mapModelToDomain(userModel);
             return userDomain;
         } else {
-            throw new OngRequestException("Wrong username or password", "invalid.access");
+            throw new OngRequestException("Wrong username or password", "invalid.access", HttpStatus.UNAUTHORIZED);
         }
     }
 
@@ -136,7 +137,7 @@ public class UserService {
             UserModel userModel = modelOptional.get();
             userRepository.delete(userModel);
         } else {
-            throw new OngRequestException("User not found", "not.found");
+            throw new OngRequestException("User not found", "not.found", HttpStatus.NOT_FOUND);
         }
     }
 

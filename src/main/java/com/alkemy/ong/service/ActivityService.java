@@ -5,6 +5,7 @@ import com.alkemy.ong.exception.OngRequestException;
 import com.alkemy.ong.mapper.ActivityMapper;
 import com.alkemy.ong.repository.ActivityRepository;
 import com.alkemy.ong.repository.model.ActivityModel;
+import org.springframework.http.HttpStatus;
 
 import javax.transaction.Transactional;
 import java.util.Optional;
@@ -28,7 +29,7 @@ public class ActivityService {
     public Activity updateActivity(Long id, Activity activity) throws OngRequestException {
         Optional<ActivityModel> optionalActivityModel = activityRepository.findById(id);
         if (optionalActivityModel.isEmpty()) {
-            throw new OngRequestException("Activity not found", "not.found");
+            throw new OngRequestException("Activity not found", "not.found", HttpStatus.NOT_FOUND);
         }
         ActivityModel activityModel = optionalActivityModel.get();
         activityModel.setName(activity.getName());

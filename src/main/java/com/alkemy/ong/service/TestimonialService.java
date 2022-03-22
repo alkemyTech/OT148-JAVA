@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 
 import javax.transaction.Transactional;
 import java.util.Optional;
@@ -37,7 +38,7 @@ public class TestimonialService {
             TestimonialModel testimonialModel = testimonialOptional.get();
             testimonialRepository.delete(testimonialModel);
         } else {
-            throw new OngRequestException("Testimonial not found", "not.found");
+            throw new OngRequestException("Testimonial not found", "not.found", HttpStatus.NOT_FOUND);
         }
     }
 
@@ -45,7 +46,7 @@ public class TestimonialService {
     public Testimonial updateTestimonial(Long id, Testimonial testimonial) throws OngRequestException {
         Optional<TestimonialModel> optionalTestimonialModel = testimonialRepository.findById(id);
         if (optionalTestimonialModel.isEmpty()) {
-            throw new OngRequestException("Testimonial not found", "not.found");
+            throw new OngRequestException("Testimonial not found", "not.found", HttpStatus.NOT_FOUND);
         }
         TestimonialModel testimonialModel = optionalTestimonialModel.get();
         testimonialModel.setName(testimonial.getName());

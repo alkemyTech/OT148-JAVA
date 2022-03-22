@@ -8,6 +8,7 @@ import com.alkemy.ong.repository.model.CategoryModel;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 
 import javax.transaction.Transactional;
 import java.util.Optional;
@@ -43,7 +44,7 @@ public class CategoryService {
             CategoryModel categoryModel = modelOptional.get();
             return CategoryMapper.mapModelToDomain(categoryModel);
         } else {
-            throw new OngRequestException("Category not found", "not.found");
+            throw new OngRequestException("Category not found", "not.found", HttpStatus.NOT_FOUND);
         }
     }
 
@@ -51,7 +52,7 @@ public class CategoryService {
     public Category updateCategory(Long id, Category category) throws OngRequestException {
         Optional<CategoryModel> optionalCategoryModel = categoryRepository.findById(id);
         if (optionalCategoryModel.isEmpty()) {
-            throw new OngRequestException("Category not found", "not.found");
+            throw new OngRequestException("Category not found", "not.found", HttpStatus.NOT_FOUND);
         }
         CategoryModel categoryModel = optionalCategoryModel.get();
         categoryModel.setName(category.getName());
@@ -67,7 +68,7 @@ public class CategoryService {
             CategoryModel categoryModel = categoryOptional.get();
             categoryRepository.delete(categoryModel);
         } else {
-            throw new OngRequestException("Category not found", "not.found");
+            throw new OngRequestException("Category not found", "not.found", HttpStatus.NOT_FOUND);
         }
     }
 }

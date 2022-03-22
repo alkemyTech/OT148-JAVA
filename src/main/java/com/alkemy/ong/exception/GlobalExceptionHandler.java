@@ -37,6 +37,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 ApiErrorDTO.builder()
                         .code(ex.getCode())
                         .message(ex.getMessage()).build();
-        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(error, ex.getStatus());
     }
 }

@@ -10,6 +10,7 @@ import com.alkemy.ong.repository.model.CommentModel;
 import com.alkemy.ong.repository.model.NewsModel;
 import com.alkemy.ong.repository.model.UserModel;
 import com.alkemy.ong.security.MainUser;
+import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -53,10 +54,10 @@ public class CommentService {
         Optional<UserModel> user = userRepository.findById(mainUser.getId());
         Optional<NewsModel> news = newsRepository.findById(comment.getNewsId());
         if (!user.isPresent()) {
-            throw new OngRequestException("User not found", "not.found");
+            throw new OngRequestException("User not found", "not.found", HttpStatus.NOT_FOUND);
         }
         if (!news.isPresent()) {
-            throw new OngRequestException("News not found", "not.found");
+            throw new OngRequestException("News not found", "not.found", HttpStatus.NOT_FOUND);
         }
         comment.setUserId(mainUser.getId());
         return mapModelToDomain(commentRepository.save(CommentMapper.mapDomainCreationToModel(comment)));
@@ -69,7 +70,7 @@ public class CommentService {
             CommentModel commentModel = commentModelOptional.get();
             commentRepository.delete(commentModel);
         } else {
-            throw new OngRequestException("Comment not found", "not.found");
+            throw new OngRequestException("Comment not found", "not.found", HttpStatus.NOT_FOUND);
         }
     }
 
@@ -79,11 +80,11 @@ public class CommentService {
         MainUser mainUser = getMainUser();
         Optional<CommentModel> commentModel = commentRepository.findById(commentId);
         if (!commentModel.isPresent()) {
-            throw new OngRequestException("Comment not found", "not.found");
+            throw new OngRequestException("Comment not found", "not.found", HttpStatus.NOT_FOUND);
         }
         CommentModel comment = commentModel.get();
         if (!hasValidId(mainUser, comment) && !isAdmin(mainUser)) {
-            throw new OngRequestException("Invalid permissions", "invalid.permissions");
+            throw new OngRequestException("Invalid permissions", "invalid.permissions", HttpStatus.UNAUTHORIZED);
         }
         comment.setBody(commentUpdate.getBody());
         return mapModelToDomain(commentRepository.save(comment));
@@ -96,7 +97,7 @@ public class CommentService {
             List<CommentModel> commentModelList = commentRepository.findByNewsId(newsModel.get().getId());
             return commentModelList.stream().map(CommentMapper::mapModelToDomain).collect(Collectors.toList());
         } else {
-            throw new OngRequestException("News not found", "not.found");
+            throw new OngRequestException("News not found", "not.found", HttpStatus.NOT_FOUND);
         }
     }
 
