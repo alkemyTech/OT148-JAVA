@@ -3,9 +3,7 @@ package com.alkemy.ong.service;
 import com.alkemy.ong.domain.User;
 import com.alkemy.ong.dto.JwtDTO;
 import com.alkemy.ong.dto.UserDTO;
-import com.alkemy.ong.exception.DuplicateEmailException;
-import com.alkemy.ong.exception.UserNotFoundException;
-import com.alkemy.ong.exception.WrongValuesException;
+import com.alkemy.ong.exception.OngRequestException;
 import com.alkemy.ong.mapper.RoleMapper;
 import com.alkemy.ong.mapper.UserMapper;
 import com.alkemy.ong.repository.RoleRepository;
@@ -14,9 +12,6 @@ import com.alkemy.ong.repository.model.RoleModel;
 import com.alkemy.ong.repository.model.UserModel;
 import com.alkemy.ong.security.JwtProvider;
 import com.alkemy.ong.security.MainUser;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -24,6 +19,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import static com.alkemy.ong.mapper.UserMapper.mapModelToDomain;
 
 public class UserService {
@@ -55,7 +55,7 @@ public class UserService {
     @Transactional
     public UserDTO registerUser(User user) {
         if (userRepository.existsByEmail(user.getEmail())) {
-            throw new DuplicateEmailException("This email is in use");
+            throw new OngRequestException("This email is duplicated", "duplicated.mail");
         }
         RoleModel roleModel = roleRepository.findByName("USER");
         user.setRole(RoleMapper.mapModelToDomain(roleModel));
@@ -84,7 +84,7 @@ public class UserService {
     @Transactional
     public User updateUser(Integer id,
                            User user,
-                           MultipartFile image) throws UserNotFoundException {
+                           MultipartFile image) throws OngRequestException {
         if (userRepository.existsById(Long.valueOf(id))) {
             UserModel userModel = userRepository.findById(Long.valueOf(id)).get();
             userModel.setEmail(user.getEmail());
@@ -95,7 +95,7 @@ public class UserService {
             UserModel save = userRepository.save(userModel);
             return mapModelToDomain(save);
         } else {
-            throw new UserNotFoundException(String.format("User with ID: %s not found", id));
+            throw new OngRequestException("User not found", "not.found");
         }
 
     }
@@ -104,24 +104,24 @@ public class UserService {
         return amazonService.uploadFile(file);
     }
 
-    public User loginUser(User user) throws WrongValuesException {
+    public User loginUser(User user) throws OngRequestException {
         if (userRepository.existsByEmail(user.getEmail())) {
             String email = user.getEmail();
             String password = user.getPassword();
             UserModel userModel = userRepository.findByEmail(email);
             return getUserPasswordChecked(password, userModel);
         } else {
-            throw new WrongValuesException();
+            throw new OngRequestException("Wrong username or password", "invalid.access");
         }
     }
 
     private User getUserPasswordChecked
-            (String password, UserModel userModel) throws WrongValuesException {
+            (String password, UserModel userModel) throws OngRequestException {
         if (passwordMatches(password, userModel.getPassword())) {
             User userDomain = mapModelToDomain(userModel);
             return userDomain;
         } else {
-            throw new WrongValuesException();
+            throw new OngRequestException("Wrong password checked", "invalid.access");
         }
     }
 
@@ -130,18 +130,18 @@ public class UserService {
     }
 
     @Transactional
-    public void deleteUser(Long id) throws UserNotFoundException {
+    public void deleteUser(Long id) throws OngRequestException {
         Optional<UserModel> modelOptional = userRepository.findById(id);
         if (!modelOptional.isEmpty()) {
             UserModel userModel = modelOptional.get();
             userRepository.delete(userModel);
         } else {
-            throw new UserNotFoundException(String.format("User with this ID " + id + "is not found", id));
+            throw new OngRequestException("User not found", "not.found");
         }
     }
 
     @Transactional
-    public UserDTO getAuthenticatedUser(String jwt) throws UserNotFoundException {
+    public UserDTO getAuthenticatedUser(String jwt) throws OngRequestException {
         String email = jwtProvider.getEmailFromToken(jwt);
         UserModel userModel = userRepository.findByEmail(email);
         User user = UserMapper.mapModelToDomain(userModel);

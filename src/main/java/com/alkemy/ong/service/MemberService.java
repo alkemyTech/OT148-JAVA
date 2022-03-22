@@ -1,7 +1,7 @@
 package com.alkemy.ong.service;
 
 import com.alkemy.ong.domain.Member;
-import com.alkemy.ong.exception.MemberNotFoundException;
+import com.alkemy.ong.exception.OngRequestException;
 import com.alkemy.ong.mapper.MemberMapper;
 import com.alkemy.ong.repository.MemberRepository;
 import com.alkemy.ong.repository.model.MemberModel;
@@ -33,10 +33,10 @@ public class MemberService {
     }
 
     @Transactional
-    public Member updateMember(Long id, Member member) throws MemberNotFoundException {
+    public Member updateMember(Long id, Member member) throws OngRequestException {
         Optional<MemberModel> optionalMemberModel = memberRepository.findById(id);
         if (optionalMemberModel.isEmpty()) {
-            throw new MemberNotFoundException(String.format("Member with ID: %s not found", id));
+            throw new OngRequestException("Member not found", "not.found");
         }
         MemberModel memberModel = optionalMemberModel.get();
         memberModel.setName(member.getName());
@@ -54,13 +54,13 @@ public class MemberService {
         return MemberMapper.mapModelToDomain(memberRepository.save(memberModel));
     }
 
-    public void deleteMember(Long id) throws MemberNotFoundException {
+    public void deleteMember(Long id) throws OngRequestException {
         Optional<MemberModel> memberOptional = memberRepository.findById(id);
         if (!memberOptional.isEmpty()) {
             MemberModel memberModel = memberOptional.get();
             memberRepository.delete(memberModel);
         } else {
-            throw new MemberNotFoundException(String.format("Member with ID: %s not found", id));
+            throw new OngRequestException("Member not found", "not.found");
         }
     }
 

@@ -1,20 +1,21 @@
 package com.alkemy.ong.service;
 
 import com.alkemy.ong.domain.Slide;
+import com.alkemy.ong.exception.OngRequestException;
 import com.alkemy.ong.exception.OrganizationNotFoundException;
-import com.alkemy.ong.exception.SlideNotFoundException;
 import com.alkemy.ong.mapper.SlideMapper;
 import com.alkemy.ong.repository.OrganizationRepository;
 import com.alkemy.ong.repository.SlideRepository;
 import com.alkemy.ong.repository.model.OrganizationModel;
 import com.alkemy.ong.repository.model.SlideModel;
 import com.alkemy.ong.util.Base64DecodedMultiPartFile;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 public class SlideService {
 
@@ -29,7 +30,7 @@ public class SlideService {
     }
 
     @Transactional(readOnly = true)
-    public Slide slideDetails(Long idSlide) throws SlideNotFoundException {
+    public Slide slideDetails(Long idSlide) throws OngRequestException {
         Optional<SlideModel> slideModel = slideRepository.findById(idSlide);
         if (!slideModel.isEmpty()) {
             Slide slide = Slide.builder()
@@ -39,25 +40,25 @@ public class SlideService {
                     .build();
             return slide;
         } else {
-            throw new SlideNotFoundException(String.format("Slide with id: %s not found", idSlide));
+            throw new OngRequestException("Slide not found", "not.found");
         }
     }
 
     @Transactional
-    public void deleteSlide(Long idSlide) throws SlideNotFoundException {
+    public void deleteSlide(Long idSlide) throws OngRequestException {
         Optional<SlideModel> slide = slideRepository.findById(idSlide);
         if (!slide.isEmpty()) {
             slideRepository.delete(slide.get());
         } else {
-            throw new SlideNotFoundException(String.format("Slide with id: %s not found", idSlide));
+            throw new OngRequestException("Slide not found", "not.found");
         }
     }
 
     @Transactional
-    public Slide updateSlide(Long id, Slide slide) throws SlideNotFoundException {
+    public Slide updateSlide(Long id, Slide slide) throws OngRequestException {
         Optional<SlideModel> optionalSlideModel = slideRepository.findById(id);
         if (optionalSlideModel.isEmpty()) {
-            throw new SlideNotFoundException(String.format("Slide with ID: %s not found", id));
+            throw new OngRequestException("Slide not found", "not.found");
         }
         SlideModel slideModel = optionalSlideModel.get();
         slideModel.setImage(uploadImage(decodeImage(slide.getImage())));

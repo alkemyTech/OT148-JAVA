@@ -1,17 +1,19 @@
 package com.alkemy.ong.service;
 
 import com.alkemy.ong.domain.Organization;
-import com.alkemy.ong.exception.OrganizationNotFoundException;
-import static com.alkemy.ong.mapper.OrganizationMapper.mapModelToDomain;
+import com.alkemy.ong.exception.OngRequestException;
 import com.alkemy.ong.repository.OrganizationRepository;
 import com.alkemy.ong.repository.SlideRepository;
 import com.alkemy.ong.repository.model.OrganizationModel;
 import com.alkemy.ong.repository.model.SlideModel;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import javax.transaction.Transactional;
-import org.springframework.web.multipart.MultipartFile;
+
+import static com.alkemy.ong.mapper.OrganizationMapper.mapModelToDomain;
 
 public class OrganizationService {
 
@@ -43,11 +45,11 @@ public class OrganizationService {
 
     @Transactional
     public Organization updateOrganization(Long id, Organization organization, MultipartFile image)
-            throws OrganizationNotFoundException {
+            throws OngRequestException {
         Optional<OrganizationModel> optionalOrg = organizationRepository.findById(id);
         if (optionalOrg.isEmpty()) {
-            throw new OrganizationNotFoundException(
-                    String.format("Organization with ID: %s not found", id));
+            throw new OngRequestException(
+                    "Organization not found", "not.found");
         }
         OrganizationModel organizationOld = optionalOrg.get();
         organizationOld.setAddress(organization.getAddress());
