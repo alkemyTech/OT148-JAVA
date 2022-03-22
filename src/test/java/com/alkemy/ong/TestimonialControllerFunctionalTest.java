@@ -52,7 +52,7 @@ public class TestimonialControllerFunctionalTest {
 
     @Test
     void testCreateTestimonial_shouldReturnCreated() {
-        TestimonialCreationDTO testimonialCreationDTO = createTestimonialDTO();
+        TestimonialCreationDTO testimonialCreationDTO = createTestimonialCreationDTO();
         String endpointUrl = testimonialControllerUrl;
         HttpHeaders headers = new HeaderBuilder()
                 .withValidToken("admin1@gmail.com", 3600L)
@@ -67,14 +67,6 @@ public class TestimonialControllerFunctionalTest {
                 Map.of()
         );
         assertEquals(200, response.getStatusCode().value());
-    }
-
-    private TestimonialCreationDTO createTestimonialDTO() {
-        return TestimonialCreationDTO.builder()
-                .name("Sebastian")
-                .image("sebastian.jpa")
-                .content("mi testimonio")
-                .build();
     }
 
     @Test
@@ -102,12 +94,11 @@ public class TestimonialControllerFunctionalTest {
 
     @Test
     void testDeleteTestimonial_shouldReturnOkResponse() {
-        TestimonialCreationDTO testimonialCreationDTO = createTestimonialDTO();
         Long id = withCreatedTestimonial();
         HttpHeaders headers = new HeaderBuilder()
                 .withValidToken("admin1@gmail.com", 3600L)
                 .build();
-        entity = new HttpEntity(testimonialCreationDTO, headers);
+        entity = new HttpEntity(null, headers);
         String endpointUrl = testimonialControllerUrl + "/{id}";
         // When
         ResponseEntity<ErrorDTO> response = testRestTemplate.exchange(
@@ -121,25 +112,9 @@ public class TestimonialControllerFunctionalTest {
         assertEquals(200, response.getStatusCode().value());
     }
 
-    private Long withCreatedTestimonial() {
-        TestimonialCreationDTO testimonialCreationDTO = createTestimonialDTO();
-        HttpHeaders headers = new HeaderBuilder()
-                .withValidToken("admin1@gmail.com", 3600L)
-                .build();
-        entity = new HttpEntity(testimonialCreationDTO, headers);
-        ResponseEntity<TestimonialDTO> response = testRestTemplate.exchange(
-                testimonialControllerUrl,
-                HttpMethod.POST,
-                entity,
-                new ParameterizedTypeReference<>() {
-                },
-                Map.of()
-        );
-        return response.getBody().getId();
-    }
-
     @Test
     void testDeleteTestimonial_shouldReturnErrorDto() {
+        Long id = withCreatedTestimonial();
         String endpointUrl = testimonialControllerUrl + "/{id}";
         HttpHeaders headers = new HeaderBuilder()
                 .withValidToken("admin1@gmail.com", 3600L)
@@ -152,14 +127,14 @@ public class TestimonialControllerFunctionalTest {
                 entity,
                 new ParameterizedTypeReference<>() {
                 },
-                Map.of("id", "1")
+                Map.of("id", 2)
         );
         assertEquals(404, response.getStatusCode().value());
     }
 
     @Test
     void testUpdateTestimonial_shouldReturnOkResponse() {
-        TestimonialCreationDTO testimonialCreationDTO = createTestimonialDTO();
+        TestimonialCreationDTO testimonialCreationDTO = createTestimonialCreationDTO();
         Long id = withCreatedTestimonial();
         HttpHeaders headers = new HeaderBuilder()
                 .withValidToken("admin1@gmail.com", 3600L)
@@ -182,8 +157,9 @@ public class TestimonialControllerFunctionalTest {
         );
         assertEquals(200, response.getStatusCode().value());
     }
+
     @Test
-    void testUpdateTestimonial_shouldReturnErrorDto() {
+    void testUpdateTestimonial_shouldReturnNotFoundException() {
         TestimonialUpdateDTO testimonialUpdateDTO = TestimonialUpdateDTO.builder()
                 .name("Santiago")
                 .image("santiago.jpg")
@@ -207,12 +183,11 @@ public class TestimonialControllerFunctionalTest {
 
     @Test
     void testGetTestimonials_shouldReturnOkResponse() {
-        TestimonialCreationDTO testimonialCreationDTO = createTestimonialDTO();
         String endpointUrl = testimonialControllerUrl;
         HttpHeaders headers = new HeaderBuilder()
                 .withValidToken("admin1@gmail.com", 3600L)
                 .build();
-        entity = new HttpEntity(testimonialCreationDTO, headers);
+        entity = new HttpEntity(null, headers);
         ResponseEntity<TestimonialDTO> response = testRestTemplate.exchange(
                 endpointUrl,
                 HttpMethod.GET,
@@ -226,12 +201,11 @@ public class TestimonialControllerFunctionalTest {
 
     @Test
     void testGetTestimonials_shouldReturnErrorDTO() {
-        TestimonialCreationDTO testimonialCreationDTO = createTestimonialDTO();
         String endpointUrl = testimonialControllerUrl;
         HttpHeaders headers = new HeaderBuilder()
                 .withValidToken("user1@gmail.com", 3600L)
                 .build();
-        entity = new HttpEntity(testimonialCreationDTO, headers);
+        entity = new HttpEntity(null, headers);
         ResponseEntity<ErrorDTO> response = testRestTemplate.exchange(
                 endpointUrl,
                 HttpMethod.GET,
@@ -243,6 +217,30 @@ public class TestimonialControllerFunctionalTest {
         assertEquals(403, response.getStatusCode().value());
     }
 
+    private TestimonialCreationDTO createTestimonialCreationDTO() {
+        return TestimonialCreationDTO.builder()
+                .name("Sebastian")
+                .image("sebastian.jpa")
+                .content("mi testimonio")
+                .build();
+    }
+
+    private Long withCreatedTestimonial() {
+        TestimonialCreationDTO testimonialCreationDTO = createTestimonialCreationDTO();
+        HttpHeaders headers = new HeaderBuilder()
+                .withValidToken("admin1@gmail.com", 3600L)
+                .build();
+        entity = new HttpEntity(testimonialCreationDTO, headers);
+        ResponseEntity<TestimonialDTO> response = testRestTemplate.exchange(
+                testimonialControllerUrl,
+                HttpMethod.POST,
+                entity,
+                new ParameterizedTypeReference<>() {
+                },
+                Map.of()
+        );
+        return response.getBody().getId();
+    }
 }
 
 

@@ -36,8 +36,7 @@ public class TestimonialResource implements TestimonialController {
     @Override
     public TestimonialDTO createTestimonial(TestimonialCreationDTO testimonialCreationDTO) {
         Testimonial testimonial = TestimonialMapper.mapCreationDTOtoDomain(testimonialCreationDTO);
-        testimonialService.createTestimonial(testimonial);
-        TestimonialDTO testimonialDTO = TestimonialMapper.mapDomainToDTO(testimonial);
+        TestimonialDTO testimonialDTO = TestimonialMapper.mapDomainToDTO(testimonialService.createTestimonial(testimonial));
         return testimonialDTO;
     }
 
