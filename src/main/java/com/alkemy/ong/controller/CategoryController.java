@@ -4,14 +4,13 @@ import com.alkemy.ong.dto.CategoryCreationDTO;
 import com.alkemy.ong.dto.CategoryDTO;
 import com.alkemy.ong.dto.CategoryUpdateDTO;
 import com.alkemy.ong.dto.PageDTO;
-import com.alkemy.ong.exception.CategoryNotFoundException;
+import com.alkemy.ong.exception.OngRequestException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +20,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
+
+import javax.validation.Valid;
 
 @Tag(name = "Categories", description = "Create, update show and delete Categories")
 public interface CategoryController {
@@ -63,7 +64,7 @@ public interface CategoryController {
     })
     @GetMapping("/categories/{id}")
     @ResponseStatus(HttpStatus.OK)
-    CategoryDTO getById(@PathVariable Long id) throws CategoryNotFoundException;
+    CategoryDTO getById(@PathVariable Long id) throws OngRequestException;
 
     @Operation(summary = "Update a Category by id")
     @ApiResponses(value = {
@@ -75,7 +76,7 @@ public interface CategoryController {
             @ApiResponse(responseCode = "404", description = "Category not found", content = @Content)})
     @PutMapping("/categories/{id}")
     @ResponseStatus(HttpStatus.OK)
-    CategoryDTO updateCategory(@PathVariable Long id, @RequestBody CategoryUpdateDTO categoryUpdateDTO) throws CategoryNotFoundException;
+    CategoryDTO updateCategory(@PathVariable Long id, @RequestBody CategoryUpdateDTO categoryUpdateDTO) throws OngRequestException;
 
     @Operation(summary = "Delete a Category by id")
     @ApiResponses(value = {
@@ -84,7 +85,7 @@ public interface CategoryController {
             @ApiResponse(responseCode = "404", description = "Category not found", content = @Content)})
     @DeleteMapping("/categories/{id}")
     @ResponseStatus(HttpStatus.OK)
-    void deleteCategory(@PathVariable Long id) throws CategoryNotFoundException;
+    void deleteCategory(@PathVariable Long id) throws OngRequestException;
 
 }
 

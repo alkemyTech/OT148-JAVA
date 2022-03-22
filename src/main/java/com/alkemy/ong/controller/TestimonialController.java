@@ -4,12 +4,12 @@ import com.alkemy.ong.dto.TestimonialCreationDTO;
 import com.alkemy.ong.dto.TestimonialDTO;
 import com.alkemy.ong.dto.TestimonialListDTO;
 import com.alkemy.ong.dto.TestimonialUpdateDTO;
-import com.alkemy.ong.exception.TestimonialNotFoundException;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import com.alkemy.ong.exception.OngRequestException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -45,7 +45,7 @@ public interface TestimonialController {
     @PutMapping("/testimonials/{id}")
     ResponseEntity<TestimonialDTO> updateTestimonial
             (@PathVariable Long id, @RequestBody TestimonialUpdateDTO testimonialUpdateDTO)
-            throws TestimonialNotFoundException;
+            throws OngRequestException;
 
     @Operation(summary = "Delete a Testimonial by id")
     @ApiResponses(value = {
@@ -57,7 +57,7 @@ public interface TestimonialController {
                     content = @Content)})
     @DeleteMapping("{id}")
     ResponseEntity<?> deleteTestimonial(@PathVariable Long id)
-            throws TestimonialNotFoundException;
+            throws OngRequestException;
 
     @Operation(
             summary = "Get testimonials list",

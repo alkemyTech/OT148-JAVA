@@ -30,11 +30,11 @@ public class ExceptionHandler extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(ex, bodyOfResponse, headers, HttpStatus.BAD_REQUEST, request);
     }
 
-    public ResponseEntity<ApiErrorDTO> handleUserNotFoundExceptions(OngRequestException ex) {
-        ApiErrorDTO notFound =
+    public ResponseEntity<ApiErrorDTO> handleOngExceptions(OngRequestException ex) {
+        ApiErrorDTO error =
                 ApiErrorDTO.builder()
-                        .code(ex)
+                        .code(ex.getCode())
                         .message(ex.getMessage()).build();
-        return new ResponseEntity(userNotFound, HttpStatus.NOT_FOUND);
+        return ResponseEntity.ok(error);
     }
 }
