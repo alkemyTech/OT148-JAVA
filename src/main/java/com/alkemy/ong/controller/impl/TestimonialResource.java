@@ -50,7 +50,7 @@ public class TestimonialResource implements TestimonialController {
         return testimonialDTO;
     }
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(TestimonialNotFoundException.class)
     private ResponseEntity<ErrorDTO> handleTestimonialNotFound(TestimonialNotFoundException ex) {
         ErrorDTO testimonialNotFound =

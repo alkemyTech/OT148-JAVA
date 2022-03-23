@@ -5,6 +5,7 @@ import com.alkemy.ong.dto.ErrorDTO;
 
 import com.alkemy.ong.dto.TestimonialCreationDTO;
 import com.alkemy.ong.dto.TestimonialDTO;
+import com.alkemy.ong.dto.TestimonialListDTO;
 import com.alkemy.ong.dto.TestimonialUpdateDTO;
 
 import com.alkemy.ong.repository.TestimonialRepository;
@@ -182,13 +183,15 @@ public class TestimonialControllerFunctionalTest {
 
 
     @Test
-    void testGetTestimonials_shouldReturnOkResponse() {
+    void testGetTestimonials_ShouldReturnResponseOk() {
+        //Given
         String endpointUrl = testimonialControllerUrl;
         HttpHeaders headers = new HeaderBuilder()
                 .withValidToken("admin1@gmail.com", 3600L)
                 .build();
         entity = new HttpEntity(null, headers);
-        ResponseEntity<TestimonialDTO> response = testRestTemplate.exchange(
+        //When
+        ResponseEntity<TestimonialListDTO> response = testRestTemplate.exchange(
                 endpointUrl,
                 HttpMethod.GET,
                 entity,
@@ -196,6 +199,7 @@ public class TestimonialControllerFunctionalTest {
                 },
                 Map.of()
         );
+        //Then
         assertEquals(200, response.getStatusCode().value());
     }
 
@@ -206,7 +210,7 @@ public class TestimonialControllerFunctionalTest {
                 .withValidToken("user1@gmail.com", 3600L)
                 .build();
         entity = new HttpEntity(null, headers);
-        ResponseEntity<ErrorDTO> response = testRestTemplate.exchange(
+        ResponseEntity<TestimonialListDTO> response = testRestTemplate.exchange(
                 endpointUrl,
                 HttpMethod.GET,
                 entity,
@@ -242,5 +246,3 @@ public class TestimonialControllerFunctionalTest {
         return response.getBody().getId();
     }
 }
-
-
