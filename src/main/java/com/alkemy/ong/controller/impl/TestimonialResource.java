@@ -2,10 +2,12 @@ package com.alkemy.ong.controller.impl;
 
 import com.alkemy.ong.controller.TestimonialController;
 import com.alkemy.ong.domain.Testimonial;
+import com.alkemy.ong.dto.ErrorDTO;
 import com.alkemy.ong.dto.TestimonialCreationDTO;
 import com.alkemy.ong.dto.TestimonialDTO;
 import com.alkemy.ong.dto.TestimonialListDTO;
 import com.alkemy.ong.dto.TestimonialUpdateDTO;
+import com.alkemy.ong.exception.NewsNotFoundException;
 import com.alkemy.ong.exception.TestimonialNotFoundException;
 import com.alkemy.ong.mapper.TestimonialMapper;
 import com.alkemy.ong.service.TestimonialService;
@@ -34,19 +36,28 @@ public class TestimonialResource implements TestimonialController {
     }
 
     @Override
-    public ResponseEntity<TestimonialDTO> createTestimonial(TestimonialCreationDTO testimonialCreationDTO) {
+    public TestimonialDTO createTestimonial(TestimonialCreationDTO testimonialCreationDTO) {
         Testimonial testimonial = TestimonialMapper.mapCreationDTOtoDomain(testimonialCreationDTO);
-        testimonialService.createTestimonial(testimonial);
-        TestimonialDTO testimonialDTO = TestimonialMapper.mapDomainToDTO(testimonial);
-        return ResponseEntity.status(HttpStatus.CREATED).body(testimonialDTO);
+        TestimonialDTO testimonialDTO = TestimonialMapper.mapDomainToDTO(testimonialService.createTestimonial(testimonial));
+        return testimonialDTO;
     }
 
     @Override
-    public ResponseEntity<TestimonialDTO> updateTestimonial(Long id, TestimonialUpdateDTO testimonialUpdateDTO) throws TestimonialNotFoundException {
+    public TestimonialDTO updateTestimonial(Long id, TestimonialUpdateDTO testimonialUpdateDTO) throws TestimonialNotFoundException {
         Testimonial testimonial =
                 TestimonialMapper.mapUpdateDTOToDomain(testimonialUpdateDTO);
         TestimonialDTO testimonialDTO = TestimonialMapper.mapDomainToDTO(testimonialService.updateTestimonial(id, testimonial));
-        return ResponseEntity.ok(testimonialDTO);
+        return testimonialDTO;
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(TestimonialNotFoundException.class)
+    private ResponseEntity<ErrorDTO> handleTestimonialNotFound(TestimonialNotFoundException ex) {
+        ErrorDTO testimonialNotFound =
+                ErrorDTO.builder()
+                        .code(HttpStatus.NOT_FOUND)
+                        .message(ex.getMessage()).build();
+        return new ResponseEntity(testimonialNotFound, HttpStatus.NOT_FOUND);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -62,16 +73,14 @@ public class TestimonialResource implements TestimonialController {
     }
 
     @Override
-    public ResponseEntity<?> deleteTestimonial(Long id) throws TestimonialNotFoundException {
+    public void deleteTestimonial(Long id) throws TestimonialNotFoundException {
         testimonialService.deleteTestimonial(id);
-        return new ResponseEntity(HttpStatus.OK);
     }
 
     @Override
-    @GetMapping
-    public ResponseEntity<TestimonialListDTO> getAll(Integer page) {
+    public TestimonialListDTO getAll(Integer page) {
         var testimonials = testimonialService.getAll(page);
         TestimonialListDTO response = new TestimonialListDTO(page, testimonials, ContextUtils.currentContextPath());
-        return ResponseEntity.ok(response);
+        return response;
     }
 }

@@ -48,7 +48,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private static final String[] GET_USER = {"/posts/**", "/auth/me", "/posts/**"};
 
-    private static final String[] GET_ADMIN = {"/users", "/categories/**", "/members/**", "/news/**", "/comments"};
+    private static final String[] GET_ADMIN = {"/users", "/categories/**", "/members/**", "/news/**", "/comments","/testimonials/**"};
 
     private static final String[] DELETE_USER = {"/user/{userId}", "/comments/**"};
 
