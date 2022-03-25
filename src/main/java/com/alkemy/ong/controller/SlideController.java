@@ -99,4 +99,4 @@ public interface SlideController {
     @GetMapping("/slides")
     @ResponseStatus(HttpStatus.OK)
     List<SlideDTO> findAll();
-}g
+}
