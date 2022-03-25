@@ -11,7 +11,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,7 +28,7 @@ public interface TestimonialController {
             summary = "Add new Testimonial",
             description = "To add a testimonial, you must access this endpoint")
     @PostMapping("/testimonials")
-    ResponseEntity<TestimonialDTO> createTestimonial(@Valid @RequestBody TestimonialCreationDTO testimonialCreationDTO);
+    TestimonialDTO createTestimonial(@Valid @RequestBody TestimonialCreationDTO testimonialCreationDTO);
 
     @Operation(summary = "Update a Testimonial by id")
     @ApiResponses(value = {
@@ -43,7 +42,7 @@ public interface TestimonialController {
             @ApiResponse(responseCode = "404", description = "Testimonial not found",
                     content = @Content)})
     @PutMapping("/testimonials/{id}")
-    ResponseEntity<TestimonialDTO> updateTestimonial
+    TestimonialDTO updateTestimonial
             (@PathVariable Long id, @RequestBody TestimonialUpdateDTO testimonialUpdateDTO)
             throws OngRequestException;
 
@@ -55,13 +54,13 @@ public interface TestimonialController {
                     content = @Content),
             @ApiResponse(responseCode = "404", description = "Testimonial not found",
                     content = @Content)})
-    @DeleteMapping("{id}")
-    ResponseEntity<?> deleteTestimonial(@PathVariable Long id)
+    @DeleteMapping("/testimonials/{id}")
+    void deleteTestimonial(@PathVariable Long id)
             throws OngRequestException;
 
     @Operation(
             summary = "Get testimonials list",
             description = "To get a paginated list of the ONG testimonials, you must access this endpoint.")
-    @GetMapping
-    ResponseEntity<TestimonialListDTO> getAll(@RequestParam(defaultValue = "0") Integer page);
+    @GetMapping("/testimonials")
+    TestimonialListDTO getAll(@RequestParam(defaultValue = "0") Integer page);
 }

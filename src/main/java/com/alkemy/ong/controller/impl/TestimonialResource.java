@@ -11,9 +11,6 @@ import com.alkemy.ong.mapper.TestimonialMapper;
 import com.alkemy.ong.service.TestimonialService;
 import com.alkemy.ong.util.ContextUtils;
 import io.swagger.annotations.Api;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @Api(value = "testimonialResource", tags = {"Testimonials"})
@@ -27,32 +24,30 @@ public class TestimonialResource implements TestimonialController {
     }
 
     @Override
-    public ResponseEntity<TestimonialDTO> createTestimonial(TestimonialCreationDTO testimonialCreationDTO) {
+    public TestimonialDTO createTestimonial(TestimonialCreationDTO testimonialCreationDTO) {
         Testimonial testimonial = TestimonialMapper.mapCreationDTOtoDomain(testimonialCreationDTO);
-        testimonialService.createTestimonial(testimonial);
-        TestimonialDTO testimonialDTO = TestimonialMapper.mapDomainToDTO(testimonial);
-        return ResponseEntity.status(HttpStatus.CREATED).body(testimonialDTO);
+        TestimonialDTO testimonialDTO = TestimonialMapper.mapDomainToDTO(testimonialService.createTestimonial(testimonial));
+        return testimonialDTO;
     }
 
     @Override
-    public ResponseEntity<TestimonialDTO> updateTestimonial(Long id, TestimonialUpdateDTO testimonialUpdateDTO) throws OngRequestException {
+    public TestimonialDTO updateTestimonial(Long id, TestimonialUpdateDTO testimonialUpdateDTO) throws OngRequestException {
+
         Testimonial testimonial =
                 TestimonialMapper.mapUpdateDTOToDomain(testimonialUpdateDTO);
         TestimonialDTO testimonialDTO = TestimonialMapper.mapDomainToDTO(testimonialService.updateTestimonial(id, testimonial));
-        return ResponseEntity.ok(testimonialDTO);
+        return testimonialDTO;
     }
 
     @Override
-    public ResponseEntity<?> deleteTestimonial(Long id) throws OngRequestException {
+    public void deleteTestimonial(Long id) throws OngRequestException {
         testimonialService.deleteTestimonial(id);
-        return new ResponseEntity(HttpStatus.OK);
     }
 
     @Override
-    @GetMapping
-    public ResponseEntity<TestimonialListDTO> getAll(Integer page) {
+    public TestimonialListDTO getAll(Integer page) {
         var testimonials = testimonialService.getAll(page);
         TestimonialListDTO response = new TestimonialListDTO(page, testimonials, ContextUtils.currentContextPath());
-        return ResponseEntity.ok(response);
+        return response;
     }
 }
