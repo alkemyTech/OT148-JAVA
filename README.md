@@ -1,5 +1,32 @@
 # OT148-JAVA
 
+## Variables de Ambiente requeridas
+
+Antes de ejecutar el proyecto o correr los test, hay que tener los valores correctos seteados en las siguientes
+variables de ambiente:
+
+AWS_ENDPOINT_URL
+
+AWS_ACCESS_KEY
+
+AWS_SECRET_KEY
+
+AWS_BUCKET_NAME
+
+JWT_SECRET
+
+## Run Project
+
+mvn spring-boot:run
+
+## Build Project
+
+Ctrl + F9. Click derecho en la carpeta de proyecto, pinchar en la opcion build module.
+
+## Run Test
+
+mvn test
+
 ## Tecnología
 
 La aplicación se desarrolló utilizando ``` Spring Boot``` siguiendo el patron REST
@@ -35,4 +62,5 @@ De esta manera, ya se cuenta con un set de usuarios para probar la aplicación.
 
 ## Documentación
 
-Para acceder a la documentación de la api, solo debe levantar la aplicación e ingresar [aqui](http://localhost:8080/api/docs).
+Para acceder a la documentación de la api, solo debe levantar la aplicación e
+ingresar [aqui](http://localhost:8080/api/docs).

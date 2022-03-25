@@ -16,6 +16,7 @@ public interface ContactController {
     ContactDTO createContact(@Valid @RequestBody ContactDTO contactDTO);
 
     @GetMapping("/contacts")
+    @ResponseStatus(HttpStatus.OK)
     List<ContactDTO> findAll();
 
 }

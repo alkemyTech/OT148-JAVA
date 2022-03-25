@@ -23,8 +23,7 @@ public interface OrganizationController {
     @ResponseStatus(HttpStatus.OK)
     OrganizationDTO updateOrganization(
             @PathVariable Long id,
-            @RequestPart("image") MultipartFile image,
+            @RequestPart(value = "image", required = false) MultipartFile image,
             @RequestPart("organization") OrganizationUpdateDTO organizationUpdateDTO)
             throws OngRequestException;
-
 }
