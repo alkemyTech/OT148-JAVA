@@ -26,5 +26,4 @@ public interface OrganizationController {
             @RequestPart(value = "image", required = false) MultipartFile image,
             @RequestPart("organization") OrganizationUpdateDTO organizationUpdateDTO)
             throws OngRequestException;
-
 }
