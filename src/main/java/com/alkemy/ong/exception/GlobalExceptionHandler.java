@@ -10,9 +10,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import java.util.HashMap;
-import java.util.Map;
-
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
@@ -22,21 +19,22 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @Override
     public ResponseEntity<Object> handleMethodArgumentNotValid(final MethodArgumentNotValidException ex, final HttpHeaders headers, final HttpStatus status, final WebRequest request) {
-        final Map<String, String> bodyOfResponse = new HashMap<>();
+        final ApiErrorDetailDTO bodyOfResponse = new ApiErrorDetailDTO();
         ex.getBindingResult().getAllErrors().forEach((error) -> {
             String fieldName = ((FieldError) error).getField();
             String errorMessage = error.getDefaultMessage();
-            bodyOfResponse.put(fieldName, errorMessage);
+            bodyOfResponse.setError(errorMessage);
+            bodyOfResponse.setField(fieldName);
         });
         return handleExceptionInternal(ex, bodyOfResponse, headers, HttpStatus.BAD_REQUEST, request);
     }
 
     @ExceptionHandler
     public ResponseEntity<ApiErrorDTO> handleOngExceptions(OngRequestException ex) {
-        ApiErrorDTO error =
-                ApiErrorDTO.builder()
-                        .code(ex.getCode())
-                        .message(ex.getMessage()).build();
+        ApiErrorDTO error = ApiErrorDTO.builder()
+                .code(ex.getCode())
+                .message(ex.getMessage())
+                .build();
         return new ResponseEntity<>(error, ex.getStatus());
     }
 }
