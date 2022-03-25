@@ -3,6 +3,7 @@ package com.alkemy.ong.exception;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder
@@ -13,12 +14,9 @@ public class ApiErrorDTO {
 }
 
 @Data
-@Builder
+@NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 class ApiErrorDetailDTO {
     private String field;
     private String error;
-
-    public ApiErrorDetailDTO() {
-    }
 }
