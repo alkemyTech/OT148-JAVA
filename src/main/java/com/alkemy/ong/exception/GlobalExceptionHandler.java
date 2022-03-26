@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
@@ -19,14 +22,21 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @Override
     public ResponseEntity<Object> handleMethodArgumentNotValid(final MethodArgumentNotValidException ex, final HttpHeaders headers, final HttpStatus status, final WebRequest request) {
-        final ApiErrorDetailDTO bodyOfResponse = new ApiErrorDetailDTO();
+        final List<ApiErrorDetailDTO> responseBody = new ArrayList<>();
         ex.getBindingResult().getAllErrors().forEach((error) -> {
             String fieldName = ((FieldError) error).getField();
             String errorMessage = error.getDefaultMessage();
-            bodyOfResponse.setField(fieldName);
-            bodyOfResponse.setError(errorMessage);
+            final ApiErrorDetailDTO errorDetail = new ApiErrorDetailDTO();
+            errorDetail.setField(fieldName);
+            errorDetail.setError(errorMessage);
+            responseBody.add(errorDetail);
         });
-        return handleExceptionInternal(ex, bodyOfResponse, headers, HttpStatus.BAD_REQUEST, request);
+        ApiErrorDTO error = ApiErrorDTO.builder()
+                .code("bad.request")
+                .message(ex.getMessage())
+                .details(responseBody)
+                .build();
+        return ResponseEntity.badRequest().body(error);
     }
 
     @ExceptionHandler
