@@ -8,6 +8,7 @@ import com.alkemy.ong.dto.ActivityUpdateDTO;
 import com.alkemy.ong.exception.ActivityNotFoundException;
 import com.alkemy.ong.mapper.ActivityMapper;
 import com.alkemy.ong.service.ActivityService;
+import io.swagger.annotations.Api;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+@Api(value = "ActivityResource", tags = {"Activities"})
 @RestController
 public class ActivityResource implements ActivityController {
 
