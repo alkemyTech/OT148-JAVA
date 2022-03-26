@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@Tag(name = "Testimonials", description = "Operations for Testimonials")
+@Tag(name = "Testimonials", description = "Operations related to Testimonials")
 public interface TestimonialController {
 
     @Operation(
