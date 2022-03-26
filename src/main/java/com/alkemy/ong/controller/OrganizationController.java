@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
 
-@Tag(name = "Organizations", description = "Operations for Organizations")
+@Tag(name = "Organizations", description = "Operations related to Organizations")
 public interface OrganizationController {
 
     @Operation(
@@ -38,7 +38,7 @@ public interface OrganizationController {
 
 
     @Operation(
-            summary = "Update Organizations by Id",
+            summary = "Update Organization by Id",
             description = "To update organizations by Id you must access this endpoint"
 
     )
