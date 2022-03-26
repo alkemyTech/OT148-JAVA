@@ -32,7 +32,7 @@ public interface CommentController {
     List<CommentBodyDTO> findAll();
 
     @Operation(
-            summary = "Add new comment",
+            summary = "Create new comment",
             description = "To create a comment, you must access this endpoint.")
     @PostMapping("/comments")
     @ResponseStatus(HttpStatus.CREATED)
