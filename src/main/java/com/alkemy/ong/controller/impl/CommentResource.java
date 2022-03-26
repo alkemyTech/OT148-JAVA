@@ -11,17 +11,21 @@ import com.alkemy.ong.exception.NewsNotFoundException;
 import com.alkemy.ong.exception.OperationNotPermittedException;
 import com.alkemy.ong.mapper.CommentMapper;
 import com.alkemy.ong.service.CommentService;
-import java.util.List;
-import java.util.stream.Collectors;
+import io.swagger.annotations.Api;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
 import static com.alkemy.ong.mapper.CommentMapper.mapBodyDTOToDomain;
 import static com.alkemy.ong.mapper.CommentMapper.mapDomainToDto;
 
 @RestController
+@Api(value = "CommentResource", tags = {"Comments"})
 public class CommentResource implements CommentController {
 
     private final CommentService commentService;
