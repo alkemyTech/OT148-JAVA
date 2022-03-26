@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public interface ActivityController {
 
     @Operation(
-            summary = "Created a new User",
+            summary = "Create a new Activity",
             description = "To created an activity, this endpoint must be accessed"
     )
     @ApiResponses(value = {
