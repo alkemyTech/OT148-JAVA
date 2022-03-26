@@ -8,6 +8,7 @@ import com.alkemy.ong.dto.OrganizationUpdateDTO;
 import com.alkemy.ong.exception.OrganizationNotFoundException;
 import com.alkemy.ong.mapper.OrganizationMapper;
 import com.alkemy.ong.service.OrganizationService;
+import io.swagger.annotations.Api;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+@Api(value = "organizationResource", tags = {"Organizations"})
 @RestController
 public class OrganizationResource implements OrganizationController {
 
