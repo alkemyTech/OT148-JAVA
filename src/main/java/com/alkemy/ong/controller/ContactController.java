@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-@Tag(name = "Contact", description = "Operations related to Contact")
+@Tag(name = "Contacts", description = "Operations related to Contacts")
 public interface ContactController {
 
     @Operation(
@@ -34,7 +34,7 @@ public interface ContactController {
 
     @Operation(
             summary = "Get all contacts",
-            description = "To get a list of news you must access this endpoint"
+            description = "To get a list of contacts you must access this endpoint"
 
     )
     @ApiResponse(responseCode = "200",
