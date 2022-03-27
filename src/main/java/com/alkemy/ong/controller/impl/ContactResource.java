@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import static com.alkemy.ong.mapper.ContactMapper.mapDomainToDto;
 import static com.alkemy.ong.mapper.ContactMapper.mapDtoToDomain;
 
-@Api(value = "ContactResource", tags = {"Contact"})
+@Api(value = "ContactResource", tags = {"Contacts"})
 @RestController
 public class ContactResource implements ContactController {
 
