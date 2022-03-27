@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-@Tag(name = "News", description = "Operations for News")
+@Tag(name = "News", description = "Operations related to News")
 public interface NewsController {
 
     @Operation(

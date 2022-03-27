@@ -5,9 +5,8 @@ import com.alkemy.ong.controller.ContactController;
 import com.alkemy.ong.domain.Contact;
 import com.alkemy.ong.dto.ContactDTO;
 import com.alkemy.ong.mapper.ContactMapper;
-import static com.alkemy.ong.mapper.ContactMapper.mapDomainToDto;
-import static com.alkemy.ong.mapper.ContactMapper.mapDtoToDomain;
 import com.alkemy.ong.service.ContactService;
+import io.swagger.annotations.Api;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,7 +17,10 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import static com.alkemy.ong.mapper.ContactMapper.mapDomainToDto;
+import static com.alkemy.ong.mapper.ContactMapper.mapDtoToDomain;
 
+@Api(value = "ContactResource", tags = {"Contacts"})
 @RestController
 public class ContactResource implements ContactController {
 
