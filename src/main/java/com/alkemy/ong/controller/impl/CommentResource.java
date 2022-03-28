@@ -8,6 +8,7 @@ import com.alkemy.ong.dto.CommentDTO;
 import com.alkemy.ong.exception.OngRequestException;
 import com.alkemy.ong.mapper.CommentMapper;
 import com.alkemy.ong.service.CommentService;
+import io.swagger.annotations.Api;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,6 +19,7 @@ import static com.alkemy.ong.mapper.CommentMapper.mapBodyDTOToDomain;
 import static com.alkemy.ong.mapper.CommentMapper.mapDomainToDto;
 
 @RestController
+@Api(value = "CommentResource", tags = {"Comments"})
 public class CommentResource implements CommentController {
 
     private final CommentService commentService;
