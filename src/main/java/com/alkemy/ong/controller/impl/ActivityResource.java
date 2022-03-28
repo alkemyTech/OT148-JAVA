@@ -5,18 +5,13 @@ import com.alkemy.ong.domain.Activity;
 import com.alkemy.ong.dto.ActivityCreationDTO;
 import com.alkemy.ong.dto.ActivityDTO;
 import com.alkemy.ong.dto.ActivityUpdateDTO;
-import com.alkemy.ong.exception.ActivityNotFoundException;
+import com.alkemy.ong.exception.OngRequestException;
 import com.alkemy.ong.mapper.ActivityMapper;
 import com.alkemy.ong.service.ActivityService;
-import java.util.HashMap;
-import java.util.Map;
-import org.springframework.http.HttpStatus;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import io.swagger.annotations.Api;
 import org.springframework.web.bind.annotation.RestController;
 
+@Api(value = "ActivityResource", tags = {"Activities"})
 @RestController
 public class ActivityResource implements ActivityController {
 
@@ -34,21 +29,9 @@ public class ActivityResource implements ActivityController {
     }
 
     @Override
-    public ActivityDTO updateActivity(Long id, ActivityUpdateDTO activityUpdateDTO) throws ActivityNotFoundException {
+    public ActivityDTO updateActivity(Long id, ActivityUpdateDTO activityUpdateDTO) throws OngRequestException {
         Activity activityDomain = ActivityMapper.mapUpdateDTOToDomain(activityUpdateDTO);
         ActivityDTO activityDTO = ActivityMapper.mapDomainToDTO(activityService.updateActivity(id, activityDomain));
         return activityDTO;
-    }
-
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public Map<String, String> handleValidationExceptions(MethodArgumentNotValidException ex) {
-        Map<String, String> errors = new HashMap<>();
-        ex.getBindingResult().getAllErrors().forEach((error) -> {
-            String fieldName = ((FieldError) error).getField();
-            String errorMessage = error.getDefaultMessage();
-            errors.put(fieldName, errorMessage);
-        });
-        return errors;
     }
 }

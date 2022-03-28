@@ -4,12 +4,12 @@ import com.alkemy.ong.dto.TestimonialCreationDTO;
 import com.alkemy.ong.dto.TestimonialDTO;
 import com.alkemy.ong.dto.TestimonialListDTO;
 import com.alkemy.ong.dto.TestimonialUpdateDTO;
-import com.alkemy.ong.exception.TestimonialNotFoundException;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import com.alkemy.ong.exception.OngRequestException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
 
-@Tag(name = "Testimonials", description = "Create, update show and delete Testimonials")
+@Tag(name = "Testimonials", description = "Operations related to Testimonials")
 public interface TestimonialController {
 
     @Operation(
@@ -44,7 +44,7 @@ public interface TestimonialController {
     @PutMapping("/testimonials/{id}")
     TestimonialDTO updateTestimonial
             (@PathVariable Long id, @RequestBody TestimonialUpdateDTO testimonialUpdateDTO)
-            throws TestimonialNotFoundException;
+            throws OngRequestException;
 
     @Operation(summary = "Delete a Testimonial by id")
     @ApiResponses(value = {
@@ -56,11 +56,11 @@ public interface TestimonialController {
                     content = @Content)})
     @DeleteMapping("/testimonials/{id}")
     void deleteTestimonial(@PathVariable Long id)
-            throws TestimonialNotFoundException;
+            throws OngRequestException;
 
     @Operation(
             summary = "Get testimonials list",
             description = "To get a paginated list of the ONG testimonials, you must access this endpoint.")
     @GetMapping("/testimonials")
-   TestimonialListDTO getAll(@RequestParam(defaultValue = "0") Integer page);
+    TestimonialListDTO getAll(@RequestParam(defaultValue = "0") Integer page);
 }

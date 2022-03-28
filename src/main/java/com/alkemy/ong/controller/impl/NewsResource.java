@@ -2,21 +2,18 @@ package com.alkemy.ong.controller.impl;
 
 import com.alkemy.ong.controller.NewsController;
 import com.alkemy.ong.domain.News;
-import com.alkemy.ong.dto.ErrorDTO;
 import com.alkemy.ong.dto.NewsCreationDTO;
 import com.alkemy.ong.dto.NewsDTO;
 import com.alkemy.ong.dto.NewsListDTO;
 import com.alkemy.ong.dto.NewsUpdateDTO;
-import com.alkemy.ong.exception.NewsNotFoundException;
+import com.alkemy.ong.exception.OngRequestException;
 import com.alkemy.ong.mapper.NewsMapper;
 import com.alkemy.ong.service.NewsService;
 import com.alkemy.ong.util.ContextUtils;
 import io.swagger.annotations.Api;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
+
 import static com.alkemy.ong.mapper.NewsMapper.mapDomainToDTO;
 
 @Api(value = "NewsResource", tags = {"News"})
@@ -37,7 +34,7 @@ public class NewsResource implements NewsController {
     }
 
     @Override
-    public NewsDTO getById(Long id) throws NewsNotFoundException {
+    public NewsDTO getById(Long id) throws OngRequestException {
         return mapDomainToDTO(newsService.getById(id));
     }
 
@@ -49,23 +46,14 @@ public class NewsResource implements NewsController {
     }
 
     @Override
-    public NewsDTO updateNews(Long id, NewsUpdateDTO newsUpdateDTO) throws NewsNotFoundException {
+    public NewsDTO updateNews(Long id, NewsUpdateDTO newsUpdateDTO) throws OngRequestException {
         News news = NewsMapper.mapUpdateDTOToDomain(newsUpdateDTO);
         NewsDTO newsUpdated = mapDomainToDTO(newsService.updateNews(id, news));
         return newsUpdated;
     }
 
     @Override
-    public void deleteNews(Long id) throws NewsNotFoundException {
+    public void deleteNews(Long id) throws OngRequestException {
         newsService.deleteNews(id);
-    }
-
-    @ExceptionHandler(NewsNotFoundException.class)
-    public ResponseEntity<ErrorDTO> handleNewsNotFoundExceptions(NewsNotFoundException ex) {
-        ErrorDTO newsNotFound =
-                ErrorDTO.builder()
-                        .code(HttpStatus.NOT_FOUND)
-                        .message(ex.getMessage()).build();
-        return new ResponseEntity(newsNotFound, HttpStatus.NOT_FOUND);
     }
 }

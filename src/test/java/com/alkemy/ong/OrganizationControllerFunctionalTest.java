@@ -1,13 +1,10 @@
 package com.alkemy.ong;
 
-import com.alkemy.ong.dto.ErrorDTO;
 import com.alkemy.ong.dto.OrganizationDTO;
 import com.alkemy.ong.dto.OrganizationUpdateDTO;
+import com.alkemy.ong.exception.ApiErrorDTO;
 import com.alkemy.ong.repository.OrganizationRepository;
 import com.alkemy.ong.util.HeaderBuilder;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,6 +20,11 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.util.LinkedMultiValueMap;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -105,7 +107,7 @@ public class OrganizationControllerFunctionalTest {
         String endpointUrl = ongControllerUrl + "/{id}";
         HttpEntity<LinkedMultiValueMap<String, Object>> httpEntity = new HttpEntity(parameters, headers);
         //When
-        ResponseEntity<ErrorDTO> response = testRestTemplate.exchange(
+        ResponseEntity<ApiErrorDTO> response = testRestTemplate.exchange(
                 endpointUrl,
                 HttpMethod.PATCH,
                 httpEntity,

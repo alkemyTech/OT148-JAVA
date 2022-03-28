@@ -3,7 +3,7 @@ package com.alkemy.ong;
 import com.alkemy.ong.dto.ActivityCreationDTO;
 import com.alkemy.ong.dto.ActivityDTO;
 import com.alkemy.ong.dto.ActivityUpdateDTO;
-import com.alkemy.ong.dto.ErrorDTO;
+import com.alkemy.ong.exception.ApiErrorDTO;
 import com.alkemy.ong.repository.ActivityRepository;
 import com.alkemy.ong.util.HeaderBuilder;
 import org.junit.jupiter.api.AfterEach;
@@ -97,7 +97,7 @@ class ActivityControllerFunctionalTest {
         String endpointUrl = activityControllerUrl + "/{id}";
 
         entity = new HttpEntity(activityUpdateDTO, null);
-        ResponseEntity<ErrorDTO> response = testRestTemplate.exchange(
+        ResponseEntity<ApiErrorDTO> response = testRestTemplate.exchange(
                 endpointUrl,
                 HttpMethod.PUT,
                 entity,
@@ -121,7 +121,7 @@ class ActivityControllerFunctionalTest {
                 .build();
         entity = new HttpEntity(activityUpdateDTO, headers);
         String endpointUrl = activityControllerUrl + "/{id}";
-        ResponseEntity<ErrorDTO> response = testRestTemplate.exchange(
+        ResponseEntity<ApiErrorDTO> response = testRestTemplate.exchange(
                 endpointUrl,
                 HttpMethod.PUT,
                 entity,

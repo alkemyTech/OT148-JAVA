@@ -1,13 +1,10 @@
 package com.alkemy.ong;
 
-
-import com.alkemy.ong.dto.ErrorDTO;
-
 import com.alkemy.ong.dto.TestimonialCreationDTO;
 import com.alkemy.ong.dto.TestimonialDTO;
 import com.alkemy.ong.dto.TestimonialListDTO;
 import com.alkemy.ong.dto.TestimonialUpdateDTO;
-
+import com.alkemy.ong.exception.ApiErrorDTO;
 import com.alkemy.ong.repository.TestimonialRepository;
 import com.alkemy.ong.util.HeaderBuilder;
 import org.junit.jupiter.api.AfterEach;
@@ -102,7 +99,7 @@ public class TestimonialControllerFunctionalTest {
         entity = new HttpEntity(null, headers);
         String endpointUrl = testimonialControllerUrl + "/{id}";
         // When
-        ResponseEntity<ErrorDTO> response = testRestTemplate.exchange(
+        ResponseEntity<ApiErrorDTO> response = testRestTemplate.exchange(
                 endpointUrl,
                 HttpMethod.DELETE,
                 entity,
@@ -122,7 +119,7 @@ public class TestimonialControllerFunctionalTest {
                 .build();
         entity = new HttpEntity(null, headers);
         // When
-        ResponseEntity<ErrorDTO> response = testRestTemplate.exchange(
+        ResponseEntity<ApiErrorDTO> response = testRestTemplate.exchange(
                 endpointUrl,
                 HttpMethod.DELETE,
                 entity,
@@ -148,7 +145,7 @@ public class TestimonialControllerFunctionalTest {
         entity = new HttpEntity(testimonialUpdateDTO, headers);
         String endpointUrl = testimonialControllerUrl + "/{id}";
         // When
-        ResponseEntity<ErrorDTO> response = testRestTemplate.exchange(
+        ResponseEntity<ApiErrorDTO> response = testRestTemplate.exchange(
                 endpointUrl,
                 HttpMethod.PUT,
                 entity,
@@ -170,7 +167,7 @@ public class TestimonialControllerFunctionalTest {
 
         entity = new HttpEntity(testimonialUpdateDTO, null);
         // When
-        ResponseEntity<ErrorDTO> response = testRestTemplate.exchange(
+        ResponseEntity<ApiErrorDTO> response = testRestTemplate.exchange(
                 endpointUrl,
                 HttpMethod.PUT,
                 entity,

@@ -1,15 +1,14 @@
 package com.alkemy.ong;
 
 import com.alkemy.ong.dto.CategoryDTO;
-import com.alkemy.ong.dto.ErrorDTO;
 import com.alkemy.ong.dto.NewsCreationDTO;
 import com.alkemy.ong.dto.NewsDTO;
 import com.alkemy.ong.dto.NewsUpdateDTO;
+import com.alkemy.ong.exception.ApiErrorDTO;
 import com.alkemy.ong.repository.CategoryRepository;
 import com.alkemy.ong.repository.NewsRepository;
 import com.alkemy.ong.repository.model.CategoryModel;
 import com.alkemy.ong.util.HeaderBuilder;
-import java.util.Map;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,6 +23,9 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
+
+import java.util.Map;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -108,7 +110,7 @@ public class NewsControllerFunctionalTest {
                 .build();
         entity = new HttpEntity(null, headers);
         // When
-        ResponseEntity<ErrorDTO> response = testRestTemplate.exchange(
+        ResponseEntity<ApiErrorDTO> response = testRestTemplate.exchange(
                 endpointUrl,
                 HttpMethod.GET,
                 entity,
@@ -151,7 +153,7 @@ public class NewsControllerFunctionalTest {
                 .build();
         entity = new HttpEntity(null, headers);
         // When
-        ResponseEntity<ErrorDTO> response = testRestTemplate.exchange(
+        ResponseEntity<ApiErrorDTO> response = testRestTemplate.exchange(
                 endpointUrl,
                 HttpMethod.DELETE,
                 entity,
@@ -205,7 +207,7 @@ public class NewsControllerFunctionalTest {
                 .build();
         entity = new HttpEntity(newsCreationDTO, headers);
         //When
-        ResponseEntity<ErrorDTO> response = testRestTemplate.exchange(
+        ResponseEntity<ApiErrorDTO> response = testRestTemplate.exchange(
                 endpointUrl,
                 HttpMethod.POST,
                 entity,
@@ -257,7 +259,7 @@ public class NewsControllerFunctionalTest {
                 .build();
         entity = new HttpEntity(newsUpdateDTO, headers);
         //When
-        ResponseEntity<ErrorDTO> response = testRestTemplate.exchange(
+        ResponseEntity<ApiErrorDTO> response = testRestTemplate.exchange(
                 endpointUrl,
                 HttpMethod.PUT,
                 entity,
