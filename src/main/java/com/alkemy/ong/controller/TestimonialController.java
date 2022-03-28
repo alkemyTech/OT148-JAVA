@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
 
-@Tag(name = "Testimonials", description = "Create, update show and delete Testimonials")
+@Tag(name = "Testimonials", description = "Operations related to Testimonials")
 public interface TestimonialController {
 
     @Operation(

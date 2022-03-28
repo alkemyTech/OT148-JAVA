@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.validation.Valid;
 
-@Tag(name = "News", description = "Operations for News")
+@Tag(name = "News", description = "Operations related to News")
 public interface NewsController {
 
     @Operation(

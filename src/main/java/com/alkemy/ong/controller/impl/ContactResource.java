@@ -6,6 +6,7 @@ import com.alkemy.ong.domain.Contact;
 import com.alkemy.ong.dto.ContactDTO;
 import com.alkemy.ong.mapper.ContactMapper;
 import com.alkemy.ong.service.ContactService;
+import io.swagger.annotations.Api;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -14,6 +15,7 @@ import java.util.stream.Collectors;
 import static com.alkemy.ong.mapper.ContactMapper.mapDomainToDto;
 import static com.alkemy.ong.mapper.ContactMapper.mapDtoToDomain;
 
+@Api(value = "ContactResource", tags = {"Contacts"})
 @RestController
 public class ContactResource implements ContactController {
 

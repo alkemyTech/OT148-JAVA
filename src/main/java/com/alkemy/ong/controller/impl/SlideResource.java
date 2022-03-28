@@ -23,7 +23,7 @@ public class SlideResource implements SlideController {
     }
 
     @Override
-    public SlideDTO slideDetails(Long id) throws OngRequestException {
+    public SlideDTO getById(Long id) throws OngRequestException {
         return SlideMapper.mapDomainToDto(slideService.slideDetails(id));
     }
 
