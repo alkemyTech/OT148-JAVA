@@ -26,7 +26,7 @@ public class SlideResource implements SlideController {
     }
 
     @Override
-    public SlideDTO slideDetails(Long id) throws SlideNotFoundException {
+    public SlideDTO getById(Long id) throws SlideNotFoundException {
         return SlideMapper.mapDomainToDto(slideService.slideDetails(id));
     }
 
