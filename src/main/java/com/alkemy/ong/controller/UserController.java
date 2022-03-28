@@ -5,16 +5,13 @@ import com.alkemy.ong.dto.UserCreationDTO;
 import com.alkemy.ong.dto.UserDTO;
 import com.alkemy.ong.dto.UserLoginDTO;
 import com.alkemy.ong.dto.UserUpdateDTO;
-import com.alkemy.ong.exception.UserNotFoundException;
-import com.alkemy.ong.exception.WrongValuesException;
+import com.alkemy.ong.exception.OngRequestException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.util.List;
-import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,6 +23,9 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.validation.Valid;
+import java.util.List;
 
 @Tag(name = "Users", description = "Operations related to Users")
 public interface UserController {
@@ -79,7 +79,7 @@ public interface UserController {
     UserDTO updateUser(
             @PathVariable Integer userId,
             @RequestPart(value = "photo", required = false) MultipartFile photo,
-            @RequestPart("user") UserUpdateDTO updateDTO) throws UserNotFoundException;
+            @RequestPart("user") UserUpdateDTO updateDTO) throws OngRequestException;
 
     @Operation(
             summary = "User login",
@@ -101,7 +101,7 @@ public interface UserController {
     })
     @PostMapping("/auth/login")
     @ResponseStatus(HttpStatus.OK)
-    JwtDTO userLogin(@Valid @RequestBody UserLoginDTO userLoginDTO) throws WrongValuesException;
+    JwtDTO userLogin(@Valid @RequestBody UserLoginDTO userLoginDTO) throws OngRequestException;
 
 
     @Operation(summary = "Delete a User by id")
@@ -112,7 +112,7 @@ public interface UserController {
                     content = @Content)})
     @DeleteMapping("/users/{userId}")
     @ResponseStatus(HttpStatus.OK)
-    void deleteUser(@PathVariable Long userId) throws UserNotFoundException;
+    void deleteUser(@PathVariable Long userId) throws OngRequestException;
 
     @Operation(
             summary = "Auth me",
@@ -132,6 +132,6 @@ public interface UserController {
     @GetMapping("/auth/me")
     @ResponseStatus(HttpStatus.OK)
     UserDTO getUserInfo(@RequestHeader(value = "Authorization") String authorizationHeader)
-            throws UserNotFoundException;
+            throws OngRequestException;
 
 }

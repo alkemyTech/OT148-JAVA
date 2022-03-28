@@ -1,14 +1,9 @@
 package com.alkemy.ong.controller;
 
-import com.alkemy.ong.dto.JwtDTO;
 import com.alkemy.ong.dto.SlideCreationDTO;
 import com.alkemy.ong.dto.SlideDTO;
 import com.alkemy.ong.dto.SlideUpdateDTO;
-import com.alkemy.ong.dto.UserDTO;
-import com.alkemy.ong.exception.SlideNotFoundException;
-import java.util.List;
-import javax.validation.Valid;
-
+import com.alkemy.ong.exception.OngRequestException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -24,6 +19,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import javax.validation.Valid;
+import java.util.List;
+
 @Tag(name = "Slides", description = "Operations related to Slides")
 public interface SlideController {
 
@@ -35,11 +33,11 @@ public interface SlideController {
             description = "Get a Slide by Id",
             content = {
                     @Content(mediaType = "application/json",
-                            schema = @Schema(implementation =SlideDTO.class))
+                            schema = @Schema(implementation = SlideDTO.class))
             })
     @GetMapping("/slides/{id}")
     @ResponseStatus(HttpStatus.OK)
-    SlideDTO getById(@PathVariable("id") Long id) throws SlideNotFoundException;
+    SlideDTO getById(@PathVariable("id") Long id) throws OngRequestException;
 
     @Operation(summary = "Delete a Slide by id")
     @ApiResponses(value = {
@@ -49,7 +47,7 @@ public interface SlideController {
                     content = @Content)})
     @DeleteMapping("/slides/{id}")
     @ResponseStatus(HttpStatus.OK)
-    void deleteSlide(@PathVariable("id") Long id) throws SlideNotFoundException;
+    void deleteSlide(@PathVariable("id") Long id) throws OngRequestException;
 
     @Operation(summary = "Update Slide by id")
     @ApiResponses(value = {
@@ -61,7 +59,7 @@ public interface SlideController {
                     content = @Content)})
     @PutMapping("/slides/{id}")
     @ResponseStatus(HttpStatus.OK)
-    SlideDTO updateSlide(@PathVariable Long id, @RequestBody SlideUpdateDTO slideUpdateDTO) throws SlideNotFoundException;
+    SlideDTO updateSlide(@PathVariable Long id, @RequestBody SlideUpdateDTO slideUpdateDTO) throws OngRequestException;
 
 
     @Operation(

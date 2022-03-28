@@ -1,9 +1,9 @@
 package com.alkemy.ong;
 
-import com.alkemy.ong.dto.ErrorDTO;
 import com.alkemy.ong.dto.MemberCreationDTO;
 import com.alkemy.ong.dto.MemberDTO;
 import com.alkemy.ong.dto.MemberUpdateDTO;
+import com.alkemy.ong.exception.ApiErrorDTO;
 import com.alkemy.ong.repository.MemberRepository;
 import com.alkemy.ong.util.HeaderBuilder;
 import org.junit.jupiter.api.AfterEach;
@@ -55,7 +55,7 @@ class MemberControllerFunctionalTest {
                 .build();
         entity = new HttpEntity(null, headers);
         // When
-        ResponseEntity<ErrorDTO> response = testRestTemplate.exchange(
+        ResponseEntity<ApiErrorDTO> response = testRestTemplate.exchange(
                 endpointUrl,
                 HttpMethod.DELETE,
                 entity,
@@ -76,7 +76,7 @@ class MemberControllerFunctionalTest {
         entity = new HttpEntity(memberCreationDTO, headers);
         String endpointUrl = memberControllerUrl + "/{id}";
         // When
-        ResponseEntity<ErrorDTO> response = testRestTemplate.exchange(
+        ResponseEntity<ApiErrorDTO> response = testRestTemplate.exchange(
                 endpointUrl,
                 HttpMethod.DELETE,
                 entity,
@@ -146,7 +146,7 @@ class MemberControllerFunctionalTest {
 
         entity = new HttpEntity(memberUpdateDTO, null);
         // When
-        ResponseEntity<ErrorDTO> response = testRestTemplate.exchange(
+        ResponseEntity<ApiErrorDTO> response = testRestTemplate.exchange(
                 endpointUrl,
                 HttpMethod.PUT,
                 entity,
@@ -175,7 +175,7 @@ class MemberControllerFunctionalTest {
         entity = new HttpEntity(memberUpdateDTO, headers);
         String endpointUrl = memberControllerUrl + "/{id}";
         // When
-        ResponseEntity<ErrorDTO> response = testRestTemplate.exchange(
+        ResponseEntity<ApiErrorDTO> response = testRestTemplate.exchange(
                 endpointUrl,
                 HttpMethod.PUT,
                 entity,
@@ -213,7 +213,7 @@ class MemberControllerFunctionalTest {
                 .withValidToken("user1@gmail.com", 3600L)
                 .build();
         entity = new HttpEntity(memberCreationDTO, headers);
-        ResponseEntity<ErrorDTO> response = testRestTemplate.exchange(
+        ResponseEntity<ApiErrorDTO> response = testRestTemplate.exchange(
                 endpointUrl,
                 HttpMethod.GET,
                 entity,

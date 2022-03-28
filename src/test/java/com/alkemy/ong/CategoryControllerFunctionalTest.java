@@ -3,11 +3,10 @@ package com.alkemy.ong;
 import com.alkemy.ong.dto.CategoryCreationDTO;
 import com.alkemy.ong.dto.CategoryDTO;
 import com.alkemy.ong.dto.CategoryUpdateDTO;
-import com.alkemy.ong.dto.ErrorDTO;
 import com.alkemy.ong.dto.PageDTO;
+import com.alkemy.ong.exception.ApiErrorDTO;
 import com.alkemy.ong.repository.CategoryRepository;
 import com.alkemy.ong.util.HeaderBuilder;
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -102,7 +101,7 @@ public class CategoryControllerFunctionalTest {
                 .build();
         entity = new HttpEntity(null, headers);
         // When
-        ResponseEntity<ErrorDTO> response = testRestTemplate.exchange(
+        ResponseEntity<ApiErrorDTO> response = testRestTemplate.exchange(
                 endpointUrl,
                 HttpMethod.GET,
                 entity,
@@ -145,7 +144,7 @@ public class CategoryControllerFunctionalTest {
                 .build();
         entity = new HttpEntity(null, headers);
         // When
-        ResponseEntity<ErrorDTO> response = testRestTemplate.exchange(
+        ResponseEntity<ApiErrorDTO> response = testRestTemplate.exchange(
                 endpointUrl,
                 HttpMethod.DELETE,
                 entity,
@@ -197,7 +196,7 @@ public class CategoryControllerFunctionalTest {
                 .build();
         entity = new HttpEntity(categoryCreationDTO, headers);
         //When
-        ResponseEntity<ErrorDTO> response = testRestTemplate.exchange(
+        ResponseEntity<ApiErrorDTO> response = testRestTemplate.exchange(
                 endpointUrl,
                 HttpMethod.POST,
                 entity,
@@ -250,7 +249,7 @@ public class CategoryControllerFunctionalTest {
                 .build();
         entity = new HttpEntity(categoryUpdateDTO, headers);
         //When
-        ResponseEntity<ErrorDTO> response = testRestTemplate.exchange(
+        ResponseEntity<ApiErrorDTO> response = testRestTemplate.exchange(
                 endpointUrl,
                 HttpMethod.PUT,
                 entity,

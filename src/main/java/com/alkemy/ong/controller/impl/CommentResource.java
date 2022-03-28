@@ -5,19 +5,15 @@ import com.alkemy.ong.domain.Comment;
 import com.alkemy.ong.dto.CommentBodyDTO;
 import com.alkemy.ong.dto.CommentCreationDTO;
 import com.alkemy.ong.dto.CommentDTO;
-import com.alkemy.ong.dto.ErrorDTO;
-import com.alkemy.ong.exception.CommentNotFoundException;
-import com.alkemy.ong.exception.NewsNotFoundException;
-import com.alkemy.ong.exception.OperationNotPermittedException;
+import com.alkemy.ong.exception.OngRequestException;
 import com.alkemy.ong.mapper.CommentMapper;
 import com.alkemy.ong.service.CommentService;
-import java.util.List;
-import java.util.stream.Collectors;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
 import static com.alkemy.ong.mapper.CommentMapper.mapBodyDTOToDomain;
 import static com.alkemy.ong.mapper.CommentMapper.mapDomainToDto;
 
@@ -45,26 +41,8 @@ public class CommentResource implements CommentController {
         return mapDomainToDto(comment);
     }
 
-    @ExceptionHandler(NewsNotFoundException.class)
-    private ResponseEntity<ErrorDTO> handleNewsNotFound(NewsNotFoundException ex) {
-        ErrorDTO newsNotFound =
-                ErrorDTO.builder()
-                        .code(HttpStatus.NOT_FOUND)
-                        .message(ex.getMessage()).build();
-        return new ResponseEntity(newsNotFound, HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler(CommentNotFoundException.class)
-    private ResponseEntity<ErrorDTO> handleNewsNotFound(CommentNotFoundException ex) {
-        ErrorDTO commentNotFound =
-                ErrorDTO.builder()
-                        .code(HttpStatus.NOT_FOUND)
-                        .message(ex.getMessage()).build();
-        return new ResponseEntity(commentNotFound, HttpStatus.NOT_FOUND);
-    }
-
     @Override
-    public void deleteComment(@PathVariable Long id) throws CommentNotFoundException {
+    public void deleteComment(@PathVariable Long id) throws OngRequestException {
         commentService.deleteComment(id);
     }
 
@@ -77,14 +55,5 @@ public class CommentResource implements CommentController {
     public List<CommentDTO> findAllByPostId(Long id) {
         List<Comment> commentList = commentService.getAllComment(id);
         return commentList.stream().map(CommentMapper::mapDomainToDto).collect(Collectors.toList());
-    }
-
-    @ExceptionHandler(OperationNotPermittedException.class)
-    private ResponseEntity<ErrorDTO> handleOpNotPermittedException(OperationNotPermittedException ex) {
-        ErrorDTO badRequest =
-                ErrorDTO.builder()
-                        .code(HttpStatus.FORBIDDEN)
-                        .message(ex.getMessage()).build();
-        return new ResponseEntity(badRequest, HttpStatus.FORBIDDEN);
     }
 }

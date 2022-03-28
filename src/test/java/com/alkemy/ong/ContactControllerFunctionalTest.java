@@ -2,7 +2,6 @@ package com.alkemy.ong;
 
 
 import com.alkemy.ong.dto.ContactDTO;
-import com.alkemy.ong.dto.ErrorDTO;
 import com.alkemy.ong.repository.ContactRepository;
 import com.alkemy.ong.util.HeaderBuilder;
 import org.junit.jupiter.api.AfterEach;

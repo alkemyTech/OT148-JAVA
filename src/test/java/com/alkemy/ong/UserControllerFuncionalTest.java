@@ -1,16 +1,12 @@
 package com.alkemy.ong;
 
-import com.alkemy.ong.dto.ErrorDTO;
 import com.alkemy.ong.dto.JwtDTO;
 import com.alkemy.ong.dto.UserCreationDTO;
 import com.alkemy.ong.dto.UserDTO;
 import com.alkemy.ong.dto.UserLoginDTO;
 import com.alkemy.ong.dto.UserUpdateDTO;
+import com.alkemy.ong.exception.ApiErrorDTO;
 import com.alkemy.ong.util.HeaderBuilder;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -26,6 +22,12 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.util.LinkedMultiValueMap;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -198,7 +200,7 @@ public class UserControllerFuncionalTest {
         String endpointUrl = testRestTemplate.getRootUri() + "/users/{id}";
         HttpEntity<LinkedMultiValueMap<String, Object>> entity =
                 new HttpEntity(parameters, null);
-        ResponseEntity<ErrorDTO> response = testRestTemplate.exchange(
+        ResponseEntity<ApiErrorDTO> response = testRestTemplate.exchange(
                 endpointUrl,
                 HttpMethod.PATCH,
                 entity,
@@ -223,7 +225,7 @@ public class UserControllerFuncionalTest {
         String endpointUrl = testRestTemplate.getRootUri() + "/users/{id}";
         HttpEntity<LinkedMultiValueMap<String, Object>> entity =
                 new HttpEntity(parameters, headers);
-        ResponseEntity<ErrorDTO> response = testRestTemplate.exchange(
+        ResponseEntity<ApiErrorDTO> response = testRestTemplate.exchange(
                 endpointUrl,
                 HttpMethod.PATCH,
                 entity,
@@ -248,7 +250,7 @@ public class UserControllerFuncionalTest {
         String endpointUrl = testRestTemplate.getRootUri() + "/users/{id}";
         HttpEntity<LinkedMultiValueMap<String, Object>> entity =
                 new HttpEntity(parameters, headers);
-        ResponseEntity<ErrorDTO> response = testRestTemplate.exchange(
+        ResponseEntity<ApiErrorDTO> response = testRestTemplate.exchange(
                 endpointUrl,
                 HttpMethod.PATCH,
                 entity,
@@ -266,7 +268,7 @@ public class UserControllerFuncionalTest {
                 .withValidToken("admin1@gmail.com", 3600L)
                 .build();
         entity = new HttpEntity(null, headers);
-        ResponseEntity<ErrorDTO> response = testRestTemplate.exchange(
+        ResponseEntity<ApiErrorDTO> response = testRestTemplate.exchange(
                 endpointUrl,
                 HttpMethod.DELETE,
                 entity,
@@ -284,7 +286,7 @@ public class UserControllerFuncionalTest {
                 .withValidToken("admin1@gmail.com", 3600L)
                 .build();
         entity = new HttpEntity(null, headers);
-        ResponseEntity<ErrorDTO> response = testRestTemplate.exchange(
+        ResponseEntity<ApiErrorDTO> response = testRestTemplate.exchange(
                 endpointUrl,
                 HttpMethod.DELETE,
                 entity,

@@ -2,14 +2,13 @@ package com.alkemy.ong.controller;
 
 import com.alkemy.ong.dto.OrganizationDTO;
 import com.alkemy.ong.dto.OrganizationUpdateDTO;
-import com.alkemy.ong.exception.OrganizationNotFoundException;
+import com.alkemy.ong.exception.OngRequestException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -17,6 +16,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @Tag(name = "Organizations", description = "Operations related to Organizations")
 public interface OrganizationController {
@@ -56,5 +57,5 @@ public interface OrganizationController {
             @PathVariable Long id,
             @RequestPart(value = "image", required = false) MultipartFile image,
             @RequestPart("organization") OrganizationUpdateDTO organizationUpdateDTO)
-            throws OrganizationNotFoundException;
+            throws OngRequestException;
 }

@@ -1,15 +1,17 @@
 package com.alkemy.ong.service;
 
 import com.alkemy.ong.domain.Category;
-import com.alkemy.ong.exception.CategoryNotFoundException;
+import com.alkemy.ong.exception.OngRequestException;
 import com.alkemy.ong.mapper.CategoryMapper;
 import com.alkemy.ong.repository.CategoryRepository;
 import com.alkemy.ong.repository.model.CategoryModel;
-import java.util.Optional;
-import javax.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+
+import javax.transaction.Transactional;
+import java.util.Optional;
 
 public class CategoryService {
 
@@ -36,21 +38,21 @@ public class CategoryService {
     }
 
     @Transactional
-    public Category getById(Long id) throws CategoryNotFoundException {
+    public Category getById(Long id) throws OngRequestException {
         Optional<CategoryModel> modelOptional = categoryRepository.findById(id);
         if (!modelOptional.isEmpty()) {
             CategoryModel categoryModel = modelOptional.get();
             return CategoryMapper.mapModelToDomain(categoryModel);
         } else {
-            throw new CategoryNotFoundException(String.format("Category with ID: %s not found", id));
+            throw new OngRequestException("Category not found", "not.found", HttpStatus.NOT_FOUND);
         }
     }
 
     @Transactional
-    public Category updateCategory(Long id, Category category) throws CategoryNotFoundException {
+    public Category updateCategory(Long id, Category category) throws OngRequestException {
         Optional<CategoryModel> optionalCategoryModel = categoryRepository.findById(id);
         if (optionalCategoryModel.isEmpty()) {
-            throw new CategoryNotFoundException(String.format("Category with ID: %s not found", id));
+            throw new OngRequestException("Category not found", "not.found", HttpStatus.NOT_FOUND);
         }
         CategoryModel categoryModel = optionalCategoryModel.get();
         categoryModel.setName(category.getName());
@@ -60,13 +62,13 @@ public class CategoryService {
         return CategoryMapper.mapModelToDomain(categoryRepository.save(categoryModel));
     }
 
-    public void deleteCategory(Long id) throws CategoryNotFoundException {
+    public void deleteCategory(Long id) throws OngRequestException {
         Optional<CategoryModel> categoryOptional = categoryRepository.findById(id);
         if (!categoryOptional.isEmpty()) {
             CategoryModel categoryModel = categoryOptional.get();
             categoryRepository.delete(categoryModel);
         } else {
-            throw new CategoryNotFoundException(String.format("Category with ID: " + id + " not found", id));
+            throw new OngRequestException("Category not found", "not.found", HttpStatus.NOT_FOUND);
         }
     }
 }

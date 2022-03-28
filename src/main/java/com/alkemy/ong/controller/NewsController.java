@@ -4,14 +4,13 @@ import com.alkemy.ong.dto.NewsCreationDTO;
 import com.alkemy.ong.dto.NewsDTO;
 import com.alkemy.ong.dto.NewsListDTO;
 import com.alkemy.ong.dto.NewsUpdateDTO;
-import com.alkemy.ong.exception.NewsNotFoundException;
+import com.alkemy.ong.exception.OngRequestException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +20,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
+
+import javax.validation.Valid;
 
 @Tag(name = "News", description = "Operations related to News")
 public interface NewsController {
@@ -54,7 +55,7 @@ public interface NewsController {
     })
     @GetMapping("/news/{id}")
     @ResponseStatus(HttpStatus.OK)
-    NewsDTO getById(@PathVariable Long id) throws NewsNotFoundException;
+    NewsDTO getById(@PathVariable Long id) throws OngRequestException;
 
     @Operation(
             summary = "Create news",
@@ -87,7 +88,7 @@ public interface NewsController {
     @PutMapping("/news/{id}")
     @ResponseStatus(HttpStatus.OK)
     NewsDTO updateNews(@PathVariable Long id,
-                       @RequestBody NewsUpdateDTO newsUpdateDTO) throws NewsNotFoundException;
+                       @RequestBody NewsUpdateDTO newsUpdateDTO) throws OngRequestException;
 
     @Operation(
             summary = "Delete news by Id",
@@ -101,5 +102,5 @@ public interface NewsController {
     })
     @DeleteMapping("/news/{id}")
     @ResponseStatus(HttpStatus.OK)
-    void deleteNews(@PathVariable Long id) throws NewsNotFoundException;
+    void deleteNews(@PathVariable Long id) throws OngRequestException;
 }

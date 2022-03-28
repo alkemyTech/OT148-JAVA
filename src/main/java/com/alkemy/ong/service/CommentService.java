@@ -1,10 +1,7 @@
 package com.alkemy.ong.service;
 
 import com.alkemy.ong.domain.Comment;
-import com.alkemy.ong.exception.CommentNotFoundException;
-import com.alkemy.ong.exception.NewsNotFoundException;
-import com.alkemy.ong.exception.OperationNotPermittedException;
-import com.alkemy.ong.exception.UserNotFoundException;
+import com.alkemy.ong.exception.OngRequestException;
 import com.alkemy.ong.mapper.CommentMapper;
 import com.alkemy.ong.repository.CommentRepository;
 import com.alkemy.ong.repository.NewsRepository;
@@ -13,10 +10,13 @@ import com.alkemy.ong.repository.model.CommentModel;
 import com.alkemy.ong.repository.model.NewsModel;
 import com.alkemy.ong.repository.model.UserModel;
 import com.alkemy.ong.security.MainUser;
+import org.springframework.http.HttpStatus;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import org.springframework.transaction.annotation.Transactional;
+
 import static com.alkemy.ong.mapper.CommentMapper.mapModelToDomain;
 import static com.alkemy.ong.security.SecurityUtils.getMainUser;
 
@@ -54,50 +54,50 @@ public class CommentService {
         Optional<UserModel> user = userRepository.findById(mainUser.getId());
         Optional<NewsModel> news = newsRepository.findById(comment.getNewsId());
         if (!user.isPresent()) {
-            throw new UserNotFoundException(String.format("User with ID: %s not found", comment.getUserId()));
+            throw new OngRequestException("User not found", "not.found", HttpStatus.NOT_FOUND);
         }
         if (!news.isPresent()) {
-            throw new NewsNotFoundException(String.format("News with ID: %s not found", comment.getNewsId()));
+            throw new OngRequestException("News not found", "not.found", HttpStatus.NOT_FOUND);
         }
         comment.setUserId(mainUser.getId());
         return mapModelToDomain(commentRepository.save(CommentMapper.mapDomainCreationToModel(comment)));
     }
 
     @Transactional
-    public void deleteComment(Long id) throws CommentNotFoundException {
+    public void deleteComment(Long id) throws OngRequestException {
         Optional<CommentModel> commentModelOptional = commentRepository.findById(id);
         if (!commentModelOptional.isEmpty()) {
             CommentModel commentModel = commentModelOptional.get();
             commentRepository.delete(commentModel);
         } else {
-            throw new CommentNotFoundException(String.format("Comment with ID: %s not found", id));
+            throw new OngRequestException("Comment not found", "not.found", HttpStatus.NOT_FOUND);
         }
     }
 
     @Transactional
     public Comment updateComment(Long commentId, Comment commentUpdate)
-            throws CommentNotFoundException, OperationNotPermittedException {
+            throws OngRequestException {
         MainUser mainUser = getMainUser();
         Optional<CommentModel> commentModel = commentRepository.findById(commentId);
         if (!commentModel.isPresent()) {
-            throw new CommentNotFoundException(String.format("Comment with ID: %s not found", commentId));
+            throw new OngRequestException("Comment not found", "not.found", HttpStatus.NOT_FOUND);
         }
         CommentModel comment = commentModel.get();
         if (!hasValidId(mainUser, comment) && !isAdmin(mainUser)) {
-            throw new OperationNotPermittedException("Invalid user");
+            throw new OngRequestException("Invalid permissions", "invalid.permissions", HttpStatus.UNAUTHORIZED);
         }
         comment.setBody(commentUpdate.getBody());
         return mapModelToDomain(commentRepository.save(comment));
     }
 
     @Transactional
-    public List<Comment> getAllComment(Long id) throws NewsNotFoundException {
+    public List<Comment> getAllComment(Long id) throws OngRequestException {
         Optional<NewsModel> newsModel = newsRepository.findById(id);
         if (newsModel.isPresent()) {
             List<CommentModel> commentModelList = commentRepository.findByNewsId(newsModel.get().getId());
             return commentModelList.stream().map(CommentMapper::mapModelToDomain).collect(Collectors.toList());
         } else {
-            throw new NewsNotFoundException(String.format("News with ID: %s not found", id));
+            throw new OngRequestException("News not found", "not.found", HttpStatus.NOT_FOUND);
         }
     }
 
